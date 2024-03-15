@@ -97,27 +97,27 @@ export const Footer = () => {
                                                 765 999 111</a>
                                         </div>
                                         <ul className="list-unstyled mb-0 d-flex ml-0">
-                                            <li className="btn pl-0">
+                                            <li className="btn1 pl-0">
                                                 <a className="link-black-100" href="#">
                                                     <span className="fab fa-instagram"></span>
                                                 </a>
                                             </li>
-                                            <li className="btn">
+                                            <li className="btn1">
                                                 <a className="link-black-100" href="#">
                                                     <span className="fab fa-facebook-f"></span>
                                                 </a>
                                             </li>
-                                            <li className="btn">
+                                            <li className="btn1">
                                                 <a className="link-black-100" href="#">
                                                     <span className="fab fa-youtube"></span>
                                                 </a>
                                             </li>
-                                            <li className="btn">
+                                            <li className="btn1">
                                                 <a className="link-black-100" href="#">
                                                     <span className="fab fa-twitter"></span>
                                                 </a>
                                             </li>
-                                            <li className="btn">
+                                            <li className="btn1">
                                                 <a className="link-black-100" href="#">
                                                     <span className="fab fa-pinterest"></span>
                                                 </a>
@@ -159,7 +159,8 @@ export const Footer = () => {
                                                 <button type="submit" name="wpforms[submit]" id="wpforms-submit-441"
                                                         className="wpforms-submit btn btn-primary-green text-white px-3 py-2 font-size-4 border-0"
                                                         data-alt-text="Sending..." data-submit-text="Submit"
-                                                        aria-live="assertive" value="wpforms-submit">Submit
+                                                        aria-live="assertive" value="wpforms-submit">Submit &nbsp;
+                                                    <i className="fa-solid fa-reply"></i>
                                                 </button>
                                             </div>
                                         </form>

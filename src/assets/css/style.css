@@ -3084,7 +3084,7 @@ textarea.form-control, .widget_search textarea.search-field {
     }
 }
 
-.btn, .shop_table.cart .button, .woocommerce-MyAccount-content .button, .single-product .related.products .yith-wcwl-add-to-wishlist a, .single-product .upsells.products .yith-wcwl-add-to-wishlist a, .single_add_to_cart_button {
+.btn1, .shop_table.cart .button, .woocommerce-MyAccount-content .button, .single-product .related.products .yith-wcwl-add-to-wishlist a, .single-product .upsells.products .yith-wcwl-add-to-wishlist a, .single_add_to_cart_button {
     display: inline-block;
     font-weight: 400;
     color: #161619;
@@ -5872,17 +5872,6 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
     outline: none
 }
 
-.custom-range:focus::-webkit-slider-thumb {
-    box-shadow: 0 0 0 1px #fff, none
-}
-
-.custom-range:focus::-moz-range-thumb {
-    box-shadow: 0 0 0 1px #fff, none
-}
-
-.custom-range:focus::-ms-thumb {
-    box-shadow: 0 0 0 1px #fff, none
-}
 
 .custom-range::-moz-focus-outer {
     border: 0
@@ -20986,7 +20975,6 @@ a.text-red-1:hover, a.text-red-1:focus {
 }
 
 .text-hide {
-    font: 0/0 a;
     color: transparent;
     text-shadow: none;
     background-color: transparent;
@@ -29399,7 +29387,7 @@ div.wpforms-container-full .wpforms-form input[type=email]:disabled, div.wpforms
 }
 
 .site-footer_v12 .footer-top-row div.wpforms-container-full .wpforms-form .wpforms-submit-container button[type=submit] {
-    font-size: 0;
+    font-size: 15px;
     padding: .815rem 1.25rem !important;
     color: #fff;
     background-color: #161619;
@@ -29408,14 +29396,6 @@ div.wpforms-container-full .wpforms-form input[type=email]:disabled, div.wpforms
     border-bottom-right-radius: .25rem
 }
 
-.site-footer_v12 .footer-top-row div.wpforms-container-full .wpforms-form .wpforms-submit-container button[type=submit]:before {
-    content: "\f11a";
-    font-family: Flaticon;
-    font-size: 1.25rem;
-    color: #fff;
-    display: inline-block;
-    line-height: 1.7
-}
 
 .site-footer_v12 .footer-top-row div.wpforms-container-full .wpforms-form label.wpforms-error {
     position: absolute;

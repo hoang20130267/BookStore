@@ -1,4 +1,4 @@
-
+import "./../../../assets/css/style-cart.css"
 export const PageLink = () => {
     return (
         <div className="page-header border-bottom">
@@ -41,7 +41,7 @@ export const ProductsInCart = () => {
                                         25.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -51,7 +51,7 @@ export const ProductsInCart = () => {
                                         25.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 <tr>
@@ -63,7 +63,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -73,7 +73,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 <tr>
@@ -85,7 +85,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -95,7 +95,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 </tbody>
