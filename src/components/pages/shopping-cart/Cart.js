@@ -1,4 +1,5 @@
-
+import "./../../../assets/css/style-cart.css"
+import {Link} from "react-router-dom";
 export const PageLink = () => {
     return (
         <div className="page-header border-bottom">
@@ -41,7 +42,7 @@ export const ProductsInCart = () => {
                                         25.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -51,7 +52,7 @@ export const ProductsInCart = () => {
                                         25.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 <tr>
@@ -63,7 +64,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -73,7 +74,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 <tr>
@@ -85,7 +86,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__quantity">
-                                        <div className="quantity">
+                                        <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
@@ -95,7 +96,7 @@ export const ProductsInCart = () => {
                                         30.000.000đ
                                     </td>
                                     <td className="shoping__cart__item__close">
-                                        <span className="icon_close"></span>
+                                        <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -130,7 +131,7 @@ export const ProductsInCart = () => {
                                 <li>Tạm tính <span>85.000.000 Đồng</span></li>
                                 <li>Tổng tiền <span>85.000.000 Đồng</span></li>
                             </ul>
-                            <a href="checkout.html" className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</a>
+                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>
                     </div>
                 </div>
