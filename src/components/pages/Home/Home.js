@@ -26,12 +26,12 @@ export const Home = () => {
                 </div>
             </div>
             <Helmet>
-                {/*<script src="./../../assets/Js/jquery.min" id="jquery-core-js"></script>*/}
-                {/*<script src="./../../assets/Js/jquery-migrate.min" id="jquery-migrate-js"></script>*/}
-                {/*<script src="./../../assets/Js/bootstrap.min" id="bootstrap-js"></script>*/}
-                {/*<script src="./../../assets/Js/hs.core" id="hs-core-js"></script>*/}
-                {/*<script src="./../../assets/Js/hs.unfold" id="hs-unfold-js"></script>*/}
-                {/*<script src="./../../assets/Js/bookworm" id="bookworm-js-js"></script>*/}
+                {/*<script src="./../../assets/js/jquery.min" id="jquery-core-js"></script>*/}
+                {/*<script src="./../../assets/js/jquery-migrate.min" id="jquery-migrate-js"></script>*/}
+                {/*<script src="./../../assets/js/bootstrap.min" id="bootstrap-js"></script>*/}
+                {/*<script src="./../../assets/js/hs.core" id="hs-core-js"></script>*/}
+                {/*<script src="./../../assets/js/hs.unfold" id="hs-unfold-js"></script>*/}
+                {/*<script src="./../../assets/js/bookworm" id="bookworm-js-js"></script>*/}
             </Helmet>
         </main>
     )
