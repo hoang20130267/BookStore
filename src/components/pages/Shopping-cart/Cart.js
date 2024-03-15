@@ -1,4 +1,5 @@
 import "./../../../assets/css/style-cart.css"
+import {Link} from "react-router-dom";
 export const PageLink = () => {
     return (
         <div className="page-header border-bottom">
@@ -130,7 +131,7 @@ export const ProductsInCart = () => {
                                 <li>Tạm tính <span>85.000.000 Đồng</span></li>
                                 <li>Tổng tiền <span>85.000.000 Đồng</span></li>
                             </ul>
-                            <a href="checkout.html" className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</a>
+                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>
                     </div>
                 </div>
