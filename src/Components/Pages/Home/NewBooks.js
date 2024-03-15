@@ -50,10 +50,6 @@ export const NewBooks = () => {
                                             data-arrow-left-classes="fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10"
                                             data-arrow-right-classes="fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10"
                                             data-responsive="[{&quot;breakpoint&quot;:1479.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:5}},{&quot;breakpoint&quot;:1199.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:4}},{&quot;breakpoint&quot;:991.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:3}},{&quot;breakpoint&quot;:575.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:2}}]">
-                                            <div
-                                                className="js-prev u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10 slick-arrow slick-disabled"
-                                                aria-disabled="true"></div>
-
                                             <div className="slick-list draggable">
                                                 <div className="slick-track"
                                                      style={{ opacity: 1, width: '1638px', transform: 'translate3d(0px, 0px, 0px)' }}>
@@ -633,9 +629,6 @@ export const NewBooks = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div
-                                                className="js-next u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10 slick-arrow"
-                                                aria-disabled="false"></div>
                                             <ul className="js-pagination text-center u-slick__pagination position-absolute right-0 left-0 d-lg-none mt-3 mb-0"
                                                 style={{ display: 'block' }} role="tablist">
                                                 <li className="slick-active slick-current" role="presentation">
@@ -668,10 +661,6 @@ export const NewBooks = () => {
                                             data-arrow-left-classes="fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10"
                                             data-arrow-right-classes="fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10"
                                             data-responsive="[{&quot;breakpoint&quot;:1479.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:5}},{&quot;breakpoint&quot;:1199.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:4}},{&quot;breakpoint&quot;:991.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:3}},{&quot;breakpoint&quot;:575.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:2}}]">
-                                            <div
-                                                className="js-prev u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10 slick-arrow slick-disabled"
-                                                aria-disabled="true" ></div>
-
 
                                             <div className="slick-list draggable">
                                                 <div className="slick-track"
@@ -1286,9 +1275,6 @@ export const NewBooks = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div
-                                                className="js-next u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10 slick-arrow"
-                                                 aria-disabled="false"></div>
                                             <ul className="js-pagination text-center u-slick__pagination position-absolute right-0 left-0 d-lg-none mt-3 mb-0"
                                                 style={{ display: 'block' }} role="tablist">
                                                 <li className="slick-active slick-current" role="presentation">
@@ -1321,9 +1307,6 @@ export const NewBooks = () => {
                                             data-arrow-left-classes="fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10"
                                             data-arrow-right-classes="fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10"
                                             data-responsive="[{&quot;breakpoint&quot;:1479.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:5}},{&quot;breakpoint&quot;:1199.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:4}},{&quot;breakpoint&quot;:991.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:3}},{&quot;breakpoint&quot;:575.98000000000001818989403545856475830078125,&quot;settings&quot;:{&quot;slidesToShow&quot;:2}}]">
-                                            <div
-                                                className="js-prev u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-left u-slick__arrow-inner u-slick__arrow-inner--left ml-lg-n10 slick-arrow slick-disabled"
-                                                aria-disabled="true" ></div>
 
 
                                             <div className="slick-list draggable">
@@ -1974,9 +1957,6 @@ export const NewBooks = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div
-                                                className="js-next u-slick__arrow u-slick__arrow-centered--y d-none d-lg-block fas fa-chevron-right u-slick__arrow-inner u-slick__arrow-inner--right mr-lg-n10 slick-arrow"
-                                                 aria-disabled="false"></div>
                                             <ul className="js-pagination text-center u-slick__pagination position-absolute right-0 left-0 d-lg-none mt-3 mb-0"
                                                 style={{ display: 'block' }} role="tablist">
                                                 <li className="slick-active slick-current" role="presentation">
