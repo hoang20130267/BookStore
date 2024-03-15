@@ -121,7 +121,7 @@ export const Header = () => {
                                 <nav className="header__menu">
                                     <ul>
                                         <li><Link to={"/home"}>Trang Chủ</Link></li>
-                                        <li><a href="">Danh mục sách</a>
+                                        <li><Link to={"/product-list"}>Danh mục sản phẩm</Link>
                                             <ul className="header__menu__dropdown">
                                                 <li><a href="">Hài kịch</a>
                                                     <ul className="header__menu__dropdown__level2">
@@ -134,7 +134,7 @@ export const Header = () => {
                                                 <li><Link to={""}>Tình cảm</Link></li>
                                             </ul>
                                         </li>
-                                        <li><Link to={"/listblogs"}>Tin Tức</Link></li>
+                                        <li><Link to={"/blog-list"}>Tin Tức</Link></li>
                                         <li><Link to={"/contact"}>Liên Hệ</Link></li>
                                     </ul>
                                 </nav>
