@@ -9,6 +9,8 @@ import ProductList from "../components/pages/shop-product/ProductList";
 import Checkout from "../components/pages/checkout/Checkout";
 import Detail from "../components/pages/product-detail/Detail";
 import SignIn from "../components/pages/sign-in/SignIn";
+import SignUp from "../components/pages/sign-up/SignUp";
+import NotFound from "../components/pages/others/NotFound";
 
 export const webRouter = createBrowserRouter([{
     path: '/',
@@ -23,6 +25,9 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "sign-in",
             element: <SignIn/>,
+        }, {
+            path: "sign-up",
+            element: <SignUp/>,
         }, {
             path: "product-list",
             element: <ProductList/>,
@@ -44,5 +49,8 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "checkout",
             element: <Checkout/>,
+        },{
+            path: "not-found",
+            element: <NotFound/>,
         }]
 }]);
