@@ -5,6 +5,7 @@ import {NewBooks} from "./NewBooks";
 import {Advertise} from "./Advertise";
 import {Categories} from "./Categories";
 import {Features} from "./Features";
+import { Helmet } from 'react-helmet';
 
 export const Home = () => {
     return (
@@ -24,6 +25,14 @@ export const Home = () => {
                     </div>
                 </div>
             </div>
+            <Helmet>
+                {/*<script src="./../../assets/Js/jquery.min" id="jquery-core-js"></script>*/}
+                {/*<script src="./../../assets/Js/jquery-migrate.min" id="jquery-migrate-js"></script>*/}
+                {/*<script src="./../../assets/Js/bootstrap.min" id="bootstrap-js"></script>*/}
+                {/*<script src="./../../assets/Js/hs.core" id="hs-core-js"></script>*/}
+                {/*<script src="./../../assets/Js/hs.unfold" id="hs-unfold-js"></script>*/}
+                {/*<script src="./../../assets/Js/bookworm" id="bookworm-js-js"></script>*/}
+            </Helmet>
         </main>
     )
 }
