@@ -1,10 +1,11 @@
 import {createBrowserRouter} from "react-router-dom";
-import {Home} from "../components/pages/Home/Home";
+import {Home} from "../components/pages/home/Home";
 import App from "../App";
-import {BlogDetail} from "../components/pages/BlogDetail/Blog-detail";
-import Contact from "../components/pages/Contact/Contact";
-import Cart from "../components/pages/Shopping-cart/Cart";
-import Checkout from "../components/pages/Checkout/Checkout";
+import {BlogDetail} from "../components/pages/blog-detail/Blog-detail";
+import Contact from "../components/pages/contact/Contact";
+import Cart from "../components/pages/shopping-cart/Cart";
+import BlogList from "../components/pages/blog-list/BlogList";
+import ProductList from "../components/pages/shop-product/ProductList";
 
 export const webRouter = createBrowserRouter([{
     path: '/',
@@ -17,14 +18,14 @@ export const webRouter = createBrowserRouter([{
             path: "home",
             element: <Home/>,
         }, {
-            path: "listbooks",
-            // element: <ListBooks/>,
+            path: "product-list",
+            element: <ProductList/>,
         }, {
             path: "bookdetail",
             element: <BlogDetail/>,
         }, {
-            path: "listblogs",
-            // element: <ListBlog/>,
+            path: "blog-list",
+            element: <BlogList/>,
         }, {
             path: "blogdetail",
             element: <BlogDetail/>,
@@ -34,8 +35,5 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "cart",
             element: <Cart/>,
-        }, {
-            path: "checkout",
-            element: <Checkout/>,
         }]
 }]);

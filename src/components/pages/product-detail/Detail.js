@@ -522,7 +522,7 @@ export const Information = () => {
                                         <h4 id="reply-title" className="comment-reply-title font-size-3 mb-4">Write a
                                             Review
                                             <small><a rel="nofollow" id="cancel-comment-reply-link"
-                                                      href="/product/the-lost-colony-the-long-winter-trilogy-book-3/#respond"
+                                                      href="/shop-product/the-lost-colony-the-long-winter-trilogy-book-3/#respond"
                                                       style={{display:"none"}}>Cancel reply</a></small></h4>
                                         <p className="must-log-in">You must be <a
                                             href="https://bookworm.madrasthemes.com/my-account/">logged
