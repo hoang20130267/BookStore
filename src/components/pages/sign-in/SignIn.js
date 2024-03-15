@@ -1,5 +1,6 @@
 import React from "react";
-import "../../../assets/css/style-login.css"
+import "../../../assets/css/style-signin.css"
+import {Link} from "react-router-dom";
 
 const SignIn = () => {
     return (
@@ -34,9 +35,9 @@ const SignIn = () => {
                                         <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
                                         <div className="social-login text-center">
-                                            <a href="#" className="facebook">
+                                            <Link to={"/not-found"} className="facebook">
                                                 <span><i className="fa-brands fa-facebook-f"></i></span>
-                                            </a>
+                                            </Link>
                                             <a href="#" className="twitter">
                                                 <span><i className="fa-brands fa-twitter"></i></span>
                                             </a>
@@ -44,9 +45,9 @@ const SignIn = () => {
                                                 <span> <i className="fa-brands fa-google"></i></span>
                                             </a>
 
-                                            <span className="d-block text-center my-4 text-muted"><a
-                                                href="../Login/signup.html"
-                                                style={{width: "60px", color: "#6c757d"}}>Đăng kí</a> </span>
+                                            <span className="d-block text-center my-4 text-muted"><Link
+                                                to={"/sign-up"}
+                                                style={{width: "60px", color: "#6c757d"}}>Đăng kí</Link> </span>
                                         </div>
                                     </form>
                                 </div>
