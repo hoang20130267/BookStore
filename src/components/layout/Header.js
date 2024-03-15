@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom";
 
 export const Header = () => {
     return (
@@ -58,7 +59,7 @@ export const Header = () => {
                                     <a href="" rel="home">GoldLeaf</a></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
-                                <a id="sidebarNavToggler-my_account" href="../Pages/Login.html" role="button"
+                                <a id="sidebarNavToggler-my_account" href="../pages/Login.html" role="button"
                                    aria-controls="registerLoginForm" aria-haspopup="true" aria-expanded="false"
                                    data-unfold-event="click" data-unfold-hide-on-scroll="false"
                                    data-unfold-target="#registerLoginForm"
@@ -78,7 +79,7 @@ export const Header = () => {
                                         </div>
                                     </div>
                                 </a>
-                                <a id="sidebarNavToggler-my_cart" href="../Pages/Shoping-cart.html" role="button"
+                                <a id="sidebarNavToggler-my_cart" href="../pages/Shoping-cart.html" role="button"
                                    aria-controls="offcanvasCart" aria-haspopup="true" aria-expanded="false"
                                    data-unfold-event="click" data-unfold-hide-on-scroll="false"
                                    data-unfold-target="#offcanvasCart"
@@ -95,7 +96,9 @@ export const Header = () => {
                                         <span className="cart-contents-count">
                                             0
                                         </span> </span>
+                                        <Link to={"/cart"}>
                                         <i className="fa-solid fa-cart-shopping font-size-5 text-dark"></i>
+                                        </Link>
                                         <div className="ml-2 d-none d-lg-block text-dark">
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Giỏ hàng </span>
@@ -117,22 +120,22 @@ export const Header = () => {
                             <div className="site-navigation mx-auto">
                                 <nav className="header__menu">
                                     <ul>
-                                        <li><a href="">Trang Chủ</a></li>
+                                        <li><Link to={"/home"}>Trang Chủ</Link></li>
                                         <li><a href="">Danh mục sách</a>
                                             <ul className="header__menu__dropdown">
                                                 <li><a href="">Hài kịch</a>
                                                     <ul className="header__menu__dropdown__level2">
-                                                        <li><a href="">Hài Việt</a></li>
-                                                        <li><a href="">Hài Trung</a></li>
-                                                        <li><a href="">Hài Hàn</a></li>
+                                                        <li><Link to={""}>Hài Việt</Link></li>
+                                                        <li><Link to={""}>Hài Trung</Link></li>
+                                                        <li><Link to={""}>Hài Hàn</Link></li>
                                                     </ul>
                                                 </li>
-                                                <li><a href="">Hành động</a></li>
-                                                <li><a href="">Tình cảm</a></li>
+                                                <li><Link to={""}>Hành động</Link></li>
+                                                <li><Link to={""}>Tình cảm</Link></li>
                                             </ul>
                                         </li>
-                                        <li><a href="">Tin Tức</a></li>
-                                        <li><a href="">Liên Hệ</a></li>
+                                        <li><Link to={"/listblogs"}>Tin Tức</Link></li>
+                                        <li><Link to={"/contact"}>Liên Hệ</Link></li>
                                     </ul>
                                 </nav>
 
@@ -142,5 +145,5 @@ export const Header = () => {
                 </div>
             </div>
         </header>
-    )
+    );
 }

@@ -1,4 +1,3 @@
-import {Information, RelatedBooks, SideBar, SingleProduct} from "../Book-detail/Detail";
 
 export const PageLink = () => {
     return (
@@ -17,7 +16,7 @@ export const PageLink = () => {
 }
 export const ProductsInCart = () => {
     return (
-        <section className="shoping-cart spad" style="margin: 0 90px 0 90px;">
+        <section className="shoping-cart spad" style={{ margin: "0 90px 0 90px" }}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">

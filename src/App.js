@@ -2,12 +2,13 @@ import 'mdbreact/dist/css/mdb.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import './App.css';
-import {Header} from "./Components/Layout/Header";
-import {Footer} from "./Components/Layout/Footer";
+import {Header} from "./components/layout/Header";
+import {Footer} from "./components/layout/Footer";
 import {Outlet} from "react-router-dom";
-import "./assets/Css/style.css";
-import "./assets/Css/animate.css";
-import "./assets/Css/bootstrap-select.min.css";
+import "./assets/css/style.css";
+import "./assets/css/style-cart.css";
+import "./assets/css/animate.css";
+import "./assets/css/bootstrap-select.min.css";
 
 function App() {
   return (
