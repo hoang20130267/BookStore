@@ -71,17 +71,17 @@ export const BlogContent = () => {
                                  data-pagi-classes="text-center u-slick__pagination mt-5 mb-0">
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style="background-image:url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-2.jpg )">
+                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-2.jpg )"}}>
                                     </div>
                                 </div>
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style="background-image:url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-3.jpg )">
+                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-3.jpg )"}}>
                                     </div>
                                 </div>
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style="background-image:url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-1-1.jpg )">
+                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-1-1.jpg )"}}>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@ export const Author = () => {
                                             <li className="share-end"></li>
                                         </ul>
                                         <div className="sharing-hidden">
-                                            <div className="inner" style="display: none;">
+                                            <div className="inner" style={{ display: "none" }}>
                                                 <ul>
                                                     <li className="share-twitter"><a rel="nofollow noopener noreferrer"
                                                                                      data-shared="sharing-twitter-1358"

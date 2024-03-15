@@ -56,7 +56,7 @@ export const SingleProduct = () => {
                                    href="#reviews" rel="nofollow" data-target="#reviews" data-compensation="#header"
                                    data-type="static">
                                     <div className="star-rating" role="img" aria-label="Rated 4.00 out of 5"><span
-                                        style="width:80%">Rated
+                                        style={{ width: "80%" }}>Rated
                                                             <strong
                                                                 className="rating">4.00</strong> out of 5 based on <span
                                             className="rating">1</span> customer rating</span>
@@ -112,12 +112,8 @@ export const SingleProduct = () => {
                                     <div className="woocommerce-variation-add-to-cart variations_button">
                                         <div className="position-relative quantity-wrap js-quantity">
                                             <a className="js-minus text-dark">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     xmlns:xlink="http://www.w3.org/1999/xlink" width="10px"
-                                                     height="1px">
-                                                    <path fill-rule="evenodd" fill="rgb(22, 22, 25)"
-                                                          d="M-0.000,-0.000 L10.000,-0.000 L10.000,1.000 L-0.000,1.000 L-0.000,-0.000 Z">
-                                                    </path>
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="10px" height="1px">
+                                                    <path fillRule="evenodd" fill="rgb(22, 22, 25)" d="M-0.000,-0.000 L10.000,-0.000 L10.000,1.000 L-0.000,1.000 L-0.000,-0.000 Z" />
                                                 </svg>
                                             </a>
                                             <div className="quantity">
@@ -130,12 +126,8 @@ export const SingleProduct = () => {
                                                        step="1" placeholder inputMode="numeric" autoComplete="off"/>
                                             </div>
                                             <a className="js-plus text-dark" href="javascript:;">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     xmlns:xlink="http://www.w3.org/1999/xlink" width="10px"
-                                                     height="10px">
-                                                    <path fill-rule="evenodd" fill="rgb(22, 22, 25)"
-                                                          d="M10.000,5.000 L6.000,5.000 L6.000,10.000 L5.000,10.000 L5.000,5.000 L-0.000,5.000 L-0.000,4.000 L5.000,4.000 L5.000,-0.000 L6.000,-0.000 L6.000,4.000 L10.000,4.000 L10.000,5.000 Z">
-                                                    </path>
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="10px" height="10px">
+                                                    <path fillRule="evenodd" fill="rgb(22, 22, 25)" d="M10.000,5.000 L6.000,5.000 L6.000,10.000 L5.000,10.000 L5.000,5.000 L-0.000,5.000 L-0.000,4.000 L5.000,4.000 L5.000,-0.000 L6.000,-0.000 L6.000,4.000 L10.000,4.000 L10.000,5.000 Z" />
                                                 </svg>
                                             </a>
                                         </div>
@@ -344,7 +336,7 @@ export const Information = () => {
                                         <li className="share-end"></li>
                                     </ul>
                                     <div className="sharing-hidden">
-                                        <div className="inner" style="display: none;">
+                                        <div className="inner" style={{ display: "none" }}>
                                             <ul>
                                                 <li className="share-twitter"><a rel="nofollow noopener noreferrer"
                                                                                  data-shared="sharing-twitter-71"
@@ -416,9 +408,9 @@ export const Information = () => {
                                                 <span className="text-dark">5 stars</span>
                                             </div>
                                             <div className="col px-0">
-                                                <div className="progress bg-white-100" style="height: 7px;">
+                                                <div className="progress bg-white-100" style={{ height: "7px" }}>
                                                     <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                         style="width: 0%;" aria-valuenow="100" aria-valuemin="0"
+                                                         style={{ width: "0%" }} aria-valuenow="100" aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
                                             </div>
@@ -432,9 +424,9 @@ export const Information = () => {
                                                 <span className="text-dark">4 stars</span>
                                             </div>
                                             <div className="col px-0">
-                                                <div className="progress bg-white-100" style="height: 7px;">
+                                                <div className="progress bg-white-100" style={{height: "7px" }}>
                                                     <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                         style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
+                                                         style={{width: "100%" }} aria-valuenow="100" aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
                                             </div>
@@ -448,9 +440,9 @@ export const Information = () => {
                                                 <span className="text-dark">3 stars</span>
                                             </div>
                                             <div className="col px-0">
-                                                <div className="progress bg-white-100" style="height: 7px;">
+                                                <div className="progress bg-white-100" style={{height: "7px" }}>
                                                     <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                         style="width: 0%;" aria-valuenow="100" aria-valuemin="0"
+                                                         style={{width: "100%" }} aria-valuenow="100" aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
                                             </div>
@@ -464,9 +456,9 @@ export const Information = () => {
                                                 <span className="text-dark">2 stars</span>
                                             </div>
                                             <div className="col px-0">
-                                                <div className="progress bg-white-100" style="height: 7px;">
+                                                <div className="progress bg-white-100" style={{height: "7px" }}>
                                                     <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                         style="width: 0%;" aria-valuenow="100" aria-valuemin="0"
+                                                         style={{width: "100%" }} aria-valuenow="100" aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
                                             </div>
@@ -480,9 +472,9 @@ export const Information = () => {
                                                 <span className="text-dark">1 stars</span>
                                             </div>
                                             <div className="col px-0">
-                                                <div className="progress bg-white-100" style="height: 7px;">
+                                                <div className="progress bg-white-100" style={{height: "7px" }}>
                                                     <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                         style="width: 0%;" aria-valuenow="100" aria-valuemin="0"
+                                                         style={{width: "100%" }} aria-valuenow="100" aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
                                             </div>
@@ -508,7 +500,7 @@ export const Information = () => {
                                             <div className="d-md-flex align-items-center mb-3">
                                                 <h6 className="mb-0 mr-3">Nilofer</h6>
                                                 <div className="star-rating" role="img"
-                                                     aria-label="Rated 4 out of 5"><span style="width:80%">Rated <strong
+                                                     aria-label="Rated 4 out of 5"><span style={{width: "80%" }}>Rated <strong
                                                     className="rating">4</strong> out of 5</span>
                                                 </div>
                                             </div>
@@ -531,7 +523,7 @@ export const Information = () => {
                                             Review
                                             <small><a rel="nofollow" id="cancel-comment-reply-link"
                                                       href="/product/the-lost-colony-the-long-winter-trilogy-book-3/#respond"
-                                                      style="display:none;">Cancel reply</a></small></h4>
+                                                      style={{display:"none"}}>Cancel reply</a></small></h4>
                                         <p className="must-log-in">You must be <a
                                             href="https://bookworm.madrasthemes.com/my-account/">logged
                                             in</a> to post a review.</p>
@@ -558,7 +550,7 @@ export const SideBar = () => {
                                        className="d-block">
                                         <img width="150" height="200"
                                              src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/10-150x200.jpg"
-                                             className="img-fluid" alt style="max-width: 60px" loading="lazy"/> </a>
+                                             className="img-fluid" alt style={{ maxWidth: "60px"}} loading="lazy"/> </a>
                                     <div className="media-body ml-3 pl-1">
                                         <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
                                             href="https://bookworm.madrasthemes.com/product/blindside-michael-bennett-book-12/">
@@ -576,7 +568,7 @@ export const SideBar = () => {
                                        className="d-block">
                                         <img width="150" height="200"
                                              src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/9-150x200.jpg"
-                                             className="img-fluid" alt style="max-width: 60px" loading="lazy"/> </a>
+                                             className="img-fluid" alt style={{ maxWidth: "60px"}} loading="lazy"/> </a>
                                     <div className="media-body ml-3 pl-1">
                                         <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
                                             href="https://bookworm.madrasthemes.com/product/until-the-end-of-time-mind-matter-and-our-search-for-meaning-in-an-evolving-universe/">
@@ -595,7 +587,7 @@ export const SideBar = () => {
                                        className="d-block">
                                         <img width="150" height="200"
                                              src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/8-150x200.jpg"
-                                             className="img-fluid" alt style="max-width: 60px" loading="lazy"/> </a>
+                                             className="img-fluid" alt style={{ maxWidth: "60px"}} loading="lazy"/> </a>
                                     <div className="media-body ml-3 pl-1">
                                         <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
                                             href="https://bookworm.madrasthemes.com/product/open-book-a-memoir/">
@@ -856,7 +848,7 @@ export const RelatedBooks = () => {
                                                 <a className="bookworm-wc-star-rating d-flex align-items-center"
                                                    href="#reviews" rel="nofollow" data-scroll>
                                                     <div className="star-rating" role="img"
-                                                         aria-label="Rated 4.50 out of 5"><span style="width:90%">Rated
+                                                         aria-label="Rated 4.50 out of 5"><span style={{ width: "90%"}}>Rated
                                                             <strong
                                                                 className="rating">4.50</strong> out of 5 based on <span
                                                             className="rating">2</span> customer ratings</span>
@@ -1160,7 +1152,7 @@ export const RelatedBooks = () => {
                                                 <a className="bookworm-wc-star-rating d-flex align-items-center"
                                                    href="#reviews" rel="nofollow" data-scroll>
                                                     <div className="star-rating" role="img"
-                                                         aria-label="Rated 4.50 out of 5"><span style="width:90%">Rated
+                                                         aria-label="Rated 4.50 out of 5"><span style={{ width: "90%"}}>Rated
                                                             <strong
                                                                 className="rating">4.50</strong> out of 5 based on <span
                                                             className="rating">2</span> customer ratings</span>
