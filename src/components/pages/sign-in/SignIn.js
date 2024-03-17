@@ -26,8 +26,8 @@ const SignIn = () => {
 
                                         <div className="d-flex mb-5 align-items-center">
 
-                                            <span className="ml-auto"><a href="../Login/forgetpass.html"
-                                                                         className="forgot-pass">Quên mật khẩu</a></span>
+                                            <span className="ml-auto"><Link to={"/forgot-password"}
+                                                                         className="forgot-pass">Quên mật khẩu</Link></span>
                                         </div>
                                         <a href="#" style={{textDecoration: "none"}}>
                                             <div className="button_login"> Đăng nhập</div>
