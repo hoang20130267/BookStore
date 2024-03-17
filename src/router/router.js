@@ -11,6 +11,7 @@ import Detail from "../components/pages/product-detail/Detail";
 import SignIn from "../components/pages/sign-in/SignIn";
 import SignUp from "../components/pages/sign-up/SignUp";
 import NotFound from "../components/pages/others/NotFound";
+import ForgotPassword from "../components/pages/forgot-pasword/ForgotPassword";
 
 export const webRouter = createBrowserRouter([{
     path: '/',
@@ -49,8 +50,11 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "checkout",
             element: <Checkout/>,
-        },{
+        }, {
             path: "not-found",
             element: <NotFound/>,
+        }, {
+            path: "forgot-password",
+            element: <ForgotPassword/>,
         }]
 }]);
