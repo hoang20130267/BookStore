@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 const ProductList = () => {
     return (
@@ -83,12 +84,12 @@ const ProductList = () => {
                                                 <div className="product__inner overflow-hidden p-3 p-md-4d875">
                                                     <div className="position-relative d-block">
                                                         <div className="woocommerce-loop-product__header">
-                                                            <a href="https://bookworm.madrasthemes.com/product/buttermilk-graffiti-a-chefs-journey-to-discover-americas-new-melting-pot-cuisine/"
+                                                            <Link to={"/product-detail"}
                                                                className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
                                                                 width="150" height="200"
                                                                 src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/50-150x200.jpg"
                                                                 className="img-fluid d-block mx-auto attachment-shop_catalog size-shop_catalog wp-post-image img-fluid"
-                                                                alt decoding="async"/></a>
+                                                                alt decoding="async"/></Link>
                                                         </div>
                                                         <div
                                                             className="woocommerce-loop-product__body product__body pt-3 bg-white">

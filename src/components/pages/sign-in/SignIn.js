@@ -7,7 +7,7 @@ const SignIn = () => {
         <div className="content">
             <div className="container">
                 <div className="row justify-content-center">
-                    <div className="col-md-6 contents">
+                    <div className="col-md-5 contents">
                         <div className="row justify-content-center">
                             <div className="col-md-12">
                                 <div className="form-block">
@@ -38,9 +38,9 @@ const SignIn = () => {
                                             <Link to={"/not-found"} className="facebook">
                                                 <span><i className="fa-brands fa-facebook-f"></i></span>
                                             </Link>
-                                            <a href="#" className="twitter">
+                                            <Link to={"/my-account"} className="twitter">
                                                 <span><i className="fa-brands fa-twitter"></i></span>
-                                            </a>
+                                            </Link>
                                             <a href="#" className="google">
                                                 <span> <i className="fa-brands fa-google"></i></span>
                                             </a>
