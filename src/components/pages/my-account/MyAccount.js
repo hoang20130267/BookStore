@@ -26,6 +26,16 @@ const MyAccount = () => {
                         </a>
                     </div>
                 </div>
+                <div className="left-side">
+                    <div className="stardust-dropdown">
+                        <Link className="sidebar-item" to={"/my-orders"}>
+                            <div className="sidebar-item-icon"><img
+                                src="https://down-vn.img.susercontent.com/file/ba61750a46794d8847c3f463c5e71cc4"/></div>
+                            <div style={{lineHeight: "1rem"}}><span className="item-name" style={{fontWeight: 500}}>Đơn hàng của tôi</span>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
             </div>
             <form method="post" encType="multipart/form-data" className="infor_user">
                 <div className="row">
