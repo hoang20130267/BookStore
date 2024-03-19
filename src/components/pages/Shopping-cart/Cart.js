@@ -128,8 +128,8 @@ export const ProductsInCart = () => {
                         <div className="shoping__checkout">
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
-                                <li>Tạm tính <span>85.000.000 Đồng</span></li>
-                                <li>Tổng tiền <span>85.000.000 Đồng</span></li>
+                                <li>Tạm tính <span>85.000 Đồng</span></li>
+                                <li>Tổng tiền <span>85.000 Đồng</span></li>
                             </ul>
                             <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>
