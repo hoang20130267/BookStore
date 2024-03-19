@@ -223,7 +223,6 @@ select.pdw {
 .left-side{
     cursor: pointer;
     list-style: none;
-    margin: 27px 0 0;
     padding: 0;
 }
 .stardust-dropdown {
@@ -242,7 +241,6 @@ select.pdw {
 .sidebar-item-icon{
     align-items: center;
     border-radius: 50%;
-    color: #fff;
     display: flex;
     flex-shrink: 0;
     height: 1.25rem;

@@ -4,13 +4,14 @@ import {Link} from "react-router-dom";
 
 const MyAccount = () => {
     return (
-        <div className="container d-flex">
+        <div className="container d-flex" style={{marginBottom: "40px"}}>
             <div className="col-md-3 d-block">
                 <div className="left-side">
                     <div className="stardust-dropdown">
                         <Link className="sidebar-item" to={"/my-account"}>
-                            <div className="sidebar-item-icon"><img
-                                src="https://down-vn.img.susercontent.com/file/ba61750a46794d8847c3f463c5e71cc4"/></div>
+                            <div className="sidebar-item-icon">
+                                <i className="fa-solid fa-user"></i>
+                            </div>
                             <div style={{lineHeight: "1rem"}}><span className="item-name" style={{fontWeight: 500}}>Tài khoản của tôi</span>
                             </div>
                         </Link>
@@ -18,19 +19,21 @@ const MyAccount = () => {
                 </div>
                 <div className="left-side">
                     <div className="stardust-dropdown">
-                        <a className="sidebar-item" href="">
-                            <div className="sidebar-item-icon"><img
-                                src="https://down-vn.img.susercontent.com/file/ba61750a46794d8847c3f463c5e71cc4"/></div>
+                        <Link className="sidebar-item" to={"/address-list"}>
+                            <div className="sidebar-item-icon">
+                                <i className="fa-solid fa-location-dot"/>
+                            </div>
                             <div style={{lineHeight: "1rem"}}><span className="item-name" style={{fontWeight: 500}}>Địa chỉ</span>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 </div>
                 <div className="left-side">
                     <div className="stardust-dropdown">
                         <Link className="sidebar-item" to={"/my-orders"}>
-                            <div className="sidebar-item-icon"><img
-                                src="https://down-vn.img.susercontent.com/file/ba61750a46794d8847c3f463c5e71cc4"/></div>
+                            <div className="sidebar-item-icon">
+                                <i className="fa-solid fa-clipboard"></i>
+                            </div>
                             <div style={{lineHeight: "1rem"}}><span className="item-name" style={{fontWeight: 500}}>Đơn hàng của tôi</span>
                             </div>
                         </Link>
@@ -40,7 +43,7 @@ const MyAccount = () => {
             <form method="post" encType="multipart/form-data" className="infor_user">
                 <div className="row">
                     <div className="col-md-8 border-right border-left">
-                        <div className="p-3 py-5">
+                        <div className="">
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <h4 className="text-right">Thông tin tài khoản</h4>
 
@@ -112,7 +115,7 @@ const MyAccount = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                        <div className="d-flex flex-column align-items-center text-center">
                             <div className="image-container">
                                 <div id="container">
                                     <div className="avatar-wrapper">
@@ -133,34 +136,6 @@ const MyAccount = () => {
                             <span className="text-black-50"></span><span> </span>
                         </div>
                     </div>
-                    {/*<div className="col-md-4">*/}
-                    {/*    <div className="p-3 py-5">*/}
-                    {/*        <div className="d-flex justify-content-between align-items-center experience"><span>Đổi mật khẩu</span>*/}
-                    {/*        </div>*/}
-                    {/*        <br/>*/}
-                    {/*        <div className="col-md-12"><label className="labels">Mật khẩu hiện tại</label><input*/}
-                    {/*            type="password" id="newpass" className="form-control" name="oldpass"*/}
-                    {/*            placeholder="Nhập mật khẩu hiện tại"/>*/}
-                    {/*        </div>*/}
-                    {/*        <br/>*/}
-                    {/*        <div className="col-md-12"><label className="labels">Mật khẩu mới</label><input*/}
-                    {/*            type="password" id="newpass" className="form-control" name="newpass"*/}
-                    {/*            placeholder="Nhập mật khẩu mới"/>*/}
-                    {/*        </div>*/}
-                    {/*        <br/>*/}
-                    {/*        <div className="col-md-12"><label className="labels">Nhập lại mật khẩu mới</label><input*/}
-                    {/*            type="password" id="newpassconfirm" className="form-control"*/}
-                    {/*            name="newpassconfirm" placeholder="Nhập lại mật khẩu mới"/>*/}
-                    {/*        </div>*/}
-
-                    {/*        <p style={{color: "red", textAlign: "center", textTransform: "none", paddingTop: "5px"}}>*/}
-                    {/*        </p>*/}
-                    {/*        <div className="mt-5 text-center">*/}
-                    {/*            <button className="btn btn-primary profile-button" type="submit">Lưu thông tin*/}
-                    {/*            </button>*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                 </div>
             </form>
         </div>
