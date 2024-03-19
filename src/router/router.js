@@ -13,6 +13,8 @@ import SignUp from "../components/pages/sign-up/SignUp";
 import NotFound from "../components/pages/others/NotFound";
 import ForgotPassword from "../components/pages/forgot-pasword/ForgotPassword";
 import MyAccount from "../components/pages/my-account/MyAccount";
+import MyOrders from "../components/pages/my-orders/MyOrders";
+import OrderDetail from "../components/pages/order-detail/OrderDetail";
 
 export const webRouter = createBrowserRouter([{
     path: '/',
@@ -60,5 +62,11 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "my-account",
             element: <MyAccount/>,
+        }, {
+            path: "my-orders",
+            element: <MyOrders/>,
+        }, {
+            path: "order-detail",
+            element: <OrderDetail/>,
         }]
 }]);
