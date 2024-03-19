@@ -17,6 +17,7 @@ import MyOrders from "../components/pages/my-orders/MyOrders";
 import OrderDetail from "../components/pages/order-detail/OrderDetail";
 import Wishlist from "../components/pages/wishlist/Wishlist";
 import AddressList from "../components/pages/user-address/AddressList";
+import AddNewAddress from "../components/pages/user-address/AddNewAddress";
 
 export const webRouter = createBrowserRouter([{
         path: '/',
@@ -67,8 +68,10 @@ export const webRouter = createBrowserRouter([{
             }, {
                 path: "address-list",
                 element: <AddressList/>,
-            },
-            {
+            }, {
+                path: "new-address",
+                element: <AddNewAddress/>,
+            }, {
                 path: "my-orders",
                 element: <MyOrders/>,
             }, {
