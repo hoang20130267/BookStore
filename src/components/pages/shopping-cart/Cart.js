@@ -35,67 +35,24 @@ export const ProductsInCart = () => {
                                 <tbody>
                                 <tr>
                                     <td className="shoping__cart__item">
-                                        <img src="img/cart/cart-1.jpg" alt=""/>
-                                            <h5>Alaska Giant xám trắng</h5>
+                                        <img src="" alt=""
+                                             style={{width: "85px", height: "85px", objectFit: "cover"}}/>
+                                            <h5>Đắc nhân tâm</h5>
                                     </td>
-                                    <td className="shoping__cart__price">
-                                        25.000.000đ
+                                    <td className="shoping__cart__price" style={{paddingTop:"60px"}}>
+                                        150.000đ
                                     </td>
-                                    <td className="shoping__cart__quantity">
+                                    <td className="shoping__cart__quantity" style={{paddingTop:"50px"}}>
                                         <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="shoping__cart__total">
-                                        25.000.000đ
+                                    <td className="shoping__cart__total" style={{paddingTop:"60px"}}>
+                                        150.000đ
                                     </td>
-                                    <td className="shoping__cart__item__close">
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="shoping__cart__item">
-                                        <img src="img/cart/cart-2.jpg" alt=""/>
-                                            <h5>Cún golden siêu phẩm</h5>
-                                    </td>
-                                    <td className="shoping__cart__price">
-                                        30.000.000đ
-                                    </td>
-                                    <td className="shoping__cart__quantity">
-                                        <div className="">
-                                            <div className="pro-qty">
-                                                <input type="text" value="1"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="shoping__cart__total">
-                                        30.000.000đ
-                                    </td>
-                                    <td className="shoping__cart__item__close">
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="shoping__cart__item">
-                                        <img src="img/cart/cart-3.jpg" alt=""/>
-                                            <h5>Mèo chân ngắn tai cụp</h5>
-                                    </td>
-                                    <td className="shoping__cart__price">
-                                        30.000.000đ
-                                    </td>
-                                    <td className="shoping__cart__quantity">
-                                        <div className="">
-                                            <div className="pro-qty">
-                                                <input type="text" value="1"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="shoping__cart__total">
-                                        30.000.000đ
-                                    </td>
-                                    <td className="shoping__cart__item__close">
+                                    <td className="shoping__cart__item__close" style={{paddingTop:"60px"}}>
                                         <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
@@ -128,8 +85,8 @@ export const ProductsInCart = () => {
                         <div className="shoping__checkout">
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
-                                <li>Tạm tính <span>85.000 Đồng</span></li>
-                                <li>Tổng tiền <span>85.000 Đồng</span></li>
+                                <li>Tạm tính <span>150.000 Đồng</span></li>
+                                <li>Tổng tiền <span>150.000 Đồng</span></li>
                             </ul>
                             <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>

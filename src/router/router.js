@@ -15,6 +15,7 @@ import ForgotPassword from "../components/pages/forgot-pasword/ForgotPassword";
 import MyAccount from "../components/pages/my-account/MyAccount";
 import MyOrders from "../components/pages/my-orders/MyOrders";
 import OrderDetail from "../components/pages/order-detail/OrderDetail";
+import Wishlist from "../components/pages/wishlist/Wishlist";
 
 export const webRouter = createBrowserRouter([{
     path: '/',
@@ -68,5 +69,8 @@ export const webRouter = createBrowserRouter([{
         }, {
             path: "order-detail",
             element: <OrderDetail/>,
+        }, {
+            path: "wishlist",
+            element: <Wishlist/>,
         }]
 }]);
