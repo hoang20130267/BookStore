@@ -59,7 +59,7 @@ export const Header = () => {
                                     <a href="" rel="home">GoldLeaf</a></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
-                                <a id="sidebarNavToggler-my_account" href="../pages/Login.html" role="button"
+                                <Link id="sidebarNavToggler-my_account" to={"sign-in"} role="button"
                                    aria-controls="registerLoginForm" aria-haspopup="true" aria-expanded="false"
                                    data-unfold-event="click" data-unfold-hide-on-scroll="false"
                                    data-unfold-target="#registerLoginForm"
@@ -78,7 +78,7 @@ export const Header = () => {
                                             <div>Tài khoản</div>
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                                 <a id="sidebarNavToggler-my_cart" href="../pages/Shoping-cart.html" role="button"
                                    aria-controls="offcanvasCart" aria-haspopup="true" aria-expanded="false"
                                    data-unfold-event="click" data-unfold-hide-on-scroll="false"
@@ -121,7 +121,7 @@ export const Header = () => {
                                 <nav className="header__menu">
                                     <ul>
                                         <li><Link to={"/home"}>Trang Chủ</Link></li>
-                                        <li><a href="">Danh mục sách</a>
+                                        <li><Link to={"/product-list"}>Danh mục sản phẩm</Link>
                                             <ul className="header__menu__dropdown">
                                                 <li><a href="">Hài kịch</a>
                                                     <ul className="header__menu__dropdown__level2">
@@ -134,7 +134,7 @@ export const Header = () => {
                                                 <li><Link to={""}>Tình cảm</Link></li>
                                             </ul>
                                         </li>
-                                        <li><Link to={"/listblogs"}>Tin Tức</Link></li>
+                                        <li><Link to={"/blog-list"}>Tin Tức</Link></li>
                                         <li><Link to={"/contact"}>Liên Hệ</Link></li>
                                     </ul>
                                 </nav>
