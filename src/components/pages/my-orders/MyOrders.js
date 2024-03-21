@@ -1,24 +1,11 @@
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                    >Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span><a className="h-primary"
-                    >My Account</a><span
-                        className="breadcrumb-separator mx-2"><i className="fas fa-angle-right"></i></span>My Orders
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
+import {useLocation} from "react-router-dom";
+import Breadcrumb from "../../general/Breadcrumb";
+
 export const MyOrders = () => {
+    const location = useLocation();
     return (
         <div>
-            <PageLink/>
+            <Breadcrumb location={location}/>
             <div className="container rounded bg-white mt-5 mb-5" style={{margin: "50px 100px 50px"}}>
                 <form method="post" encType="multipart/form-data" className="infor_user">
                     <div className="row">
@@ -72,7 +59,7 @@ export const MyOrders = () => {
 
                                     </td>
                                     <td className="email align-middle white-space-nowrap pe-5"><a
-                                        className="fw-semi-bold text-1100" style={{color:"red"}}>Xem</a></td>
+                                        className="fw-semi-bold text-1100" style={{color: "red"}}>Xem</a></td>
                                 </tr>
                                 </tbody>
                             </table>

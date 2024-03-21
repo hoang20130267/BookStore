@@ -63,22 +63,22 @@ export const webRouter = createBrowserRouter([{
                 path: "forgot-password",
                 element: <ForgotPassword/>,
             }, {
-                path: "my-account",
+                path: "user/account",
                 element: <MyAccount/>,
             }, {
-                path: "address-list",
+                path: "user/address",
                 element: <AddressList/>,
             }, {
-                path: "new-address",
+                path: "user/address/new",
                 element: <AddNewAddress/>,
             }, {
-                path: "my-orders",
+                path: "user/order",
                 element: <MyOrders/>,
             }, {
                 path: "order-detail",
                 element: <OrderDetail/>,
             }, {
-                path: "wishlist",
+                path: "user/wishlist",
                 element: <Wishlist/>,
             }]
     }])

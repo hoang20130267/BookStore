@@ -1,9 +1,13 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import "../../../assets/css/style-addresslist.css"
+import Breadcrumb from "../../general/Breadcrumb";
 
 const AddressList = () => {
+    const location = useLocation();
     return (
+        <>
+            <Breadcrumb location={location}/>
         <div className="container d-flex" style={{marginBottom: "40px"}}>
             <div className="col-md-3 d-block">
                 <div className="left-side">
@@ -50,7 +54,7 @@ const AddressList = () => {
                             <div>
                                 <div className="">
                                     <div style={{display: "flex"}}>
-                                        <Link to={"/new-address"}>
+                                        <Link to={"/user/address/new"}>
                                             <button className="button-solid button-solid--primary">
                                                 <div className="d-flex justify-content-center align-items-center">
                                                     <div className="d-flex align-items-center"
@@ -162,6 +166,7 @@ const AddressList = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 export default AddressList;
