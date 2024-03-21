@@ -1,8 +1,12 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
+import Breadcrumb from "../../general/Breadcrumb";
 
 const AddNewAddress = () => {
+    const location = useLocation();
     return (
+        <>
+            <Breadcrumb location={location}/>
         <div className="container d-flex" style={{marginBottom: "40px"}}>
             <div className="col-md-3 d-block">
                 <div className="left-side">
@@ -113,6 +117,7 @@ const AddNewAddress = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 }
 export default AddNewAddress;

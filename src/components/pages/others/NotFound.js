@@ -1,4 +1,5 @@
 import React from "react";
+import {useLocation} from "react-router-dom";
 
 const NotFound = () => {
     return (
@@ -6,9 +7,11 @@ const NotFound = () => {
             <div className="page-header border-bottom">
                 <div className="container">
                     <div className="d-md-flex justify-content-between align-items-center py-4">
-                        <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                               href="https://bookworm.madrasthemes.com">Home</a><span
-                            className="breadcrumb-separator mx-2"><i className="fas fa-angle-right"></i></span>Error 404
+                        <nav className="woocommerce-breadcrumb font-size-2">
+                            <a className="h-primary" href="https://bookworm.madrasthemes.com">Home</a>
+                            <span className="breadcrumb-separator mx-2">
+                                <i className="fas fa-angle-right"></i>
+                            </span>Error 404
                         </nav>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 export const Header = () => {
     return (
-        <header id="site-header" className="site-header site-header__v12 mb-7 pb-1">
+        <header id="site-header" className="site-header site-header__v12 pb-1">
             <div className="masthead">
                 <div className="bg-punch-light">
                     <div className="container py-3 py-md-4">

@@ -235,7 +235,6 @@ select.pdw {
     margin-bottom: 0.9375rem;
     -webkit-text-decoration: none;
     text-decoration: none;
-    text-transform: capitalize;
     transition: color .1s cubic-bezier(.4,0,.2,1);
 }
 .sidebar-item-icon{
