@@ -17,7 +17,7 @@ const ForgotPassword = () => {
                                         <div className="mb-4">
                                             <h3>Quên mật khẩu</h3>
                                         </div>
-                                        <form action="#" method="post">
+                                        <form>
                                             <div className="form-group first">
                                                 <p>Email hoặc số điện thoại</p>
                                                 <input type="text" className="form-control" id="username"/>

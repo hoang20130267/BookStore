@@ -18,14 +18,16 @@ const SignIn = () => {
                                         <div className="mb-4">
                                             <h3>Đăng nhập</h3>
                                         </div>
-                                        <form action="#" method="post">
+                                        <form>
                                             <div className="form-group first">
                                                 <p> Tên đăng nhập</p>
-                                                <input type="text" className="form-control" id="username"/>
+                                                <input type="text" className="form-control" id="username"
+                                                       name="username" required/>
                                             </div>
                                             <div className="form-group last mb-4">
                                                 <p>Mật khẩu</p>
-                                                <input type="password" className="form-control" id="password"/>
+                                                <input type="password" className="form-control" id="password"
+                                                       name="password" required/>
                                             </div>
 
                                             <div className="d-flex mb-5 align-items-center">
@@ -57,9 +59,7 @@ const SignIn = () => {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>

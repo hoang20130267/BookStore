@@ -23,7 +23,7 @@ const Breadcrumb = ({location}) => {
     let currentLink = '';
     const pathNames = location.pathname.split('/').filter(path => path != '');
     return (
-        <div className="page-header border-bottom mb-3">
+        <div className="page-header border-bottom">
             <div className="container">
                 <div className="d-md-flex justify-content-between align-items-center py-4">
                     <nav className="woocommerce-breadcrumb font-size-2">
