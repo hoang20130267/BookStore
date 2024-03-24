@@ -7,7 +7,7 @@ export const MyOrders = () => {
     return (
         <div>
             <Breadcrumb location={location}/>
-            <div className="container d-flex mb-5 mt-5">
+            <div className="container d-flex mb-5 mt-5 px-0">
                 <LeftSideBar/>
                 {/*<form method="post" encType="multipart/form-data" className="infor_user">*/}
                 <div className="col-md-9">

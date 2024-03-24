@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import Breadcrumb from "../../general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 
-const AddNewAddress = () => {
+const UpdateAddress = () => {
     const location = useLocation();
     return (
         <>
@@ -12,7 +12,7 @@ const AddNewAddress = () => {
                 <LeftSideBar/>
                 <div className="col-md-9">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h4 className="text-right">Thêm địa chỉ mới</h4>
+                        <h4 className="text-right">Chỉnh sửa địa chỉ</h4>
                         <p style={{
                             color: "#11ff02",
                             textAlign: "center",
@@ -77,7 +77,7 @@ const AddNewAddress = () => {
                                     }}>
                                     </p>
                                     <div className="mt-3 text-center">
-                                        <button className="btn btn-primary profile-button" type="submit">Thêm địa chỉ
+                                        <button className="btn btn-primary profile-button" type="submit">Cập nhật
                                         </button>
                                     </div>
                                 </div>
@@ -89,4 +89,4 @@ const AddNewAddress = () => {
         </>
     );
 }
-export default AddNewAddress;
+export default UpdateAddress;
