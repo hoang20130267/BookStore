@@ -10,6 +10,7 @@ const Breadcrumb = ({location}) => {
         '/user/account': 'Thông tin tài khoản',
         '/user/address': 'Sổ địa chỉ',
         '/user/address/new': 'Thêm địa chỉ',
+        '/user/address/update': 'Chỉnh sửa địa chỉ',
         '/user/order': 'Đơn hàng của tôi',
         '/user/wishlist': 'Sản phẩm yêu thích',
         '/blog-list': 'Tin tức',
