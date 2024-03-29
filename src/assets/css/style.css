@@ -22917,7 +22917,6 @@ footer .bootstrap-select .dropup .dropdown-menu {
     list-style: none;
     padding-left: 0;
     margin-bottom: 0;
-    font-size: 14px
 }
 
 .widget-content > ul a, footer .widget > ul a, .blog-sidebar .widget > ul a, .widget-area .widget > ul a {
@@ -26833,11 +26832,11 @@ ul.products li.product .bookworm-product-list {
     transform: none
 }
 
-ul.products li.product span.price {
-    font-size: 1.125rem;
-    font-weight: 500 !important;
-    display: block !important
-}
+/*ul.products li.product span.price {*/
+/*    font-size: 1.125rem;*/
+/*    font-weight: 500 !important;*/
+/*    display: block !important*/
+/*}*/
 
 @media (max-width: 767.98px) {
     ul.products li.product .onsale.badge-pos--top-right {
