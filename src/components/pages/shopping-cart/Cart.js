@@ -1,23 +1,10 @@
 import "./../../../assets/css/style-cart.css"
-import {Link} from "react-router-dom";
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                           href="https://bookworm.madrasthemes.com">Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span>Cart
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
+import {Link, useLocation} from "react-router-dom";
+import Breadcrumb from "../../general/Breadcrumb";
+
 export const ProductsInCart = () => {
     return (
-        <section className="shoping-cart spad" style={{ margin: "0 90px 0 90px" }}>
+        <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -37,22 +24,22 @@ export const ProductsInCart = () => {
                                     <td className="shoping__cart__item">
                                         <img src="" alt=""
                                              style={{width: "85px", height: "85px", objectFit: "cover"}}/>
-                                            <h5>Đắc nhân tâm</h5>
+                                        <h5>Đắc nhân tâm</h5>
                                     </td>
-                                    <td className="shoping__cart__price" style={{paddingTop:"60px"}}>
+                                    <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
                                         150.000đ
                                     </td>
-                                    <td className="shoping__cart__quantity" style={{paddingTop:"50px"}}>
+                                    <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
                                         <div className="">
                                             <div className="pro-qty">
                                                 <input type="text" value="1"/>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="shoping__cart__total" style={{paddingTop:"60px"}}>
+                                    <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
                                         150.000đ
                                     </td>
-                                    <td className="shoping__cart__item__close" style={{paddingTop:"60px"}}>
+                                    <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
                                         <i className="fa-solid fa-xmark"></i>
                                     </td>
                                 </tr>
@@ -76,7 +63,7 @@ export const ProductsInCart = () => {
                                 <h5>Mã giảm giá</h5>
                                 <form action="#">
                                     <input type="text" placeholder="Nhập mã giảm giá"/>
-                                        <button type="submit" className="site-btn">APPLY</button>
+                                    <button type="submit" className="site-btn">APPLY</button>
                                 </form>
                             </div>
                         </div>
@@ -97,10 +84,11 @@ export const ProductsInCart = () => {
     )
 }
 export const Cart = () => {
+    const location = useLocation()
     return (
         <div>
-        <PageLink/>
-        <ProductsInCart/>
+            <Breadcrumb location={location}/>
+            <ProductsInCart/>
         </div>
     )
 }

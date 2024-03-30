@@ -1,18 +1,6 @@
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                           href="https://bookworm.madrasthemes.com">Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span>Cart
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
+import Breadcrumb from "../../general/Breadcrumb";
+import {useLocation} from "react-router-dom";
+import "../../../assets/css/style-checkout.css"
 export const Coupon = () => {
     return (
         <div className="row">
@@ -48,7 +36,7 @@ export const InputInfor = () => {
             <div className="checkout__input">
                 <p>Địa chỉ<span>*</span></p>
                 <input type="text" placeholder="Street Address" className="checkout__input__add"/>
-                    <input type="text" placeholder="Apartment, suite, unite ect (optinal)"/>
+                <input type="text" placeholder="Apartment, suite, unite ect (optinal)"/>
             </div>
             <div className="checkout__input">
                 <p>Quận/Huyện<span>*</span></p>
@@ -80,7 +68,7 @@ export const InputInfor = () => {
                 <label htmlFor="diff-acc">
                     Giao đến địa chỉ khác?
                     <input type="checkbox" id="diff-acc"/>
-                        <span className="checkmark"></span>
+                    <span className="checkmark"></span>
                 </label>
             </div>
             <div className="checkout__input">
@@ -107,7 +95,7 @@ export const Bill = () => {
                     <label htmlFor="acc-or">
                         <p>Xác nhận thông tin<span>*</span></p>
                         <input type="checkbox" id="acc-or"/>
-                            <span className="checkmark"></span>
+                        <span className="checkmark"></span>
                     </label>
                 </div>
                 <p>Tôi xác nhận thông tin đơn hàng và những thông tin tôi đã nhập là chính xác.</p>
@@ -115,14 +103,14 @@ export const Bill = () => {
                     <label htmlFor="payment">
                         Thanh toán khi nhận hàng
                         <input type="checkbox" id="payment"/>
-                            <span className="checkmark"></span>
+                        <span className="checkmark"></span>
                     </label>
                 </div>
                 <div className="checkout__input__checkbox">
                     <label htmlFor="paypal">
                         Thanh toán qua thẻ
                         <input type="checkbox" id="paypal"/>
-                            <span className="checkmark"></span>
+                        <span className="checkmark"></span>
                     </label>
                 </div>
                 <button type="submit" className="site-btn">Mua hàng</button>
@@ -131,23 +119,24 @@ export const Bill = () => {
     )
 }
 export const Checkout = () => {
+    const location = useLocation();
     return (
         <div>
-            <PageLink/>
-        <section className="checkout spad">
-            <div className="container">
-                <Coupon/>
-                <div className="checkout__form">
-                    <h4>Thông tin thanh toán</h4>
-                    <form action="#">
-                        <div className="row">
-                            <InputInfor/>
-                            <Bill/>
-                        </div>
-                    </form>
+            <Breadcrumb location={location}/>
+            <section className="checkout spad">
+                <div className="container">
+                    <Coupon/>
+                    <div className="checkout__form">
+                        <h4>Thông tin thanh toán</h4>
+                        <form action="#">
+                            <div className="row">
+                                <InputInfor/>
+                                <Bill/>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
         </div>
     )
 }

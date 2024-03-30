@@ -34,14 +34,14 @@ const Product = () => {
                                 </span>
                             </div>
                             <div className="rate d-flex align-items-center">
-                                <div className="star-container">
+                                <div className="star-container d-inline-block">
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
                                     <span><i className="fa-solid fa-star"></i></span>
                                     <span><i className="fa-solid fa-star"></i></span>
                                 </div>
-                                <span className="ml-2">(2)</span>
+                                <span className="ml-1 pt-1" style={{color: "#CDCFD0"}}>(2)</span>
                             </div>
                         </div>
                         <div
