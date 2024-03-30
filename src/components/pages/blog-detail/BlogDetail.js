@@ -1,22 +1,6 @@
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                           href="https://bookworm.madrasthemes.com">Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span><a className="h-primary"
-                                                                     href="https://bookworm.madrasthemes.com/category/childrens-books/">Children&#039;s
-                        Books</a><span className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span>&#8216;American Dirt&#8217; Invites Readers into the
-                        Journey of Mexican Migrants
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
+import {useLocation} from "react-router-dom";
+import Breadcrumb from "../../general/Breadcrumb";
+
 export const BlogContent = () => {
     return (
         <div className="article-post max-width-940 mx-auto bg-white position-relative">
@@ -71,17 +55,17 @@ export const BlogContent = () => {
                                  data-pagi-classes="text-center u-slick__pagination mt-5 mb-0">
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-2.jpg )"}}>
+                                         style={{backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-2.jpg )"}}>
                                     </div>
                                 </div>
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-3.jpg )"}}>
+                                         style={{backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-3.jpg )"}}>
                                     </div>
                                 </div>
                                 <div className="js-slide slick-slide position-relative">
                                     <div className="bg-img-hero min-height-350"
-                                         style={{ backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-1-1.jpg )"}}>
+                                         style={{backgroundImage: "url( https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/gallery-1-1.jpg )"}}>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +96,7 @@ export const Author = () => {
                             href="https://bookworm.madrasthemes.com/tag/kids/" rel="tag">Kids</a> <a
                             href="https://bookworm.madrasthemes.com/tag/romance/" rel="tag">Romance</a></div>
                     </div>
-                    <hr className="mb-7 mt-0">
+                    <div className="mb-7 mt-0">
                         <div className="mb-7">
                             <div className="sharedaddy sd-sharing-enabled">
                                 <div className="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><span
@@ -126,7 +110,7 @@ export const Author = () => {
                                             <li className="share-end"></li>
                                         </ul>
                                         <div className="sharing-hidden">
-                                            <div className="inner" style={{ display: "none" }}>
+                                            <div className="inner" style={{display: "none"}}>
                                                 <ul>
                                                     <li className="share-twitter"><a rel="nofollow noopener noreferrer"
                                                                                      data-shared="sharing-twitter-1358"
@@ -189,17 +173,18 @@ export const Author = () => {
                                 </div>
                             </div>
                         </div>
-                    </hr>
+                    </div>
                 </div>
             </div>
         </div>
     )
 }
 export const BlogDetail = () => {
+    const location = useLocation();
     return (
         <div>
-            <PageLink/>
-            <div className="bookworm-single-post mb-5 mb-lg-6 pb-xl-1">
+            <Breadcrumb location={location}/>
+            <div className="bookworm-single-post my-5 mb-lg-6 pb-xl-1">
                 <div className="container">
                     <div className="container__inner">
                         <article id="post-1358"
@@ -219,4 +204,4 @@ export const BlogDetail = () => {
         </div>
     )
 }
-export default BlogContent;
+export default BlogDetail;

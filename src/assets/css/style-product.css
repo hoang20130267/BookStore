@@ -93,3 +93,7 @@
     background-color: #f75454;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 512 512'%3E%3Cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='50.0' d='M416 128L192 384l-96-96'/%3E%3C/svg%3E")
 }
+
+.page-item.active .page-link:hover {
+    background-color: #161619 !important;
+}
