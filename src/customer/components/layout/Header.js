@@ -1,8 +1,10 @@
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
 import {useState} from "react";
 
 export const Header = () => {
+    const user = useSelector(state => state.auth.login.currentUser);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMouseEnter = () => {
@@ -48,6 +50,35 @@ export const Header = () => {
                                     <Link to="/">GoldLeaf</Link></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
+                                {user?(
+                                    <>
+                                        <Link id="sidebarNavToggler-my_account">
+                                            <div
+                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                <div className="ml-2 d-none d-lg-block text-dark">
+                                        <span className="text-secondary-gray-1090 font-size-1">
+                                            Xin chào </span>
+                                                    <div>{user.username}</div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </>
+                                ):(
+                                    <>
+                                        <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                            <div
+                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                <div className="ml-2 d-none d-lg-block text-dark">
+                                        <span className="text-secondary-gray-1090 font-size-1">
+                                            Đăng nhập </span>
+                                                    <div>Tài khoản</div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </>
+                                )}
                                 <div className="position-relative mt-4 pb-4"
                                      onMouseEnter={handleMouseEnter}
                                      onMouseLeave={handleMouseLeave}>
