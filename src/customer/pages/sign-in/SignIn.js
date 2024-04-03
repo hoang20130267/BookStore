@@ -41,13 +41,13 @@ const SignIn = () => {
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
                                             <div className="social-login text-center">
-                                                <Link to={"/not-found"} className="facebook">
+                                                <Link to="/not-found" className="facebook">
                                                     <span><i className="fa-brands fa-facebook-f"></i></span>
                                                 </Link>
-                                                <Link to={"/user/account"} className="twitter">
+                                                <Link to="#" className="twitter">
                                                     <span><i className="fa-brands fa-twitter"></i></span>
                                                 </Link>
-                                                <Link to={"/user/wishlist"} className="google">
+                                                <Link to="/user/wishlist" className="google">
                                                     <span> <i className="fa-brands fa-google"></i></span>
                                                 </Link>
 

@@ -272,13 +272,11 @@ sup {
 
 a {
     color: #f75454;
-    text-decoration: none;
     background-color: transparent
 }
 
 a:hover {
     color: #f30b0b;
-    text-decoration: none
 }
 
 a:not([href]) {
