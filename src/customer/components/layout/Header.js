@@ -52,49 +52,42 @@ export const Header = () => {
                             <div className="d-flex align-items-center ml-auto header-icons-links">
                                 {user?(
                                     <>
-                                        <Link id="sidebarNavToggler-my_account">
-                                            <div
-                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
-                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
-                                                <div className="ml-2 d-none d-lg-block text-dark">
+                                        <div className="position-relative mt-4 pb-4"
+                                             onMouseEnter={handleMouseEnter}
+                                             onMouseLeave={handleMouseLeave}>
+                                            <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                                <div
+                                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                    <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                    <div className="ml-2 d-none d-lg-block text-dark">
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Xin chào </span>
-                                                    <div>{user.username}</div>
+                                                        <div>{user.username}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
+                                            </Link>
+                                            {isMenuOpen && (<UserMenu/>)}
+                                        </div>
                                     </>
                                 ):(
                                     <>
-                                        <Link id="sidebarNavToggler-my_account" to="sign-in">
-                                            <div
-                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
-                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
-                                                <div className="ml-2 d-none d-lg-block text-dark">
+                                        <div className="position-relative mt-4 pb-4">
+                                            <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                                <div
+                                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                    <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                    <div className="ml-2 d-none d-lg-block text-dark">
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Đăng nhập </span>
-                                                    <div>Tài khoản</div>
+                                                        <div>Tài khoản</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
+                                            </Link>
+                                        </div>
                                     </>
                                 )}
-                                <div className="position-relative mt-4 pb-4"
-                                     onMouseEnter={handleMouseEnter}
-                                     onMouseLeave={handleMouseLeave}>
-                                    <Link id="sidebarNavToggler-my_account" to="sign-in">
-                                        <div
-                                            className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
-                                            <i className="fa-solid fa-user font-size-5 text-dark"></i>
-                                            <div className="ml-2 d-none d-lg-block text-dark">
-                                        <span className="text-secondary-gray-1090 font-size-1">
-                                            Đăng nhập </span>
-                                                <div>Tài khoản</div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    {isMenuOpen && (<UserMenu/>)}
-                                </div>
+                            </div>
+
                                 <Link id="sidebarNavToggler-my_cart" to="/cart"
                                       className="d-block nav-link text-dark ml-4">
                                     <div
@@ -151,7 +144,6 @@ export const Header = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </header>
     );
 }
