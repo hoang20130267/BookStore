@@ -2,7 +2,7 @@ import React from "react";
 import "../../assets/css/style-signin.css"
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {loginUser} from "../../../store/apiRequest";
+import {loginUser, registerUser} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
 
 const SignIn = () => {
@@ -11,13 +11,18 @@ const SignIn = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = React.useState("");
     const handleLogin = (e) => {
         e.preventDefault();
         const newUser = {
             username: username,
             password: password
         };
-        loginUser(newUser, dispatch, navigate)
+        try {
+            loginUser(newUser, dispatch, navigate)
+        } catch (error) {
+            setErrorMessage("Tài khoản hoặc mật khẩu không đúng");
+        }
     }
     return (
         <>
@@ -51,6 +56,11 @@ const SignIn = () => {
                                             <span className="ml-auto"><Link to={"/forgot-password"}
                                                                             className="forgot-pass">Quên mật khẩu</Link></span>
                                             </div>
+                                            {errorMessage && (
+                                                <div className="alert alert-danger" role="alert">
+                                                    {errorMessage}
+                                                </div>
+                                            )}
                                                 <button className="button_login" type={"submit"}> Đăng nhập</button>
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
