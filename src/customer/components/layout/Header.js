@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 export const Header = () => {
+    const user = useSelector(state => state.auth.login.currentUser);
     return (
         <header id="site-header" className="site-header site-header__v12 pb-1">
             <div className="masthead">
@@ -38,17 +40,35 @@ export const Header = () => {
                                     <Link to="/">GoldLeaf</Link></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
-                                <Link id="sidebarNavToggler-my_account" to="sign-in">
-                                    <div
-                                        className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
-                                        <i className="fa-solid fa-user font-size-5 text-dark"></i>
-                                        <div className="ml-2 d-none d-lg-block text-dark">
+                                {user?(
+                                    <>
+                                        <Link id="sidebarNavToggler-my_account">
+                                            <div
+                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                <div className="ml-2 d-none d-lg-block text-dark">
+                                        <span className="text-secondary-gray-1090 font-size-1">
+                                            Xin chào </span>
+                                                    <div>{user.username}</div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </>
+                                ):(
+                                    <>
+                                        <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                            <div
+                                                className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                <div className="ml-2 d-none d-lg-block text-dark">
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Đăng nhập </span>
-                                            <div>Tài khoản</div>
-                                        </div>
-                                    </div>
-                                </Link>
+                                                    <div>Tài khoản</div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </>
+                                )}
                                 <Link id="sidebarNavToggler-my_cart" to="/cart"
                                       className="d-block nav-link text-dark ml-4">
                                     <div
