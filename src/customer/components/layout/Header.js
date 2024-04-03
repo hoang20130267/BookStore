@@ -1,13 +1,28 @@
 import {Link} from "react-router-dom";
+<<<<<<< HEAD
 import {useSelector} from "react-redux";
 
 export const Header = () => {
     const user = useSelector(state => state.auth.login.currentUser);
+=======
+import UserMenu from "../general/UserMenu";
+import {useState} from "react";
+
+export const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsMenuOpen(true);
+    };
+    const handleMouseLeave = () => {
+        setIsMenuOpen(false);
+    };
+>>>>>>> f94897a55c986b09dc20f9943ca6aae06a85fa84
     return (
         <header id="site-header" className="site-header site-header__v12 pb-1">
             <div className="masthead">
                 <div className="bg-punch-light">
-                    <div className="container py-3 py-md-4">
+                    <div className="container">
                         <div className="d-flex align-items-center position-relative flex-wrap">
                             <div className="d-none d-xl-flex align-items-center mt-3 mt-md-0 mr-md-auto">
                                 <a href="mailto:info@bookworm.com" className="mr-4 mb-4 mb-md-0">
@@ -40,6 +55,7 @@ export const Header = () => {
                                     <Link to="/">GoldLeaf</Link></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
+<<<<<<< HEAD
                                 {user?(
                                     <>
                                         <Link id="sidebarNavToggler-my_account">
@@ -69,6 +85,24 @@ export const Header = () => {
                                         </Link>
                                     </>
                                 )}
+=======
+                                <div className="position-relative mt-4 pb-4"
+                                     onMouseEnter={handleMouseEnter}
+                                     onMouseLeave={handleMouseLeave}>
+                                    <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                        <div
+                                            className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                            <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                            <div className="ml-2 d-none d-lg-block text-dark">
+                                        <span className="text-secondary-gray-1090 font-size-1">
+                                            Đăng nhập </span>
+                                                <div>Tài khoản</div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    {isMenuOpen && (<UserMenu/>)}
+                                </div>
+>>>>>>> f94897a55c986b09dc20f9943ca6aae06a85fa84
                                 <Link id="sidebarNavToggler-my_cart" to="/cart"
                                       className="d-block nav-link text-dark ml-4">
                                     <div
