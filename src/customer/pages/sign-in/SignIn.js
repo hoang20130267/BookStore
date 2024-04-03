@@ -1,10 +1,24 @@
 import React from "react";
 import "../../assets/css/style-signin.css"
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
+import {loginUser} from "../../../store/apiRequest";
+import {useDispatch} from "react-redux";
 
 const SignIn = () => {
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
     const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const newUser = {
+            username: username,
+            password: password
+        };
+        loginUser(newUser, dispatch, navigate)
+    }
     return (
         <>
             <Breadcrumb location={location}/>
@@ -18,16 +32,18 @@ const SignIn = () => {
                                         <div className="mb-4">
                                             <h3>Đăng nhập</h3>
                                         </div>
-                                        <form>
+                                        <form onSubmit={handleLogin}>
                                             <div className="form-group first">
                                                 <p> Tên đăng nhập</p>
                                                 <input type="text" className="form-control" id="username"
-                                                       name="username" required/>
+                                                       name="username" required
+                                                       onChange={e => setUsername(e.target.value)}/>
                                             </div>
                                             <div className="form-group last mb-4">
                                                 <p>Mật khẩu</p>
                                                 <input type="password" className="form-control" id="password"
-                                                       name="password" required/>
+                                                       name="password" required
+                                                       onChange={e => setPassword(e.target.value)}/>
                                             </div>
 
                                             <div className="d-flex mb-5 align-items-center">
@@ -35,9 +51,7 @@ const SignIn = () => {
                                             <span className="ml-auto"><Link to={"/forgot-password"}
                                                                             className="forgot-pass">Quên mật khẩu</Link></span>
                                             </div>
-                                            <a href="sign-in#" style={{textDecoration: "none"}}>
-                                                <div className="button_login"> Đăng nhập</div>
-                                            </a>
+                                                <button className="button_login" type={"submit"}> Đăng nhập</button>
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
                                             <div className="social-login text-center">
