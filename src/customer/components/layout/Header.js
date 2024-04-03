@@ -1,14 +1,10 @@
 import {Link} from "react-router-dom";
-<<<<<<< HEAD
 import {useSelector} from "react-redux";
-
-export const Header = () => {
-    const user = useSelector(state => state.auth.login.currentUser);
-=======
 import UserMenu from "../general/UserMenu";
 import {useState} from "react";
 
 export const Header = () => {
+    const user = useSelector(state => state.auth.login.currentUser);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMouseEnter = () => {
@@ -17,7 +13,6 @@ export const Header = () => {
     const handleMouseLeave = () => {
         setIsMenuOpen(false);
     };
->>>>>>> f94897a55c986b09dc20f9943ca6aae06a85fa84
     return (
         <header id="site-header" className="site-header site-header__v12 pb-1">
             <div className="masthead">
@@ -55,7 +50,6 @@ export const Header = () => {
                                     <Link to="/">GoldLeaf</Link></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
-<<<<<<< HEAD
                                 {user?(
                                     <>
                                         <Link id="sidebarNavToggler-my_account">
@@ -85,7 +79,6 @@ export const Header = () => {
                                         </Link>
                                     </>
                                 )}
-=======
                                 <div className="position-relative mt-4 pb-4"
                                      onMouseEnter={handleMouseEnter}
                                      onMouseLeave={handleMouseLeave}>
@@ -102,7 +95,6 @@ export const Header = () => {
                                     </Link>
                                     {isMenuOpen && (<UserMenu/>)}
                                 </div>
->>>>>>> f94897a55c986b09dc20f9943ca6aae06a85fa84
                                 <Link id="sidebarNavToggler-my_cart" to="/cart"
                                       className="d-block nav-link text-dark ml-4">
                                     <div
