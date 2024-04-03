@@ -15,26 +15,22 @@ const AddressList = () => {
                 <div className="col-md-9 border" style={{borderRadius: "10px"}}>
                     <div className="d-flex flex-column" role="main">
                         <div className="d-flex flex-column">
-                            <div className="d-flex align-items-center address-title-div">
+                            <div className="d-flex align-items-center justify-content-between address-title-div">
                                 <div className="flex-1">
                                     <h4>Địa chỉ của tôi</h4>
                                 </div>
-                                <div>
-                                    <div className="">
-                                        <div style={{display: "flex"}}>
-                                            <Link to={"/user/address/new"}>
-                                                <button className="button-solid button-solid--primary">
-                                                    <div className="d-flex justify-content-center align-items-center">
-                                                        <div className="d-flex align-items-center"
-                                                             style={{marginRight: "10px"}}>
-                                                            <i className="fa-regular fa-plus"></i>
-                                                        </div>
-                                                        <div>Thêm địa chỉ mới</div>
-                                                    </div>
-                                                </button>
-                                            </Link>
-                                        </div>
-                                    </div>
+                                <div style={{display: "flex"}}>
+                                    <Link to={"/user/address/new"}>
+                                        <button className="button-solid button-solid--primary">
+                                            <div className="d-flex justify-content-center align-items-center">
+                                                <div className="d-flex align-items-center"
+                                                     style={{marginRight: "10px"}}>
+                                                    <i className="fa-regular fa-plus"></i>
+                                                </div>
+                                                <div>Thêm địa chỉ mới</div>
+                                            </div>
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                             <div>
