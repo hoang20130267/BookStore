@@ -1,36 +1,35 @@
 import axios from 'axios';
 import {
-    changeForgotPassFailure,
-    changeForgotPassStart, changeForgotPassSuccess,
-    loginFailure,
-    loginStart,
-    loginSuccess, logoutFailure,
+    logoutFailure,
     logoutStart, logoutSuccess,
-    registerFailure,
-    registerStart,
-    registerSuccess, sendEmailFailure, sendEmailStart, sendEmailSuccess,
 } from "./authSlice";
 
-export const loginUser = async (user, dispatch, navigate) => {
-    dispatch(loginStart());
+export const loginUser = async (username, password) => {
+    const url = "http://localhost:8080/api/auth/signin";
+    const requestBody = {
+        username: username,
+        password: password
+    };
     try {
-        const res = await axios.post("http://localhost:8080/api/auth/signin", user);
-        dispatch(loginSuccess(res.data));
-        navigate("/");
+        return await axios.post(url, requestBody);
         console.log("Login success")
     } catch (err) {
-        dispatch(loginFailure());
+        console.error("Error during loginUser:", err);
+        throw err;
     }
 }
-export const registerUser = async (user, dispatch, navigate) => {
-    dispatch(registerStart());
+export const registerUser = async (username,password,email) => {
+    const url= "http://localhost:8080/api/auth/signup";
+    const newUser = {
+        username: username,
+        password: password,
+        email: email,
+        role: ["USER"]
+    };
     try {
-        const res = await axios.post("http://localhost:8080/api/auth/logout", user);
-        dispatch(registerSuccess(res.data));
-        navigate("/sign-in");
-        console.log("Register success")
-    } catch (err) {
-        dispatch(registerFailure());
+        return await axios.post(url, newUser);
+    } catch (error) {
+        console.error("Error during signUp:", error);
     }
 }
 export const logOut = async (dispatch, id, navigate, token) => {
