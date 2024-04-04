@@ -2,9 +2,6 @@ import axios from 'axios';
 import {
     logoutFailure,
     logoutStart, logoutSuccess,
-    registerFailure,
-    registerStart,
-    registerSuccess
 } from "./authSlice";
 
 export const loginUser = async (username, password) => {
@@ -21,15 +18,18 @@ export const loginUser = async (username, password) => {
         throw err;
     }
 }
-export const registerUser = async (user, dispatch, navigate) => {
-    dispatch(registerStart());
+export const registerUser = async (username,password,email) => {
+    const url= "http://localhost:8080/api/auth/signup";
+    const newUser = {
+        username: username,
+        password: password,
+        email: email,
+        role: ["USER"]
+    };
     try {
-        const res = await axios.post("http://localhost:8080/api/auth/logout", user);
-        dispatch(registerSuccess(res.data));
-        navigate("/sign-in");
-        console.log("Register success")
-    } catch (err) {
-        dispatch(registerFailure());
+        return await axios.post(url, newUser);
+    } catch (error) {
+        console.error("Error during signUp:", error);
     }
 }
 export const logOut = async (dispatch, id, navigate, token) => {

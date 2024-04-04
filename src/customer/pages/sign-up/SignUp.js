@@ -3,6 +3,7 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import {registerUser} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
+import {registerSuccess} from "../../../store/authSlice";
 
 const SignUp = () => {
     const location = useLocation();
@@ -13,23 +14,29 @@ const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = React.useState("");
+    const [showErrorMessage, setShowErrorMessage] = React.useState(false);
 
     const handleRegister = (e) => {
         e.preventDefault();
+        setErrorMessage("");
+        setShowErrorMessage(false);
         if (password !== repeatPassword) {
             setErrorMessage("Mật khẩu và mật khẩu lặp lại không trùng khớp.");
+            setShowErrorMessage(true);
             return;
         }
-        const newUser = {
-            username: username,
-            password: password,
-            email: email,
-            role: ["USER"]
-        };
         try {
-            registerUser(newUser, dispatch, navigate);
+            const response = registerUser(username, email, password);
+            if(response.status === 200){
+                dispatch(registerSuccess(response.data));
+                navigate("/sign-in");
+            } else{
+                setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
+                setShowErrorMessage(true);
+            }
         } catch (error) {
-            setErrorMessage("Đã xảy ra lỗi khi đăng ký tài khoản.");
+            setErrorMessage("Lỗi không xác định!");
+            setShowErrorMessage(true);
         }
     }
     return (
@@ -69,7 +76,7 @@ const SignUp = () => {
                                                        name="re-password" required
                                                        onChange={e => setRepeatPassword(e.target.value)}/>
                                             </div>
-                                            {errorMessage && (
+                                            {showErrorMessage && (
                                                 <div className="alert alert-danger" role="alert">
                                                     {errorMessage}
                                                 </div>
