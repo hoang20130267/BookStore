@@ -2,8 +2,9 @@ import React from "react";
 import "../../assets/css/style-signin.css"
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {loginUser, registerUser} from "../../../store/apiRequest";
+import {loginUser, registerUser, sendEmail} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
+import {loginSuccess} from "../../../store/authSlice";
 
 const SignIn = () => {
     const [username, setUsername] = React.useState("");
@@ -12,16 +13,20 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = React.useState("");
-    const handleLogin = (e) => {
+    const [showErrorMessage, setShowErrorMessage] = React.useState(false);
+    const handleLogin = async (e) => {
         e.preventDefault();
-        const newUser = {
-            username: username,
-            password: password
-        };
+        setErrorMessage("");
+        setShowErrorMessage(false);
         try {
-            loginUser(newUser, dispatch, navigate)
-        } catch (error) {
-            setErrorMessage("Tài khoản hoặc mật khẩu không đúng");
+            const response = await loginUser(username, password);
+            if(response.status === 200){
+                dispatch(loginSuccess(response.data));
+                navigate("/");
+            }
+        } catch (e) {
+            setErrorMessage("Tài khoản hoặc mật khẩu không đúng!");
+            setShowErrorMessage(true);
         }
     }
     return (
@@ -56,7 +61,7 @@ const SignIn = () => {
                                             <span className="ml-auto"><Link to={"/forgot-password"}
                                                                             className="forgot-pass">Quên mật khẩu</Link></span>
                                             </div>
-                                            {errorMessage && (
+                                            {showErrorMessage && (
                                                 <div className="alert alert-danger" role="alert">
                                                     {errorMessage}
                                                 </div>

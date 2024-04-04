@@ -131,7 +131,7 @@ const ForgotPassword = () => {
                                                            onChange={e => setNewPass(e.target.value)}/>
 
                                                 </div>
-                                                {errorMessage && (
+                                                {showErrorMessage && (
                                                     <div className="alert alert-danger" role="alert">
                                                         {errorMessage}
                                                     </div>
