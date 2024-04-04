@@ -6,7 +6,7 @@ import {
     logoutStart, logoutSuccess,
     registerFailure,
     registerStart,
-    registerSuccess
+    registerSuccess, sendEmailFailure, sendEmailStart, sendEmailSuccess,
 } from "./authSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -45,5 +45,15 @@ export const logOut = async (dispatch, id, navigate, token) => {
         console.log("Logout success")
     } catch (err) {
         dispatch(logoutFailure());
+    }
+}
+export const sendEmail = async (email, dispatch) => {
+    dispatch(sendEmailStart());
+    try {
+        const res = await axios.post("http://localhost:8080/api/auth/forgot-password", email);
+        dispatch(sendEmailSuccess(res.data));
+        console.log("Send email success")
+    } catch (err) {
+        dispatch(sendEmailFailure());
     }
 }

@@ -55,7 +55,7 @@ export const Header = () => {
                                         <div className="position-relative mt-4 pb-4"
                                              onMouseEnter={handleMouseEnter}
                                              onMouseLeave={handleMouseLeave}>
-                                            <Link id="sidebarNavToggler-my_account" to="sign-in">
+                                            <Link id="sidebarNavToggler-my_account">
                                                 <div
                                                     className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                                     <i className="fa-solid fa-user font-size-5 text-dark"></i>

@@ -74,7 +74,10 @@ const SignUp = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-                                            <button className="button_login" type={"submit"}> Đăng ký</button>
+                                            <button className="button_login" type={"submit"}
+                                                    style={{paddingBottom:"13px",border:"none"
+                                                        , marginLeft:"53px", fontSize:"18px"
+                                                        , fontWeight:"bold"}}> Đăng ký</button>
                                             <span
                                                 className="d-block text-center my-4 text-muted">Bạn đã có tài khoản? <Link
                                                 to={"/sign-in"}
