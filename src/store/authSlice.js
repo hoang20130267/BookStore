@@ -21,6 +21,11 @@ const authSlice = createSlice({
             isFetching: false,
             error: false,
             success: false
+        },
+        changeForgotPass: {
+            isFetching: false,
+            error: false,
+            success: false
         }
     },
     reducers: {
@@ -73,10 +78,39 @@ const authSlice = createSlice({
             state.sendEmail.isFetching = false;
             state.sendEmail.error = true;
             state.sendEmail.success = false;
+        },
+        changeForgotPassStart: (state) => {
+            state.changeForgotPass.isFetching = true;
+        },
+        changeForgotPassSuccess: (state) => {
+            state.changeForgotPass.isFetching = false;
+            state.changeForgotPass.error = false;
+            state.changeForgotPass.success = true;
+        },
+        changeForgotPassFailure: (state) => {
+            state.changeForgotPass.isFetching = false;
+            state.changeForgotPass.error = true;
+            state.changeForgotPass.success = false;
         }
     }
 });
-export const {loginStart, loginSuccess, loginFailure, registerSuccess, registerFailure, registerStart, logoutStart, logoutSuccess, logoutFailure, sendEmailSuccess, sendEmailStart, sendEmailFailure} = authSlice.actions;
+export const {
+    loginStart,
+    loginSuccess,
+    loginFailure,
+    registerSuccess,
+    registerFailure,
+    registerStart,
+    logoutStart,
+    logoutSuccess,
+    logoutFailure,
+    sendEmailSuccess,
+    sendEmailStart,
+    sendEmailFailure,
+    changeForgotPassStart,
+    changeForgotPassSuccess,
+    changeForgotPassFailure
+} = authSlice.actions;
 
 
 export default authSlice.reducer;
