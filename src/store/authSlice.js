@@ -16,6 +16,16 @@ const authSlice = createSlice({
         logout: {
             isFetching: false,
             error: false
+        },
+        sendEmail: {
+            isFetching: false,
+            error: false,
+            success: false
+        },
+        changeForgotPass: {
+            isFetching: false,
+            error: false,
+            success: false
         }
     },
     reducers: {
@@ -34,7 +44,7 @@ const authSlice = createSlice({
         registerStart: (state) => {
             state.register.isFetching = true;
         },
-        registerSuccess: (state, action) => {
+        registerSuccess: (state) => {
             state.register.isFetching = false;
             state.register.error = false;
             state.register.success = true;
@@ -56,9 +66,51 @@ const authSlice = createSlice({
             state.logout.isFetching = false;
             state.logout.error = true;
         },
+        sendEmailStart: (state) => {
+            state.sendEmail.isFetching = true;
+        },
+        sendEmailSuccess: (state) => {
+            state.sendEmail.isFetching = false;
+            state.sendEmail.error = false;
+            state.sendEmail.success = true;
+        },
+        sendEmailFailure: (state) => {
+            state.sendEmail.isFetching = false;
+            state.sendEmail.error = true;
+            state.sendEmail.success = false;
+        },
+        changeForgotPassStart: (state) => {
+            state.changeForgotPass.isFetching = true;
+        },
+        changeForgotPassSuccess: (state) => {
+            state.changeForgotPass.isFetching = false;
+            state.changeForgotPass.error = false;
+            state.changeForgotPass.success = true;
+        },
+        changeForgotPassFailure: (state) => {
+            state.changeForgotPass.isFetching = false;
+            state.changeForgotPass.error = true;
+            state.changeForgotPass.success = false;
+        }
     }
 });
-export const {loginStart, loginSuccess, loginFailure, registerSuccess, registerFailure, registerStart, logoutStart, logoutSuccess, logoutFailure} = authSlice.actions;
+export const {
+    loginStart,
+    loginSuccess,
+    loginFailure,
+    registerSuccess,
+    registerFailure,
+    registerStart,
+    logoutStart,
+    logoutSuccess,
+    logoutFailure,
+    sendEmailSuccess,
+    sendEmailStart,
+    sendEmailFailure,
+    changeForgotPassStart,
+    changeForgotPassSuccess,
+    changeForgotPassFailure
+} = authSlice.actions;
 
 
 export default authSlice.reducer;

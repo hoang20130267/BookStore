@@ -1,12 +1,14 @@
 import axios from 'axios';
 import {
+    changeForgotPassFailure,
+    changeForgotPassStart, changeForgotPassSuccess,
     loginFailure,
     loginStart,
     loginSuccess, logoutFailure,
     logoutStart, logoutSuccess,
     registerFailure,
     registerStart,
-    registerSuccess
+    registerSuccess, sendEmailFailure, sendEmailStart, sendEmailSuccess,
 } from "./authSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -45,5 +47,30 @@ export const logOut = async (dispatch, id, navigate, token) => {
         console.log("Logout success")
     } catch (err) {
         dispatch(logoutFailure());
+    }
+}
+export const sendEmail = async (props:any) => {
+    const url = "http://localhost:8080/api/auth/forgot-password";
+    try {
+        return await axios.post(url, {
+            email: props.email
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        throw error;
+    }
+}
+export const changeForgotPass = async (props:any) => {
+    const url = "http://localhost:8080/api/auth/reset-password";
+    try {
+        return await axios.post(url, {
+            email: props.email,
+            otp: props.otp,
+            newPassword: props.newPassword
+        });
+        console.log("Change forgot pass success")
+    } catch (err) {
+        console.error("Error fetching users:", err);
+        throw err;
     }
 }
