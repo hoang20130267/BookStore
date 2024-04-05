@@ -42,7 +42,12 @@
     background-color: #0d95e8;
 }
 
-.cart-fragment:hover i {
+.wishlist-fragment:hover{
+    border-radius: 100px;
+    background-color: #f75454;
+}
+
+.cart-fragment:hover i, .wishlist-fragment:hover i {
     color: white;
 }
 
@@ -96,4 +101,12 @@
 
 .page-item.active .page-link:hover {
     background-color: #161619 !important;
+}
+
+.cat-item a.active {
+    color: #f75454;
+}
+
+.cat-item a:hover {
+    color: #f75454;
 }

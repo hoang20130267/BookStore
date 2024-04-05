@@ -231,7 +231,8 @@ ol, ul, dl {
 }
 
 ol ol, ul ul, ol ul, ul ol {
-    margin-bottom: 0
+    margin-bottom: 0;
+    list-style: none;
 }
 
 dt {
@@ -22923,9 +22924,9 @@ footer .bootstrap-select .dropup .dropdown-menu {
     color: #161619
 }
 
-.widget-content > ul a:hover, .widget-content > ul a:focus, footer .widget > ul a:hover, footer .widget > ul a:focus, .blog-sidebar .widget > ul a:hover, .blog-sidebar .widget > ul a:focus, .widget-area .widget > ul a:hover, .widget-area .widget > ul a:focus {
-    color: #f75454
-}
+/*.widget-content > ul a:hover, .widget-content > ul a:focus, footer .widget > ul a:hover, footer .widget > ul a:focus, .blog-sidebar .widget > ul a:hover, .blog-sidebar .widget > ul a:focus, .widget-area .widget > ul a:hover, .widget-area .widget > ul a:focus {*/
+/*    color: #f75454*/
+/*}*/
 
 .widget-content > ul .children, footer .widget > ul .children, .blog-sidebar .widget > ul .children, .widget-area .widget > ul .children {
     display: none

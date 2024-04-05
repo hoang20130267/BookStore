@@ -2,7 +2,7 @@ import React from "react";
 import "../../assets/css/style-signin.css"
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {loginUser, registerUser, sendEmail} from "../../../store/apiRequest";
+import {loginUser} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
 import {loginSuccess} from "../../../store/authSlice";
 
@@ -76,7 +76,7 @@ const SignIn = () => {
                                                 <Link to="/not-found" className="facebook">
                                                     <span><i className="fa-brands fa-facebook-f"></i></span>
                                                 </Link>
-                                                <Link to="#" className="twitter">
+                                                <Link to="/user/account" className="twitter">
                                                     <span><i className="fa-brands fa-twitter"></i></span>
                                                 </Link>
                                                 <Link to="/user/wishlist" className="google">

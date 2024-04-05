@@ -1,7 +1,6 @@
 import React from "react";
-import {Link, useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import Product from "./sub-components/Product";
-import FeaturedProduct from "./sub-components/FeaturedProduct";
 import "../../assets/css/style-product.css"
 import Breadcrumb from "../../components/general/Breadcrumb";
 import SideContent from "./sub-components/SideContent";
@@ -9,6 +8,7 @@ import Pagination from "../../components/general/Pagination";
 
 const ProductList = () => {
     const location = useLocation();
+    const { categoryId, subCategoryId1, subCategoryId2 } = useParams();
     return (
         <>
             <Breadcrumb location={location}/>
@@ -70,7 +70,7 @@ const ProductList = () => {
                                 </div>
                             </main>
                         </div>
-                        <SideContent/>
+                        <SideContent {...{ categoryId, subCategoryId1, subCategoryId2 }}/>
                     </div>
                 </div>
             </div>
