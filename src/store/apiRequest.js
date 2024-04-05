@@ -12,7 +12,6 @@ export const loginUser = async (username, password) => {
     };
     try {
         return await axios.post(url, requestBody);
-        console.log("Login success")
     } catch (err) {
         console.error("Error during loginUser:", err);
         throw err;
@@ -67,9 +66,20 @@ export const changeForgotPass = async (props:any) => {
             otp: props.otp,
             newPassword: props.newPassword
         });
-        console.log("Change forgot pass success")
     } catch (err) {
         console.error("Error fetching users:", err);
         throw err;
     }
 }
+export const listBlogs = async () => {
+    const url = "http://localhost:8080/api/blog/all";
+
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching blogs:", error);
+        throw error;
+    }
+};
+
