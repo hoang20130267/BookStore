@@ -1,11 +1,33 @@
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import APIService from "../../../service/APIService";
 
+const apiService = new APIService();
 export const Header = () => {
     const user = useSelector(state => state.auth.login.currentUser);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [mainCategories, setMainCategories] = useState([]);
+    const [parentCategory, setParentCategory] = useState({});
+    console.log(mainCategories)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories`)
+                const parent = result.find(cat => cat.parentCategory === null);
+                setParentCategory(parent)
+                const mainCategories = result.filter(cat => cat.parentCategory && cat.parentCategory.id === parent.id);
+                setMainCategories(mainCategories);
+            } catch (error) {
+
+            }
+        };
+
+        fetchData();
+    }, [])
+
 
     const handleMouseEnter = () => {
         setIsMenuOpen(true);
@@ -50,7 +72,7 @@ export const Header = () => {
                                     <Link to="/">GoldLeaf</Link></h1>
                             </div>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
-                                {user?(
+                                {user ? (
                                     <>
                                         <div className="position-relative mt-4 pb-4"
                                              onMouseEnter={handleMouseEnter}
@@ -69,7 +91,7 @@ export const Header = () => {
                                             {isMenuOpen && (<UserMenu/>)}
                                         </div>
                                     </>
-                                ):(
+                                ) : (
                                     <>
                                         <div className="position-relative mt-4 pb-4">
                                             <Link id="sidebarNavToggler-my_account" to="sign-in">
@@ -88,62 +110,55 @@ export const Header = () => {
                                 )}
                             </div>
 
-                                <Link id="sidebarNavToggler-my_cart" to="/cart"
-                                      className="d-block nav-link text-dark ml-4">
-                                    <div
-                                        className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                            <Link id="sidebarNavToggler-my_cart" to="/cart"
+                                  className="d-block nav-link text-dark ml-4">
+                                <div
+                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                     <span
                                         className="position-absolute width-16 height-16 rounded-circle d-flex align-items-center justify-content-center font-size-n9 left-0 top-0 ml-n2 mt-n1 text-white bg-dark">
                                         <span className="cart-contents-count">
                                             0
                                         </span> </span>
-                                        <Link to={"/cart"}>
-                                            <i className="fa-solid fa-cart-shopping font-size-5 text-dark"></i>
-                                        </Link>
-                                        <div className="ml-2 d-none d-lg-block text-dark">
+                                    <Link to={"/cart"}>
+                                        <i className="fa-solid fa-cart-shopping font-size-5 text-dark"></i>
+                                    </Link>
+                                    <div className="ml-2 d-none d-lg-block text-dark">
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Giỏ hàng </span>
-                                            <div><span className="cart-contents-total">
+                                        <div><span className="cart-contents-total">
                                                 <span className="woocommerce-Price-amount amount"><span
                                                     className="woocommerce-Price-currencySymbol">&#036;</span>0.00</span>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
-                                </Link>
-                            </div>
+                                </div>
+                            </Link>
                         </div>
                     </div>
                 </div>
-                <div className="border-bottom py-1 d-none d-xl-block">
-                    <div className="container">
-                        <div className="d-md-flex align-items-center position-relative">
-                            <div className="site-navigation mx-auto">
-                                <nav className="header__menu">
-                                    <ul>
-                                        <li><Link to={"/"}>Trang Chủ</Link></li>
-                                        <li><Link to={"/product-list"}>Danh mục sản phẩm</Link>
-                                            <ul className="header__menu__dropdown">
-                                                <li><a href="src/customer/components/layout">Hài kịch</a>
-                                                    <ul className="header__menu__dropdown__level2">
-                                                        <li><Link to={""}>Hài Việt</Link></li>
-                                                        <li><Link to={""}>Hài Trung</Link></li>
-                                                        <li><Link to={""}>Hài Hàn</Link></li>
-                                                    </ul>
-                                                </li>
-                                                <li><Link to={""}>Hành động</Link></li>
-                                                <li><Link to={""}>Tình cảm</Link></li>
-                                            </ul>
-                                        </li>
-                                        <li><Link to={"/blog-list"}>Tin Tức</Link></li>
-                                        <li><Link to={"/contact"}>Liên Hệ</Link></li>
-                                    </ul>
-                                </nav>
+            </div>
+            <div className="border-bottom py-1 d-none d-xl-block">
+                <div className="container">
+                    <div className="d-md-flex align-items-center position-relative">
+                        <div className="site-navigation mx-auto">
+                            <nav className="header__menu">
+                                <ul>
+                                    <li><Link to={"/"}>Trang Chủ</Link></li>
+                                    <li><Link to={`/product-list/${parentCategory.id}`}>Danh mục sản phẩm</Link>
+                                        <ul className="header__menu__dropdown">
+                                            {mainCategories.map(category => (
+                                                <li key={category.id}><Link to={`/product-list/${parentCategory.id}/${category.id}`}>{category.name}</Link></li>))}
+                                        </ul>
+                                    </li>
+                                    <li><Link to={"/blog-list"}>Tin Tức</Link></li>
+                                    <li><Link to={"/contact"}>Liên Hệ</Link></li>
+                                </ul>
+                            </nav>
 
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </header>
     );
 }
