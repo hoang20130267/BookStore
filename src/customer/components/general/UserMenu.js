@@ -9,13 +9,14 @@ const UserMenu = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = user;
-    const { accessToken } = user;
+    const { token } = user;
     const handleLogout = () => {
-        if (id && accessToken) {
-            logOut(dispatch, id, navigate, accessToken);
+        if (id && token) {
+            logOut(dispatch, id, navigate, token);
         } else {
             // Xử lý trường hợp không có id hoặc accessToken
             console.error('Không thể đăng xuất: Thiếu id hoặc accessToken');
+            console.log(id + " " + token);
         }
     }
     return (

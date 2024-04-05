@@ -23,7 +23,7 @@ const BlogTab = () => {
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                     {blogs.map(blog => (
                         <BlogItem
-                            key={blog.id}
+                            id={blog.id}
                             title={blog.title}
                             image={blog.image}
                             content={blog.content}
