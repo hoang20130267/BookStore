@@ -21,74 +21,6 @@ import UpdateAddress from "../customer/pages/user-address/UpdateAddress";
 import {Header} from "../customer/components/layout/Header";
 import {Footer} from "../customer/components/layout/Footer";
 
-// export const customerRouter = createBrowserRouter([{
-//         path: '/',
-//         element: <CustomerLayout/>,
-//         children: [
-//             {
-//                 path: "",
-//                 element: <Home/>
-//             }, {
-//                 path: "home",
-//                 element: <Home/>,
-//             }, {
-//                 path: "sign-in",
-//                 element: <SignIn/>,
-//             }, {
-//                 path: "sign-up",
-//                 element: <SignUp/>,
-//             }, {
-//                 path: "product-list",
-//                 element: <ProductList/>,
-//             }, {
-//                 path: "product-detail",
-//                 element: <Detail/>,
-//             }, {
-//                 path: "blog-list",
-//                 element: <BlogList/>,
-//             }, {
-//                 path: "blog-detail",
-//                 element: <BlogDetail/>,
-//             }, {
-//                 path: "contact",
-//                 element: <Contact/>,
-//             }, {
-//                 path: "cart",
-//                 element: <Cart/>,
-//             }, {
-//                 path: "checkout",
-//                 element: <Checkout/>,
-//             }, {
-//                 path: "not-found",
-//                 element: <NotFound/>,
-//             }, {
-//                 path: "forgot-password",
-//                 element: <ForgotPassword/>,
-//             }, {
-//                 path: "user/account",
-//                 element: <MyAccount/>,
-//             }, {
-//                 path: "user/address",
-//                 element: <AddressList/>,
-//             }, {
-//                 path: "user/address/new",
-//                 element: <AddNewAddress/>,
-//             }, {
-//                 path: "user/address/update",
-//                 element: <UpdateAddress/>,
-//             }, {
-//                 path: "user/order",
-//                 element: <MyOrders/>,
-//             }, {
-//                 path: "order-detail",
-//                 element: <OrderDetail/>,
-//             }, {
-//                 path: "user/wishlist",
-//                 element: <Wishlist/>,
-//             }]
-//     }])
-// ;
-
 const CustomerRouter = () => {
     return (
         <div>
@@ -98,7 +30,7 @@ const CustomerRouter = () => {
                 <Route path="/home" element={<Home/>}/>
                 <Route path="/sign-in" element={<SignIn/>}/>
                 <Route path="/sign-up" element={<SignUp/>}/>
-                <Route path="/product-list" element={<ProductList/>}/>
+                <Route path="/product-list/:categoryId/:subCategoryId1?/:subCategoryId2?" element={<ProductList/>}/>
                 <Route path="/product-detail" element={<Detail/>}/>
                 <Route path="/blog-list" element={<BlogList/>}/>
                 <Route path="/blog-detail" element={<BlogDetail/>}/>
