@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useParams} from "react-router-dom";
 import {Home} from "../customer/pages/home/Home";
 import {BlogDetail} from "../customer/pages/blog-detail/BlogDetail";
 import Contact from "../customer/pages/contact/Contact";
@@ -33,7 +33,7 @@ const CustomerRouter = () => {
                 <Route path="/product-list/:categoryId/:subCategoryId1?/:subCategoryId2?" element={<ProductList/>}/>
                 <Route path="/product-detail" element={<Detail/>}/>
                 <Route path="/blog-list" element={<BlogList/>}/>
-                <Route path="/blog-detail" element={<BlogDetail/>}/>
+                <Route path={`/blog-detail/:id`} element={<BlogDetail/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
                 <Route path="/checkout" element={<Checkout/>}/>

@@ -26,33 +26,18 @@ const authSlice = createSlice({
             isFetching: false,
             error: false,
             success: false
-        }
+        },
     },
     reducers: {
-        loginStart: (state) => {
-            state.login.isFetching = true;
-        },
         loginSuccess: (state, action) => {
             state.login.isFetching = false;
             state.login.currentUser = action.payload;
             state.login.error = false;
         },
-        loginFailure: (state) => {
-            state.login.isFetching = false;
-            state.login.error = true;
-        },
-        registerStart: (state) => {
-            state.register.isFetching = true;
-        },
         registerSuccess: (state) => {
             state.register.isFetching = false;
             state.register.error = false;
             state.register.success = true;
-        },
-        registerFailure: (state) => {
-            state.register.isFetching = false;
-            state.register.error = true;
-            state.register.success = false;
         },
         logoutStart: (state) => {
             state.logout.isFetching = true;
@@ -66,50 +51,20 @@ const authSlice = createSlice({
             state.logout.isFetching = false;
             state.logout.error = true;
         },
-        sendEmailStart: (state) => {
-            state.sendEmail.isFetching = true;
-        },
-        sendEmailSuccess: (state) => {
-            state.sendEmail.isFetching = false;
-            state.sendEmail.error = false;
-            state.sendEmail.success = true;
-        },
-        sendEmailFailure: (state) => {
-            state.sendEmail.isFetching = false;
-            state.sendEmail.error = true;
-            state.sendEmail.success = false;
-        },
-        changeForgotPassStart: (state) => {
-            state.changeForgotPass.isFetching = true;
-        },
-        changeForgotPassSuccess: (state) => {
-            state.changeForgotPass.isFetching = false;
-            state.changeForgotPass.error = false;
-            state.changeForgotPass.success = true;
-        },
-        changeForgotPassFailure: (state) => {
-            state.changeForgotPass.isFetching = false;
-            state.changeForgotPass.error = true;
-            state.changeForgotPass.success = false;
+        blogSuccess: (state, action) => {
+            state.blog.isFetching = false;
+            state.blog.currentBlog = action.payload;
+            state.blog.error = false;
         }
     }
 });
 export const {
-    loginStart,
     loginSuccess,
-    loginFailure,
     registerSuccess,
-    registerFailure,
-    registerStart,
     logoutStart,
     logoutSuccess,
     logoutFailure,
-    sendEmailSuccess,
-    sendEmailStart,
-    sendEmailFailure,
-    changeForgotPassStart,
-    changeForgotPassSuccess,
-    changeForgotPassFailure
+    blogSuccess
 } = authSlice.actions;
 
 
