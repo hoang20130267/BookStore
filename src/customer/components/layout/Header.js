@@ -3,14 +3,70 @@ import {useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
 import {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
+import { FaSearch } from "react-icons/fa";
+import "../../assets/css/searchbar.css";
 
 const apiService = new APIService();
+
+export const SearchBar = ({setResults}) => {
+    const [keyword, setKeyword] = useState("");
+    const [hasResults, setHasResults] = useState(true);
+    const fetchSearchProduct = (value) => {
+        fetch("http://localhost:8080/api/products")
+            .then((response) => response.json())
+            .then(json => {
+                const result = json.filter(product =>
+                    value &&
+                    product &&
+                    product.title &&
+                    product.title.toLowerCase().includes(value.toLowerCase())
+                );
+                setHasResults(result.length > 0);
+                setResults(result);
+            });
+    }
+
+    const handleSearch = (value) => {
+        setKeyword(value)
+        fetchSearchProduct(value)
+    }
+    return (
+        <>
+        <div className="input-wrapper d-flex">
+            <FaSearch id="#search-icon"/>
+            <input type="text" class="searchInput" placeholder="Tìm kiếm..."
+                   value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
+        </div>
+        {!hasResults && keyword.length > 0 &&
+            <div className="search-results">
+            <p className="result-notfound">Không tìm thấy sản phẩm</p>
+            </div>
+        }
+        </>
+    )
+}
+export const SearchResults = ({results}) => {
+    return (
+        <div className="search-results">
+            {results.map((product) => (
+                    <Link className="result" to={`/product-detail/${product.id}`} key={product.id}>
+                        <image src={product.image} alt={product.title} className="imageSearch"/>
+                        <p>
+                        {product.title}
+                        </p>
+                    </Link>
+            ))}
+        </div>
+    )
+}
+
 export const Header = () => {
     const user = useSelector(state => state.auth.login.currentUser);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
-    console.log(mainCategories)
+    const [results, setResults] = useState([]);
+    console.log(mainCategories);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,36 +97,13 @@ export const Header = () => {
                 <div className="bg-punch-light">
                     <div className="container">
                         <div className="d-flex align-items-center position-relative flex-wrap">
-                            <div className="d-none d-xl-flex align-items-center mt-3 mt-md-0 mr-md-auto">
-                                <a href="mailto:info@bookworm.com" className="mr-4 mb-4 mb-md-0">
-                                    <div className="d-flex align-items-center text-dark font-size-2 text-lh-sm">
-                                        <i className="fa-regular fa-circle-question font-size-5 mt-2 mr-1"></i>
-                                        <div className="ml-2">
-                                        <span className="text-secondary-gray-1090 font-size-1">
-                                            goldleaf@gmail.com </span>
-                                            <div className="h6 mb-0">
-                                                Gửi mail ngay!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="tel:+1246-345-0695">
-                                    <div className="d-flex align-items-center text-dark font-size-2 text-lh-sm">
-                                        <i className="fa-solid fa-phone font-size-5 mt-2 mr-1"></i>
-                                        <div className="ml-2">
-                                        <span className="text-secondary-gray-1090 font-size-1">
-                                            +84 765 999 111 </span>
-                                            <div className="h6 mb-0">
-                                                Gọi không tốn phí
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
                             <div className="site-branding pr-md-7 mx-md-0">
                                 <h1 className="beta site-title site-title text-uppercase font-weight-bold font-size-5 m-0 ">
-                                    <Link to="/">GoldLeaf</Link></h1>
+                                    <Link to="/" style={{marginLeft:"20px"}}>GoldLeaf</Link></h1>
                             </div>
+
+                            <SearchBar setResults={setResults}/>
+                            <SearchResults results={results}/>
                             <div className="d-flex align-items-center ml-auto header-icons-links">
                                 {user ? (
                                     <>
