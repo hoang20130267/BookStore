@@ -82,9 +82,7 @@ export const listBlogs = async () => {
         throw error;
     }
 };
-export const blogDetail = async () => {
-    const url = "http://localhost:8080/api/blog/1";
-
+export const blogDetail = async (url) => {
     try {
         const response = await axios.get(url);
         return response.data;
