@@ -109,7 +109,7 @@ const CategoriesList = (props) => {
             }
         };
 
-        fetchData();
+            fetchData();
     }, [props.categoryId, props.subCategoryId1, props.subCategoryId2]);
 
     return (
