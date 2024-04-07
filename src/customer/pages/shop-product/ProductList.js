@@ -1,14 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useParams} from "react-router-dom";
 import Product from "./sub-components/Product";
 import "../../assets/css/style-product.css"
 import Breadcrumb from "../../components/general/Breadcrumb";
 import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
+import APIService from "../../../service/APIService";
+import product from "./sub-components/Product";
 
+const apiService = new APIService();
 const ProductList = () => {
     const location = useLocation();
-    const { categoryId, subCategoryId1, subCategoryId2 } = useParams();
+    const {categoryId, subCategoryId1, subCategoryId2} = useParams();
+    const [products, setProducts] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products`)
+                const first24Products = result.slice(0, 24);
+                setProducts(first24Products);
+            } catch (error) {
+                console.error('Error fetching products', error);
+            }
+        }
+        fetchData();
+    }, [])
     return (
         <>
             <Breadcrumb location={location}/>
@@ -57,20 +73,13 @@ const ProductList = () => {
                                 </div>
                                 <div className="grid-view">
                                     <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
+                                        {products.map(product => (<Product info={product}/>))}
                                     </ul>
                                     <Pagination/>
                                 </div>
                             </main>
                         </div>
-                        <SideContent {...{ categoryId, subCategoryId1, subCategoryId2 }}/>
+                        <SideContent {...{categoryId, subCategoryId1, subCategoryId2}}/>
                     </div>
                 </div>
             </div>

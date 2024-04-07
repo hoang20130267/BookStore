@@ -1,7 +1,7 @@
 .current-price .price {
     line-height: 1.6rem;
     color: #C92127;
-    font-size: 1.125rem;;
+    font-size: 16px;
     font-weight: 600 !important;
 }
 
@@ -42,7 +42,7 @@
     background-color: #0d95e8;
 }
 
-.wishlist-fragment:hover{
+.wishlist-fragment:hover {
     border-radius: 100px;
     background-color: #f75454;
 }
@@ -109,4 +109,17 @@
 
 .cat-item a:hover {
     color: #f75454;
+}
+.bookworm-product-grid .woocommerce-loop-product__header{
+    height: 190px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.bookworm-product-grid .woocommerce-loop-product__header img{
+    max-height: 190px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }

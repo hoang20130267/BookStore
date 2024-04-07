@@ -1,17 +1,18 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import formatCurrency from "../../../../utils/formatCurrency";
 
-const Product = () => {
+const Product = (props) => {
+    const productInfo = props.info;
     return (
-        <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
+        <li key={productInfo.id} className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
             <div className="bookworm-product-grid">
-                <div className="product__inner overflow-hidden p-3 p-md-4d875">
+                <div className="product__inner overflow-hidden p-3">
                     <div className="position-relative d-block">
                         <div className="woocommerce-loop-product__header">
                             <Link to="/product-detail"
                                   className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
-                                width="150" height="200"
-                                src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/22-300x449-1-150x200.jpg"
+                                src={productInfo.image}
                                 className="img-fluid d-block mx-auto attachment-shop_catalog size-shop_catalog wp-post-image img-fluid"
                                 alt decoding="async"/></Link>
                         </div>
@@ -19,17 +20,15 @@ const Product = () => {
                             <h2 className="woocommerce-loop-product__title product__title h6 text-lh-md mb-1 crop-text-2 h-dark  text-height-2">
                                 <Link to="/product-detail"
                                       className="woocommerce-LoopProduct-link woocommerce-loop-product__link">
-                                    Buttermilk Graffiti: A Chef&#8217;s Journey to
-                                    Discover
-                                    America&#8217;s New Melting-Pot Cuisine </Link>
+                                    {productInfo.title}</Link>
                             </h2>
                             <div className="price-label">
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price">130000</span>
+                                        <span className="price">{formatCurrency(productInfo.current_price)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price">150000</span>
+                                        <span className="price">{formatCurrency(productInfo.old_price)}</span>
                                     </p>
                                 </span>
                             </div>
