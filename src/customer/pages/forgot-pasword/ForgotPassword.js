@@ -27,13 +27,13 @@ const ForgotPassword = () => {
             const response = await sendEmail({
                 email: email
             });
-            if(response.status === 200) {
+            if (response.status === 200) {
                 setChangePage(true);
             } else {
                 setErrorMessage("Không tìm thấy email");
                 setShowErrorMessage(true);
             }
-        }catch (e) {
+        } catch (e) {
             setErrorMessage("Lỗi không xác định");
             setShowErrorMessage(true);
         }
@@ -93,12 +93,14 @@ const ForgotPassword = () => {
                                                         {errorMessage}
                                                     </div>
                                                 )}
-                                                <button className="button_login" type={"submit"}
-                                                        style={{paddingBottom:"13px",border:"none"
-                                                            , marginLeft:"120px", fontSize:"18px"
-                                                            , fontWeight:"bold"}}
+                                                <button className="button_login d-flex justify-content-center" type={"submit"}
+                                                        style={{
+                                                            paddingBottom: "13px", border: "none", fontSize: "18px"
+                                                            , fontWeight: "bold"
+                                                        }}
                                                         onSubmit={handleSendEmail}
-                                                        onPress={handleChangeAction}> Gửi mã OTP</button>
+                                                        onPress={handleChangeAction}> Gửi mã OTP
+                                                </button>
                                                 <Link to={"/sign-in"} className="d-block text-center my-4 text-muted"
                                                       style={{textDecoration: "none"}}> Đăng nhập</Link>
                                             </form>
@@ -109,7 +111,7 @@ const ForgotPassword = () => {
                         </div>
                     </div>
                 </div>
-                </>}
+            </>}
             {changePage && <>
                 <div className="content">
                     <div className="container">
@@ -137,9 +139,12 @@ const ForgotPassword = () => {
                                                     </div>
                                                 )}
                                                 <button className="button_login" type={"submit"}
-                                                        style={{paddingBottom:"13px",border:"none"
-                                                            , marginLeft:"120px", fontSize:"18px"
-                                                            , fontWeight:"bold"}}>Đặt lại mật khẩu</button>
+                                                        style={{
+                                                            paddingBottom: "13px", border: "none"
+                                                            , marginLeft: "120px", fontSize: "18px"
+                                                            , fontWeight: "bold"
+                                                        }}>Đặt lại mật khẩu
+                                                </button>
                                                 <Link to={"/sign-in"} className="d-block text-center my-4 text-muted"
                                                       style={{textDecoration: "none"}}> Đăng nhập</Link>
                                             </form>
@@ -150,8 +155,8 @@ const ForgotPassword = () => {
                         </div>
                     </div>
                 </div>
-                </>
-                    }
+            </>
+            }
             )}
         </>
     );

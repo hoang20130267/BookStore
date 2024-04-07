@@ -66,7 +66,6 @@ export const Header = () => {
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
     const [results, setResults] = useState([]);
-    console.log(mainCategories);
 
     useEffect(() => {
         const fetchData = async () => {

@@ -30,7 +30,7 @@ const CustomerRouter = () => {
                 <Route path="/home" element={<Home/>}/>
                 <Route path="/sign-in" element={<SignIn/>}/>
                 <Route path="/sign-up" element={<SignUp/>}/>
-                <Route path="/product-list/:categoryId/:subCategoryId1?/:subCategoryId2?" element={<ProductList/>}/>
+                <Route path="/product-list/:categoryId?/:mainCategoryId?/:subCategoryId?" element={<ProductList/>}/>
                 <Route path="/product-detail" element={<Detail/>}/>
                 <Route path="/blog-list" element={<BlogList/>}/>
                 <Route path={`/blog-detail/:id`} element={<BlogDetail/>}/>

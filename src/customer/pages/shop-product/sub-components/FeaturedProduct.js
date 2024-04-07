@@ -16,12 +16,12 @@ const FeaturedProduct = () => {
                       aria-controls="widget-collapse-woocommerce_products-3" onClick={handleToggle}>
                     <h3 className="widget-title font-weight-medium font-size-3 mb-0">Sản phẩm nổi bật</h3>
                     <svg className="mins" width="15px" height="2px">
-                        <path fill-rule="evenodd" fill="rgb(22, 22, 25)"
+                        <path fillRule="evenodd" fill="rgb(22, 22, 25)"
                               d="M0.000,-0.000 L15.000,-0.000 L15.000,2.000 L0.000,2.000 L0.000,-0.000 Z">
                         </path>
                     </svg>
                     <svg className="plus" width="15px" height="15px">
-                        <path fill-rule="evenodd" fill="rgb(22, 22, 25)"
+                        <path fillRule="evenodd" fill="rgb(22, 22, 25)"
                               d="M15.000,8.000 L9.000,8.000 L9.000,15.000 L7.000,15.000 L7.000,8.000 L0.000,8.000 L0.000,6.000 L7.000,6.000 L7.000,-0.000 L9.000,-0.000 L9.000,6.000 L15.000,6.000 L15.000,8.000 Z">
                         </path>
                     </svg>
