@@ -66,7 +66,6 @@ export const Header = () => {
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
     const [results, setResults] = useState([]);
-    console.log(mainCategories);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -177,7 +176,7 @@ export const Header = () => {
                             <nav className="header__menu">
                                 <ul>
                                     <li><Link to={"/"}>Trang Chủ</Link></li>
-                                    <li><Link to={`/product-list/${parentCategory.id}`}>Danh mục sản phẩm</Link>
+                                    <li><Link to={`/product-list/${parentCategory.id}?`}>Danh mục sản phẩm</Link>
                                         <ul className="header__menu__dropdown">
                                             {mainCategories.map(category => (
                                                 <li key={category.id}><Link to={`/product-list/${parentCategory.id}/${category.id}`}>{category.name}</Link></li>))}

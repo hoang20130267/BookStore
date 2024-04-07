@@ -1,8 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const Breadcrumb = ({location}) => {
-
+const Breadcrumb = (props) => {
     const pathNameMap = {
         '/sign-in': 'Đăng nhập',
         '/sign-up': 'Đăng ký',
@@ -24,7 +23,7 @@ const Breadcrumb = ({location}) => {
         return pathNameMap[path] || '';
     }
     let currentLink = '';
-    const pathNames = location.pathname.split('/').filter(path => path != '');
+    const pathNames = props.location.pathname.split('/').filter(path => path != '');
     return (
         <div className="page-header border-bottom">
             <div className="container">

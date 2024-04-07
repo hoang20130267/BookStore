@@ -20,7 +20,7 @@ const SignIn = () => {
         setShowErrorMessage(false);
         try {
             const response = await loginUser(username, password);
-            if(response.status === 200){
+            if (response.status === 200) {
                 dispatch(loginSuccess(response.data));
                 navigate("/");
             }
@@ -66,10 +66,12 @@ const SignIn = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-                                                <button className="button_login" type={"submit"}
-                                                style={{paddingBottom:"13px",border:"none"
-                                                    , marginLeft:"53px", fontSize:"18px"
-                                                , fontWeight:"bold"}}> Đăng nhập</button>
+                                            <button className="button_login justify-content-center d-flex" type={"submit"}
+                                                    style={{
+                                                        paddingBottom: "13px", border: "none", fontSize: "18px"
+                                                        , fontWeight: "bold"
+                                                    }}> Đăng nhập
+                                            </button>
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
                                             <div className="social-login text-center">

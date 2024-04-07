@@ -1,14 +1,29 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useParams} from "react-router-dom";
 import Product from "./sub-components/Product";
 import "../../assets/css/style-product.css"
 import Breadcrumb from "../../components/general/Breadcrumb";
 import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
+import APIService from "../../../service/APIService";
+import product from "./sub-components/Product";
 
+const apiService = new APIService();
 const ProductList = () => {
     const location = useLocation();
-    const { categoryId, subCategoryId1, subCategoryId2 } = useParams();
+    const [products, setProducts] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products`)
+                const first24Products = result.slice(0, 24);
+                setProducts(first24Products);
+            } catch (error) {
+                console.error('Error fetching products', error);
+            }
+        }
+        fetchData();
+    }, [])
     return (
         <>
             <Breadcrumb location={location}/>
@@ -32,7 +47,7 @@ const ProductList = () => {
                                                         className="orderby js-select dropdown-select"
                                                         aria-label="Shop order"
                                                         data-style="border-bottom shadow-none outline-none py-2">
-                                                    <option value="menu_order" selected="selected">Mặc định
+                                                    <option value="menu_order" defaultValue>Mặc định
                                                     </option>
                                                     <option value="popularity">A&rarr;Z</option>
                                                     <option value="rating">Z&rarr;A</option>
@@ -44,7 +59,7 @@ const ProductList = () => {
                                             </form>
                                             <form method="POST" action
                                                   className="number-of-items ml-md-4 mb-4 m-md-0 d-none d-xl-block">
-                                                <select name="ppp" onChange="this.form.submit()"
+                                                <select name="ppp"
                                                         className="dropdown-select orderby"
                                                         data-style="border-bottom shadow-none outline-none py-2">
                                                     <option value="24">24 sản phẩm</option>
@@ -57,20 +72,13 @@ const ProductList = () => {
                                 </div>
                                 <div className="grid-view">
                                     <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
-                                        <Product/>
+                                        {products.map(product => (<Product key={product.id} info={product}/>))}
                                     </ul>
                                     <Pagination/>
                                 </div>
                             </main>
                         </div>
-                        <SideContent {...{ categoryId, subCategoryId1, subCategoryId2 }}/>
+                        <SideContent/>
                     </div>
                 </div>
             </div>

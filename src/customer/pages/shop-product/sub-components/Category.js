@@ -3,8 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import APIService from "../../../../service/APIService";
 
 const apiService = new APIService();
-const Category = (props) => {
-    const {categoryId, subCategoryId1, subCategoryId2} = props;
+const Category = () => {
     const [isShown, setIsShown] = useState(true);
 
     const handleToggle = () => {
@@ -36,46 +35,61 @@ const Category = (props) => {
             {isShown && (<div id="widget-collapse-woocommerce_product_categories-2"
                               className="mt-4 widget-content collapse show"
                               aria-labelledby="widgetHeading-woocommerce_product_categories-2">
-                <CategoriesList {...{categoryId, subCategoryId1, subCategoryId2}}/>
+                <CategoriesList/>
             </div>)}
         </div>
     );
 }
 const CategoryItem = ({category, subMainCategories, subCategories}) => {
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedMainCategory, setSelectedMainCategory] = useState(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
-    const [listVisibility, setListVisibility] = useState({});
+    const [expandedSubCategories, setExpandedSubCategories] = useState(false);
 
-    const handleItemClick = (subCateId) => {
-        setSelectedSubCategory(subCateId);
-        const updatedListVisibility = {};
-        for (const subCate of subMainCategories) {
-            updatedListVisibility[subCate.id] = subCate.id === subCateId ? 'block' : 'none';
-        }
-        setListVisibility(updatedListVisibility)
+    const handleCategoryClick = (categoryId) => {
+        setSelectedCategory(categoryId);
+        setSelectedSubCategory(null);
+        setSelectedMainCategory(null);
+    };
+    const handleMainCategoryClick = (mainCateId) => {
+        setSelectedMainCategory(mainCateId);
+        setSelectedCategory(null);
+        setSelectedSubCategory(null);
+        setExpandedSubCategories(true);
+    };
+
+    const handleSubCategoryClick = (subCateId) => {
+        setSelectedSubCategory(subCateId)
+        setSelectedCategory(null);
+        setExpandedSubCategories(true)
     };
 
 
     return (
         <>
             <li className={`cat-item cat-item-${category.id}`}>
-                <Link to={`/product-list/${category.id}`}>
+                <Link to={`/product-list/${category.id}`}
+                      className={`${selectedCategory === category.id ? 'active' : ''}`}
+                      onClick={() => handleCategoryClick(category.id)}>
                     {category.name}
                 </Link>
                 <ul className={`children ml-3 d-block`}>
                     {subMainCategories.map(subCate => (
                         <li key={subCate.id}
                             className={`cat-item cat-item-${subCate.id}`}
-                            style={{display: listVisibility[subCate.id]}}
-                            onClick={() => handleItemClick(subCate.id)}>
+                            style={{display: selectedMainCategory === null || selectedMainCategory === subCate.id ? 'block' : 'none'}}>
                             <Link to={`/product-list/${category.id}/${subCate.id}`}
-                                  className={`${selectedSubCategory === subCate.id ? 'active' : ''}`}>
+                                  className={`${selectedMainCategory === subCate.id && selectedSubCategory === null ? 'active' : ''}`}
+                                  onClick={() => handleMainCategoryClick(subCate.id)}>
                                 {subCate.name}
                             </Link>
-                            {selectedSubCategory === subCate.id && (
+                            {expandedSubCategories && selectedMainCategory === subCate.id && (
                                 <ul key={subCate.id} className={`children ml-3 d-block`}>
                                     {subCategories.map(child => (
                                         <li key={child.id} className={`cat-item cat-item-${child.id}`}>
-                                            <Link to={`/product-list/${category.id}/${subCate.id}/${child.id}`}>
+                                            <Link to={`/product-list/${category.id}/${subCate.id}/${child.id}`}
+                                                  className={`${selectedSubCategory === child.id ? 'active' : ''}`}
+                                                  onClick={() => handleSubCategoryClick(child.id)}>
                                                 {child.name}
                                             </Link>
                                         </li>
@@ -90,32 +104,37 @@ const CategoryItem = ({category, subMainCategories, subCategories}) => {
 
 };
 
-const CategoriesList = (props) => {
+const CategoriesList = () => {
     const [parentCategory, setParentCategory] = useState({});
     const [subMainCategories, setSubMainCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const {categoryId, mainCategoryId, subCategoryId} = useParams();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const parentResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${props.categoryId}`);
+                const parentResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${categoryId}`);
                 setParentCategory(parentResult);
-                const subMainResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${props.categoryId}/subcategories`);
-                setSubMainCategories(subMainResult);
-                const subResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${props.subCategoryId1}/subcategories`);
-                setSubCategories(subResult);
+                if (parentResult) {
+                    const subMainResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${parentResult.id}/subcategories`);
+                    setSubMainCategories(subMainResult);
+                }
+                if (mainCategoryId) {
+                    const subResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${mainCategoryId}/subcategories`);
+                    setSubCategories(subResult);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
         fetchData();
-    }, [props.categoryId, props.subCategoryId1, props.subCategoryId2]);
+    }, [mainCategoryId, subCategoryId]);
 
     return (
         <ul className="product-categories">
             <CategoryItem category={parentCategory} subMainCategories={subMainCategories}
-                          subCategories={subCategories} sub1={props.subCategoryId1}/>
+                          subCategories={subCategories}/>
         </ul>
     );
 };
