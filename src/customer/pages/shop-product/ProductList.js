@@ -6,24 +6,28 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
 import APIService from "../../../service/APIService";
-import product from "./sub-components/Product";
 
 const apiService = new APIService();
 const ProductList = () => {
     const location = useLocation();
+    const params = useParams();
+    const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products`)
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/category/${lastParam}`);
                 const first24Products = result.slice(0, 24);
                 setProducts(first24Products);
+
             } catch (error) {
                 console.error('Error fetching products', error);
             }
         }
         fetchData();
-    }, [])
+    }, [lastParam])
     return (
         <>
             <Breadcrumb location={location}/>
