@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from "react";
 import BlogItem from "./BlogItem";
 import Pagination from "../../../components/general/Pagination";
-import {listBlogs} from "../../../../store/apiRequest";
+import APIService from "../../../../service/APIService";
 
+const apiService = new APIService();
 const BlogTab = () => {
     const [blogs, setBlogs] = useState([]);
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const data = await listBlogs();
+                const data = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/blog/all`);
                 setBlogs(data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);

@@ -1,9 +1,10 @@
 import {Link, useLocation, useParams} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import {useEffect, useState} from "react";
-import {blogDetail} from "../../../store/apiRequest";
 import { CiClock1 } from "react-icons/ci";
+import APIService from "../../../service/APIService";
 
+const apiService = new APIService();
 export const BlogContent = ({ title, content, created_at, category }) => {
     return (
         <div className="article-post max-width-940 mx-auto bg-white position-relative">
@@ -71,16 +72,13 @@ export const Author = ({creator, email}) => {
 export const BlogDetail = () => {
     const location = useLocation();
     const {id} = useParams();
-    const API = "http://localhost:8080/api/blog";
     const [blog, setBlog] = useState([]);
-
 
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await blogDetail(`${API}/${id}`);
+                const response = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/blog/${id}`);
                 setBlog(response);
-                // console.log(response);
             } catch (error) {
                 console.error("Error fetching blog:", error);
             }
