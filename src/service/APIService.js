@@ -31,6 +31,16 @@ class ApiService {
             throw error;
         }
     }
+
+    async updateData(endpoint, data) {
+        try {
+            const response = await this.api.put(endpoint, data);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating data:', error);
+            throw error;
+        }
+    }
 }
 
 export default ApiService;
