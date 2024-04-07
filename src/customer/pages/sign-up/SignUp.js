@@ -27,10 +27,10 @@ const SignUp = () => {
         }
         try {
             const response = registerUser(username, email, password);
-            if(response.status === 200){
+            if (response.status === 200) {
                 dispatch(registerSuccess(response.data));
                 navigate("/sign-in");
-            } else{
+            } else {
                 setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
                 setShowErrorMessage(true);
             }
@@ -81,10 +81,12 @@ const SignUp = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-                                            <button className="button_login" type={"submit"}
-                                                    style={{paddingBottom:"13px",border:"none"
-                                                        , marginLeft:"53px", fontSize:"18px"
-                                                        , fontWeight:"bold"}}> Đăng ký</button>
+                                            <button className="button_login d-flex justify-content-center" type={"submit"}
+                                                    style={{
+                                                        paddingBottom: "13px", border: "none", fontSize: "18px"
+                                                        , fontWeight: "bold"
+                                                    }}> Đăng ký
+                                            </button>
                                             <span
                                                 className="d-block text-center my-4 text-muted">Bạn đã có tài khoản? <Link
                                                 to={"/sign-in"}
