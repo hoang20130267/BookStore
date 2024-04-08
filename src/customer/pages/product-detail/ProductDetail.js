@@ -77,31 +77,6 @@ export const Information = () => {
     return (
         <div className="woocommerce-tabs wc-tabs-wrapper mx-lg-auto">
             <div className="classic-nav">
-                {/*<ul className="tabs wc-tabs nav container justify-content-md-center flex-nowrap flex-md-wrap overflow-auto overflow-md-visble"*/}
-                {/*    role="tablist">*/}
-                {/*    <li className="description_tab flex-shrink-0 flex-md-shrink-1 nav-item" id="tab-title-description"*/}
-                {/*        role="tab" aria-controls="tab-description">*/}
-                {/*        <a href="product-detail#tab-description" className="nav-link font-weight-medium py-4">*/}
-                {/*            Description </a>*/}
-                {/*    </li>*/}
-                {/*    <li className="additional_information_tab flex-shrink-0 flex-md-shrink-1 nav-item"*/}
-                {/*        id="tab-title-additional_information" role="tab" aria-controls="tab-additional_information">*/}
-                {/*        <a href="product-detail#tab-additional_information"*/}
-                {/*           className="nav-link font-weight-medium py-4">*/}
-                {/*            Product Details </a>*/}
-                {/*    </li>*/}
-                {/*    <li className="videos_tab flex-shrink-0 flex-md-shrink-1 nav-item" id="tab-title-videos" role="tab"*/}
-                {/*        aria-controls="tab-videos">*/}
-                {/*        <a href="product-detail#tab-videos" className="nav-link font-weight-medium py-4">*/}
-                {/*            Videos </a>*/}
-                {/*    </li>*/}
-                {/*    <li className="reviews_tab flex-shrink-0 flex-md-shrink-1 nav-item" id="tab-title-reviews"*/}
-                {/*        role="tab" aria-controls="tab-reviews">*/}
-                {/*        <a href="product-detail#tab-reviews" className="nav-link font-weight-medium py-4">*/}
-                {/*            Reviews (1) </a>*/}
-                {/*    </li>*/}
-                {/*</ul>*/}
-                {/*<div className="tab-content">*/}
                 <div
                     className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--description panel entry-content wc-tab font-size-2"
                     id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
