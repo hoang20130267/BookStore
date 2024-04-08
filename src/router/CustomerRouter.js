@@ -1,4 +1,4 @@
-import {Route, Routes, useParams} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {Home} from "../customer/pages/home/Home";
 import {BlogDetail} from "../customer/pages/blog-detail/BlogDetail";
 import Contact from "../customer/pages/contact/Contact";
@@ -6,7 +6,7 @@ import Cart from "../customer/pages/shopping-cart/Cart";
 import BlogList from "../customer/pages/blog-list/BlogList";
 import ProductList from "../customer/pages/shop-product/ProductList";
 import Checkout from "../customer/pages/checkout/Checkout";
-import Detail from "../customer/pages/product-detail/Detail";
+import Detail from "../customer/pages/product-detail/ProductDetail";
 import SignIn from "../customer/pages/sign-in/SignIn";
 import SignUp from "../customer/pages/sign-up/SignUp";
 import NotFound from "../customer/pages/others/NotFound";

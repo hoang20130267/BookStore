@@ -33,7 +33,7 @@ const Product = (props) => {
                                 </span>
                             </div>
                             <div className="rate d-flex align-items-center">
-                                <div className="star-container d-inline-block">
+                                <div className="star-container">
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
                                     <span className="checked"><i className="fa-solid fa-star"></i></span>
