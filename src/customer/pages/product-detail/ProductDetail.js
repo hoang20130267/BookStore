@@ -3,12 +3,14 @@ import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
 import {Link} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
+import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 
 export const SingleProduct = () => {
     return (
         <div className="single-product-container border my-4 py-4">
-            <div className="row single-product-wrapper">
+            <div className="row single-product-wrapper m-0">
                 <div className="bookworm-product-gallery col-lg-5">
+                    <ProductImagesSlider/>
                 </div>
                 <div className="summary entry-summary col-lg-7 pl-lg-0">
                     <div className="summary entry-summary">
@@ -46,13 +48,9 @@ export const SingleProduct = () => {
                                 <div className="lgdBsd"><p className="label">Số
                                     Lượng</p>
                                     <div className="group-input">
-                                        <button className=""><img
-                                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-remove.svg"
-                                            alt="remove-icon" width="20" height="20"/></button>
+                                        <button><i className="fa-solid fa-minus"></i></button>
                                         <input type="text" value="2" className="input"/>
-                                        <button><img
-                                            src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
-                                            alt="add-icon" width="20" height="20"/></button>
+                                        <button><i className="fa-solid fa-plus"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -65,6 +63,13 @@ export const SingleProduct = () => {
                                     <i className="fa-solid fa-wallet"></i>
                                     mua ngay
                                 </button>
+                            </div>
+                            <div className="add-wishlist-button mt-4">
+                                <a href="?add_to_wishlist=71" rel="nofollow"
+                                   className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
+                                    <i className="fa-regular fa-heart"></i> <span
+                                    className="text">Thêm vào yêu thích</span>
+                                </a>
                             </div>
                         </div>
                     </div>

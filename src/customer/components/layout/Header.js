@@ -49,14 +49,12 @@ export const SearchResults = ({results}) => {
     return (
         <div className="search-results">
             {results.map((product) => (
-                    <Link className="result" to={`/blog-detail/${product.id}`} key={product.id}>
-                        <img src={product.image} alt={product.title} className="imageSearch"/>
-                    <Link className="result" to={`/product-detail/${product.id}`} key={product.id}>
-                        <image src={product.image} alt={product.title} className="imageSearch"/>
-                        <p>
+                <Link className="result" to={`/product-detail/${product.id}`} key={product.id}>
+                    <image src={product.image} alt={product.title} className="imageSearch"/>
+                    <p>
                         {product.title}
-                        </p>
-                    </Link>
+                    </p>
+                </Link>
             ))}
         </div>
     )
