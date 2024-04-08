@@ -20800,7 +20800,8 @@ a.text-primary-yellow:hover, a.text-primary-yellow:focus {
 }
 
 .text-yellow-darker {
-    color: #ffbd00 !important
+    color: #ffbd00 !important;
+    font-size: 14px;
 }
 
 a.text-yellow-darker:hover, a.text-yellow-darker:focus {
