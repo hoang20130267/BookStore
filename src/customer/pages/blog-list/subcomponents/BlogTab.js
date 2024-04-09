@@ -9,7 +9,7 @@ const BlogTab = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const data = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/blog/all`);
+                const data = await apiService.fetchData(`http://localhost:8080/api/blog/all`);
                 setBlogs(data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);

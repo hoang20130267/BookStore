@@ -38,7 +38,7 @@ export const SingleProduct = ({product}) => {
     const addToCart = async () => {
         const requestData = {product: {id: product.id}, quantity: quantity};
         try {
-            const responseData = await apiService.sendData(`${process.env.REACT_APP_API_ENDPOINT}/cart/add`, requestData);
+            const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
             console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
@@ -328,7 +328,7 @@ export const SideBar = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/latest`)
+                const result = await apiService.fetchData(`http://localhost:8080/api/products/latest`)
                 setLatestProducts(result);
             } catch (error) {
                 console.error('Error fetching latest products', error);
@@ -477,7 +477,7 @@ export const Detail = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/${id}`);
+                const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
                 setProduct(result)
             } catch (error) {
                 console.error('Error fetching product', error);
