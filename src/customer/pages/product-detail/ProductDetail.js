@@ -6,9 +6,44 @@ import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
 import DetailItem from "./subcomponents/DetailItem";
+import {useSelector} from "react-redux";
 
-const apiService = new APIService()
 export const SingleProduct = ({product}) => {
+    const [quantity, setQuantity] = useState(1);
+    const [editQuantity, setEditQuantity] = useState(false);
+    const handlePlus = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handleMinus = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const input = e.target.value;
+        if (input.trim() === '' || isNaN(input)) {
+            setQuantity(1); // Set quantity to 1 if the input is empty or not a number
+        } else {
+            setQuantity(parseInt(input)); // Set quantity to the parsed integer value of input
+        }
+    };
+    const enableEdit = () => {
+        setEditQuantity(!editQuantity);
+    };
+    const user = useSelector(state => state.auth.login.currentUser);
+    const {token} = user;
+    const apiService = new APIService(token);
+    const addToCart = async () => {
+        const requestData = {product: {id: product.id}, quantity: quantity};
+        try {
+            const responseData = await apiService.sendData(`${process.env.REACT_APP_API_ENDPOINT}/cart/add`, requestData);
+            console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+        } catch (error) {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+        }
+    };
     return (
         <div className="single-product-container border my-4 py-4">
             <div className="row single-product-wrapper m-0">
@@ -50,14 +85,16 @@ export const SingleProduct = ({product}) => {
                                 <div className="lgdBsd"><p className="label">Số
                                     Lượng</p>
                                     <div className="group-input">
-                                        <button><i className="fa-solid fa-minus"></i></button>
-                                        <input type="text" value="2" className="input"/>
-                                        <button><i className="fa-solid fa-plus"></i></button>
+                                        <button onClick={handleMinus}><i className="fa-solid fa-minus"></i></button>
+                                        <input type="text" value={quantity}
+                                               className="input"
+                                               onChange={handleInputChange}/>
+                                        <button onClick={handlePlus}><i className="fa-solid fa-plus"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div className="btn-groups">
-                                <button type="button" className="add_cart_btn">
+                                <button type="button" className="add_cart_btn" onClick={addToCart}>
                                     <i className="fa-solid fa-cart-shopping"></i>
                                     thêm vào giỏ hàng
                                 </button>
@@ -286,6 +323,7 @@ export const Information = ({detail}) => {
     )
 }
 export const SideBar = () => {
+    const apiService = new APIService();
     const [latestProducts, setLatestProducts] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
@@ -305,14 +343,15 @@ export const SideBar = () => {
                 <div id="woocommerce_products-2" className="widget p-4d875 border my-4 woocommerce widget_products">
                     <h4 className="font-size-3 mb-4">Sản phẩm mới</h4>
                     <ul className="product_list_widget">
-                        {latestProducts.map(product=>(<li className="mb-5">
+                        {latestProducts.map(product => (<li className="mb-5">
                             <div className="media">
                                 <div className="media d-md-flex">
                                     <Link to={`/product-detail/${product.id}`}
-                                       className="d-block">
+                                          className="d-block">
                                         <img width="150" height="200"
                                              src={product.image}
-                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/> </Link>
+                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/>
+                                    </Link>
                                     <div className="media-body ml-3 pl-1">
                                         <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><Link
                                             to={`/product-detail/${product.id}`}>
@@ -430,6 +469,7 @@ export const PageLink = () => {
     )
 }
 export const Detail = () => {
+    const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
     console.log(product)

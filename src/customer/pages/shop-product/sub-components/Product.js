@@ -1,9 +1,24 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
+import APIService from "../../../../service/APIService";
+import {useSelector} from "react-redux";
 
 const Product = (props) => {
     const productInfo = props.info;
+    const user = useSelector(state => state.auth.login.currentUser);
+    const {token} = user;
+    const apiService = new APIService(token);
+    const addToCart = async () => {
+        const requestData = {product: {id: productInfo.id}, quantity: 1};
+        try {
+            const responseData = await apiService.sendData(`${process.env.REACT_APP_API_ENDPOINT}/cart/add`, requestData);
+            console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+        } catch (error) {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+        }
+    };
+
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
             <div className="bookworm-product-grid">
@@ -46,15 +61,16 @@ const Product = (props) => {
                         <div
                             className="woocommerce-loop-product__hover product__hover d-flex align-items-center justify-content-between mt-2">
                             <div className="cart-fragment">
-                                <a href="shop-product/sub-components?add-to-cart=108" data-quantity="1"
-                                   className="button product_type_simple add_to_cart_button ajax_add_to_cart text-uppercase text-dark h-dark font-weight-medium mr-auto"
-                                   title="Thêm vào giỏ hàng">
+                                <Link to="" data-quantity="1" onClick={addToCart}
+                                      className="button product_type_simple add_to_cart_button ajax_add_to_cart text-uppercase text-dark h-dark font-weight-medium mr-auto"
+                                      title="Thêm vào giỏ hàng">
                                     <i className="fa-solid fa-cart-shopping"></i>
-                                </a>
+                                </Link>
                             </div>
                             <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                 <div className="yith-wcwl-add-button">
-                                    <a href="shop-product/sub-components?add_to_wishlist=108" className="add_to_wishlist single_add_to_wishlist"
+                                    <a href="shop-product/sub-components?add_to_wishlist=108"
+                                       className="add_to_wishlist single_add_to_wishlist"
                                        title="Thêm vào yêu thích">
                                         <i className="fa-regular fa-heart"></i>
                                     </a>

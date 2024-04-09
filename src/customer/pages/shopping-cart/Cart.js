@@ -2,22 +2,17 @@ import "../../assets/css/style-cart.css"
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import React, {useEffect, useState} from "react";
-import { MdOutlineDelete } from "react-icons/md";
-import { useSelector} from "react-redux";
+import {MdOutlineDelete} from "react-icons/md";
+import {useSelector} from "react-redux";
 import axios from "axios";
+import formatCurrency from "../../../utils/formatCurrency";
 
-export const Item = ({id, idProduct, name,image, price, quantity, token, updateCart}) => {
+export const Item = ({id, name, image, price, quantity, updateCart}) => {
     const handleIncrease = async () => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/cart/add/${idProduct}`,
-                {},
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            updateCart();
+            const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
             console.log("Product increased successfully:", response.data);
+            updateCart();
         } catch (error) {
             console.error("Error increasing product:", error);
         }
@@ -25,10 +20,10 @@ export const Item = ({id, idProduct, name,image, price, quantity, token, updateC
     const handleDecrease = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/decrease/${id}`);
-            console.log("Product increased successfully:", response.data);
+            console.log("Product decreased successfully:", response.data);
             updateCart();
         } catch (error) {
-            console.error("Error increasing product:", error);
+            console.error("Error decreasing product:", error);
         }
     };
     const handleDelete = async () => {
@@ -42,25 +37,25 @@ export const Item = ({id, idProduct, name,image, price, quantity, token, updateC
     };
     return (
         <tr id={id}>
-            <td className="shoping__cart__item" style={{display:"flex"}}>
+            <td className="shoping__cart__item" style={{display: "flex"}}>
                 <img src={image} alt=""
                      style={{width: "85px", height: "85px", objectFit: "cover"}}/>
                 <p>{name}</p>
             </td>
             <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
-                {price}đ
+                {formatCurrency(price)}
             </td>
             <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
                 <div className="value-button" id="decrease"
                      onClick={handleDecrease}>-
                 </div>
-                <input type="number" id="number"  value={quantity}/>
+                <input type="number" id="number" value={quantity}/>
                 <div className="value-button" id="increase"
                      onClick={handleIncrease}>+
                 </div>
             </td>
             <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
-                {quantity * price}đ
+                {formatCurrency(quantity * price)}
             </td>
             <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
                 <MdOutlineDelete size={"30px"}
@@ -138,13 +133,12 @@ export const ProductsInCart = () => {
                                 <tbody>
                                 {cart.map(cart => (
                                     <Item
+                                        key={cart.id}
                                         id={cart.id}
-                                        idProduct={cart.product.id}
                                         name={cart.product.title}
                                         image={cart.product.image}
                                         price={cart.product.current_price}
                                         quantity={cart.quantity}
-                                        token={token}
                                         updateCart={updateCart}
                                     />
                                 ))}
@@ -177,8 +171,8 @@ export const ProductsInCart = () => {
                         <div className="shoping__checkout">
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
-                                <li>Tạm tính <span>{total} Đồng</span></li>
-                                <li>Tổng tiền <span>{total} Đồng</span></li>
+                                <li>Tạm tính <span>{formatCurrency(total)}</span></li>
+                                <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
                             <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>
