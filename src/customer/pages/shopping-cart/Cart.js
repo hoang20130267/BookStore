@@ -2,57 +2,123 @@ import "../../assets/css/style-cart.css"
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import React, {useEffect, useState} from "react";
-import APIService from "../../../service/APIService";
-import {listCart} from "../../../store/apiRequest";
+import { MdOutlineDelete } from "react-icons/md";
 import { useSelector} from "react-redux";
+import axios from "axios";
 
-const apiService = new APIService();
-export const Item = ({id, name,image, price, quantity}) => {
+export const Item = ({id, idProduct, name,image, price, quantity, token, updateCart}) => {
+    const handleIncrease = async () => {
+        try {
+            const response = await axios.post(`http://localhost:8080/api/cart/add/${idProduct}`,
+                {},
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            updateCart();
+            console.log("Product increased successfully:", response.data);
+        } catch (error) {
+            console.error("Error increasing product:", error);
+        }
+    };
+    const handleDecrease = async () => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/cart/decrease/${id}`);
+            console.log("Product increased successfully:", response.data);
+            updateCart();
+        } catch (error) {
+            console.error("Error increasing product:", error);
+        }
+    };
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/cart/remove/${id}`);
+            alert("Xóa sản phẩm ra khỏi giỏ hàng thành công");
+            updateCart();
+        } catch (error) {
+            console.error("Error deleting blog:", error);
+        }
+    };
     return (
-        <tr key={id}>
-            <td className="shoping__cart__item">
+        <tr id={id}>
+            <td className="shoping__cart__item" style={{display:"flex"}}>
                 <img src={image} alt=""
                      style={{width: "85px", height: "85px", objectFit: "cover"}}/>
-                <h5>{name}</h5>
+                <p>{name}</p>
             </td>
             <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
                 {price}đ
             </td>
             <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
                 <div className="value-button" id="decrease"
-                     value="Decrease Value">-
+                     onClick={handleDecrease}>-
                 </div>
                 <input type="number" id="number"  value={quantity}/>
                 <div className="value-button" id="increase"
-                     value="Increase Value">+
+                     onClick={handleIncrease}>+
                 </div>
             </td>
             <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
                 {quantity * price}đ
             </td>
             <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
-                <i className="fa-solid fa-xmark"></i>
+                <MdOutlineDelete size={"30px"}
+                                 onClick={handleDelete}
+                />
             </td>
         </tr>
     )
 }
 export const ProductsInCart = () => {
+    const navigate = useNavigate();
     const [cart, setCart] = useState([]);
-    const user = useSelector(state => state.auth.login.currentUser);
-    const { token } = user;
-    console.log(token);
+    const [total, setTotal] = useState(0);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    useEffect(() => {
+        if (!user) {
+            navigate("/sign-in");
+        }
+    }, [user, navigate]);
+    const token = user ? user.token : null;
+    useEffect(() => {
+        const calculateTotals = () => {
+            let subtotalAmount = 0;
+            cart.forEach(item => {
+                subtotalAmount += item.quantity * item.product.current_price;
+            });
+            setTotal(subtotalAmount);
+        };
+
+        calculateTotals();
+    }, [cart]);
+    const updateCart = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/api/cart/items", {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setCart(response.data);
+        } catch (error) {
+            console.error("Error fetching carts:", error);
+        }
+    };
     useEffect(() => {
         const fetchCarts = async () => {
             try {
-                const data = await listCart(token);
-                setCart(data);
+                const response = await axios.get("http://localhost:8080/api/cart/items", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setCart(response.data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);
             }
         };
         fetchCarts();
     }, []);
-    console.log(cart);
     return (
         <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
             <div className="container">
@@ -73,10 +139,13 @@ export const ProductsInCart = () => {
                                 {cart.map(cart => (
                                     <Item
                                         id={cart.id}
+                                        idProduct={cart.product.id}
                                         name={cart.product.title}
                                         image={cart.product.image}
                                         price={cart.product.current_price}
                                         quantity={cart.quantity}
+                                        token={token}
+                                        updateCart={updateCart}
                                     />
                                 ))}
                                 </tbody>
@@ -108,8 +177,8 @@ export const ProductsInCart = () => {
                         <div className="shoping__checkout">
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
-                                <li>Tạm tính <span>150.000 Đồng</span></li>
-                                <li>Tổng tiền <span>150.000 Đồng</span></li>
+                                <li>Tạm tính <span>{total} Đồng</span></li>
+                                <li>Tổng tiền <span>{total} Đồng</span></li>
                             </ul>
                             <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
                         </div>

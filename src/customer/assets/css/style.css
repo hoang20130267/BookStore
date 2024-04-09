@@ -2005,7 +2005,6 @@ pre code {
 }
 
 .table th, .widget_calendar table th, .woocommerce-MyAccount-content .shop_table:not(.order_details) th, table.wishlist_table th, table th, .table td, .widget_calendar table td, .woocommerce-MyAccount-content .shop_table:not(.order_details) td, table.wishlist_table td, table td {
-    padding: .75rem;
     vertical-align: top;
     border-top: 1px solid #eae8e4
 }
