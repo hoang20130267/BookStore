@@ -1,8 +1,58 @@
 import "../../assets/css/style-cart.css"
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
+import React, {useEffect, useState} from "react";
+import APIService from "../../../service/APIService";
+import {listCart} from "../../../store/apiRequest";
+import { useSelector} from "react-redux";
 
+const apiService = new APIService();
+export const Item = ({id, name,image, price, quantity}) => {
+    return (
+        <tr key={id}>
+            <td className="shoping__cart__item">
+                <img src={image} alt=""
+                     style={{width: "85px", height: "85px", objectFit: "cover"}}/>
+                <h5>{name}</h5>
+            </td>
+            <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
+                {price}đ
+            </td>
+            <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
+                <div className="value-button" id="decrease"
+                     value="Decrease Value">-
+                </div>
+                <input type="number" id="number"  value={quantity}/>
+                <div className="value-button" id="increase"
+                     value="Increase Value">+
+                </div>
+            </td>
+            <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
+                {quantity * price}đ
+            </td>
+            <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
+                <i className="fa-solid fa-xmark"></i>
+            </td>
+        </tr>
+    )
+}
 export const ProductsInCart = () => {
+    const [cart, setCart] = useState([]);
+    const user = useSelector(state => state.auth.login.currentUser);
+    const { token } = user;
+    console.log(token);
+    useEffect(() => {
+        const fetchCarts = async () => {
+            try {
+                const data = await listCart(token);
+                setCart(data);
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+            }
+        };
+        fetchCarts();
+    }, []);
+    console.log(cart);
     return (
         <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
             <div className="container">
@@ -20,29 +70,15 @@ export const ProductsInCart = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td className="shoping__cart__item">
-                                        <img src="shopping-cart" alt=""
-                                             style={{width: "85px", height: "85px", objectFit: "cover"}}/>
-                                        <h5>Đắc nhân tâm</h5>
-                                    </td>
-                                    <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
-                                        150.000đ
-                                    </td>
-                                    <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
-                                        <div className="">
-                                            <div className="pro-qty">
-                                                <input type="text" value="1"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
-                                        150.000đ
-                                    </td>
-                                    <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </td>
-                                </tr>
+                                {cart.map(cart => (
+                                    <Item
+                                        id={cart.id}
+                                        name={cart.product.title}
+                                        image={cart.product.image}
+                                        price={cart.product.current_price}
+                                        quantity={cart.quantity}
+                                    />
+                                ))}
                                 </tbody>
                             </table>
                         </div>

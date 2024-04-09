@@ -1,3 +1,51 @@
+.value-button {
+    display: inline-block;
+    border: 1px solid #ddd;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 36px; /* Thêm dòng này */
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    background: #eee;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input#number {
+    text-align: center;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#decrease {
+    border-radius: 8px 0 0 8px;
+}
+
+#increase {
+    border-radius: 0 8px 8px 0;
+}
+.value-button:hover {
+    cursor: pointer;
+}
+
+
+
 .spad {
     padding-top: 100px;
     padding-bottom: 100px;
