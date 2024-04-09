@@ -47,6 +47,20 @@ export const logOut = async (dispatch, id, navigate, token) => {
         dispatch(logoutFailure());
     }
 }
+export const listCart = async (token) => {
+    try {
+        const response = await axios.get("http://localhost:8080/api/cart/items", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log("Load success:", response.data);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching cart:", err);
+        throw err;
+    }
+}
 export const sendEmail = async (props:any) => {
     const url = "http://localhost:8080/api/auth/forgot-password";
     try {

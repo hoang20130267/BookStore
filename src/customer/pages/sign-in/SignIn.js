@@ -22,6 +22,7 @@ const SignIn = () => {
             const response = await loginUser(username, password);
             if (response.status === 200) {
                 dispatch(loginSuccess(response.data));
+                localStorage.setItem('currentUser', JSON.stringify(response.data));
                 navigate("/");
             }
         } catch (e) {

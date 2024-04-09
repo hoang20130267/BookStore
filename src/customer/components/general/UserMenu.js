@@ -13,6 +13,7 @@ const UserMenu = () => {
     const handleLogout = () => {
         if (id && token) {
             logOut(dispatch, id, navigate, token);
+            localStorage.removeItem('currentUser');
         } else {
             // Xử lý trường hợp không có id hoặc accessToken
             console.error('Không thể đăng xuất: Thiếu id hoặc accessToken');
