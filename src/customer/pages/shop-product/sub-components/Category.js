@@ -113,14 +113,14 @@ const CategoriesList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const parentResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${categoryId}`);
+                const parentResult = await apiService.fetchData(`http://localhost:8080/api/categories/${categoryId}`);
                 setParentCategory(parentResult);
                 if (parentResult) {
-                    const subMainResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${parentResult.id}/subcategories`);
+                    const subMainResult = await apiService.fetchData(`http://localhost:8080/api/categories/${parentResult.id}/subcategories`);
                     setSubMainCategories(subMainResult);
                 }
                 if (mainCategoryId) {
-                    const subResult = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories/${mainCategoryId}/subcategories`);
+                    const subResult = await apiService.fetchData(`http://localhost:8080/api/categories/${mainCategoryId}/subcategories`);
                     setSubCategories(subResult);
                 }
             } catch (error) {

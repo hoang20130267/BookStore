@@ -77,7 +77,7 @@ export const BlogDetail = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/blog/${id}`);
+                const response = await apiService.fetchData(`http://localhost:8080/api/blog/${id}`);
                 setBlog(response);
             } catch (error) {
                 console.error("Error fetching blog:", error);

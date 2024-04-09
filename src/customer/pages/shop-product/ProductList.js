@@ -13,12 +13,12 @@ const ProductList = () => {
     const params = useParams();
     const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
-
+    console.log(process.env.REACT_APP_API_ENDPOINT);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/category/${lastParam}`);
+                const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${lastParam}`);
                 const first24Products = result.slice(0, 24);
                 setProducts(first24Products);
 

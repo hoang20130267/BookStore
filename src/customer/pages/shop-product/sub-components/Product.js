@@ -1,18 +1,19 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, {useEffect} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import APIService from "../../../../service/APIService";
 import {useSelector} from "react-redux";
 
 const Product = (props) => {
+    const navigate = useNavigate();
     const productInfo = props.info;
     const user = useSelector(state => state.auth.login.currentUser);
-    const {token} = user;
+    const token = user ? user.token : null;
     const apiService = new APIService(token);
     const addToCart = async () => {
         const requestData = {product: {id: productInfo.id}, quantity: 1};
         try {
-            const responseData = await apiService.sendData(`${process.env.REACT_APP_API_ENDPOINT}/cart/add`, requestData);
+            const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
             console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
