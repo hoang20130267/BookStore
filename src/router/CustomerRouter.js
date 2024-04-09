@@ -31,7 +31,7 @@ const CustomerRouter = () => {
                 <Route path="/sign-in" element={<SignIn/>}/>
                 <Route path="/sign-up" element={<SignUp/>}/>
                 <Route path="/product-list/:categoryId?/:mainCategoryId?/:subCategoryId?" element={<ProductList/>}/>
-                <Route path="/product-detail" element={<Detail/>}/>
+                <Route path="/product-detail/:id" element={<Detail/>}/>
                 <Route path="/blog-list" element={<BlogList/>}/>
                 <Route path={`/blog-detail/:id`} element={<BlogDetail/>}/>
                 <Route path="/contact" element={<Contact/>}/>

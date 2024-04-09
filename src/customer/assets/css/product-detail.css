@@ -90,6 +90,10 @@ table td, table th {
     outline: none;
     border: 2px solid #dee2e6 !important;
 }
+.image-gallery-thumbnail-image, .image-gallery-image{
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+}
 .add-wishlist-button a{
     color: #161619;
     font-size: 1rem;

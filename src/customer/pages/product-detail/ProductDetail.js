@@ -1,22 +1,24 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
+import APIService from "../../../service/APIService";
+import DetailItem from "./subcomponents/DetailItem";
 
-export const SingleProduct = () => {
+const apiService = new APIService()
+export const SingleProduct = ({product}) => {
     return (
         <div className="single-product-container border my-4 py-4">
             <div className="row single-product-wrapper m-0">
                 <div className="bookworm-product-gallery col-lg-5">
-                    <ProductImagesSlider/>
+                    <ProductImagesSlider images={product?.images}/>
                 </div>
                 <div className="summary entry-summary col-lg-7 pl-lg-0">
                     <div className="summary entry-summary">
                         <div className="summary__inner px-lg-4">
-                            <h1 className="product_title entry-title">The Lost Colony (The Long Winter Trilogy Book
-                                3)</h1>
+                            <h1 className="product_title entry-title">{product.title}</h1>
                             <div className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
                                 <div className="rate d-flex align-items-center">
                                     <Link to="#">
@@ -32,18 +34,18 @@ export const SingleProduct = () => {
                             <div className="price-label">
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price">{formatCurrency(50000)}</span>
+                                        <span className="price">{formatCurrency(product.current_price)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price">{formatCurrency(75000)}</span>
+                                        <span className="price">{formatCurrency(product.old_price)}</span>
                                     </p>
                                 </span>
                             </div>
-                            <div className="woocommerce-product-details__short-description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                    Excepteur sint occaecat.</p>
-                            </div>
+                            {/*<div className="woocommerce-product-details__short-description">*/}
+                            {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor*/}
+                            {/*        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut*/}
+                            {/*        Excepteur sint occaecat.</p>*/}
+                            {/*</div>*/}
                             <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                                 <div className="lgdBsd"><p className="label">Số
                                     Lượng</p>
@@ -78,7 +80,13 @@ export const SingleProduct = () => {
         </div>
     )
 }
-export const Information = () => {
+export const Information = ({detail}) => {
+    const [productDetails, setProductDetails] = useState({})
+    useEffect(() => {
+        if (detail) {
+            setProductDetails(detail);
+        }
+    }, [detail])
     return (
         <div className="woocommerce-tabs wc-tabs-wrapper mx-lg-auto">
             <div className="classic-nav">
@@ -86,31 +94,7 @@ export const Information = () => {
                     className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--description panel entry-content wc-tab font-size-2"
                     id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
                     <h4 className="font-size-3">Mô tả sản phẩm</h4>
-                    <p className="mb-0">We aim to show you accurate product information. Manufacturers, suppliers
-                        and others provide what you see here, and we have not verified it. See our disclaimer</p>
-                    <p className="mb-0">#1 New York Times Bestseller</p>
-                    <p className="mb-0">A Reese Witherspoon x Hello Sunshine Book Club Pick</p>
-                    <p className="mb-4">&#8220;I can&#8217;t even express how much I love this book! I didn&#8217;t
-                        want this story to end!&#8221;&#8211;Reese Witherspoon</p>
-                    <p className="mb-4">&#8220;Painfully beautiful.&#8221;&#8211;The New York Times Book Review
-                    </p>
-                    <p>&#8220;Perfect for fans of Barbara Kingsolver.&#8221;&#8211;Bustle</p>
-                    <p className="mb-4">For years, rumors of the &#8220;Marsh Girl&#8221; have haunted Barkley Cove,
-                        a quiet town on the North Carolina coast. So in late 1969, when handsome Chase Andrews is
-                        found dead, the locals immediately suspect Kya
-                        Clark, the so-called Marsh Girl. But Kya is not what they say. Sensitive and intelligent,
-                        she has survived for years alone in the marsh that she calls home, finding friends in the
-                        gulls and lessons in the sand.
-                        Then the time comes when she yearns to be touched and loved. When two young men from town
-                        become intrigued by her wild beauty, Kya opens herself to a new life&#8211;until the
-                        unthinkable happens.</p>
-                    <p className="mb-4">Perfect for fans of Barbara Kingsolver and Karen Russell, Where the Crawdads
-                        Sing is at once an exquisite ode to the natural world, a heartbreaking coming-of-age story,
-                        and a surprising tale of possible murder.
-                        Owens reminds us that we are forever shaped by the children we once were, and that we are
-                        all subject to the beautiful and violent secrets that nature keeps
-                    </p>
-                    <p>WHERE THE CRAWDADS LP</p>
+                    <div dangerouslySetInnerHTML={{__html: productDetails.description}}/>
                 </div>
                 <div
                     className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--additional_information panel entry-content wc-tab font-size-2"
@@ -120,71 +104,23 @@ export const Information = () => {
                     <div className="table-responsive">
                         <table
                             className="woocommerce-product-attributes shop_attributes table table-hover table-borderless">
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_book-author">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Mã sản phẩm
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p><a href="https://bookworm.madrasthemes.com/book-author/a-g-riddle/"
-                                          rel="tag">A G Riddle</a></p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Tên nhà cung cấp
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Tác giả
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Nhà xuất bản
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Năm xuất bản
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Trọng lượng
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Số trang
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
-                            <tr className="woocommerce-product-attributes-item woocommerce-product-attributes-item--attribute_pa_format">
-                                <th className="woocommerce-product-attributes-item__label px-4 px-xl-5">
-                                    Danh mục
-                                </th>
-                                <td className="woocommerce-product-attributes-item__value">
-                                    <p>Hardcover, Kindle, Paperback</p>
-                                </td>
-                            </tr>
+                            {productDetails.product_sku && (
+                                <DetailItem name={"Mã sản phẩm"} value={productDetails.product_sku}/>)}
+                            {productDetails.supplier && (
+                                <DetailItem name={"Nhà cung cấp"} value={productDetails.supplier}/>)}
+                            {productDetails.publisher && (
+                                <DetailItem name={"Nhà xuất bản"} value={productDetails.publisher}/>)}
+                            {productDetails.publish_year && (
+                                <DetailItem name={"Năm xuất bản"} value={productDetails.publish_year}/>)}
+                            {productDetails.author && (<DetailItem name={"Tác giả"} value={productDetails.author}/>)}
+                            {productDetails.brand && (<DetailItem name={"Thương hiệu"} value={productDetails.brand}/>)}
+                            {productDetails.origin && (<DetailItem name={"Xuất xứ"} value={productDetails.origin}/>)}
+                            {productDetails.color && (<DetailItem name={"Màu sắc"} value={productDetails.color}/>)}
+                            {productDetails.weight && (
+                                <DetailItem name={"Trọng lượng"} value={productDetails.weight}/>)}
+                            {productDetails.size && (<DetailItem name={"Kích cỡ"} value={productDetails.size}/>)}
+                            {productDetails.quantity_of_page && productDetails.quantity_of_page !== -1 && (
+                                <DetailItem name={"Số trang"} value={productDetails.quantity_of_page}/>)}
                         </table>
                     </div>
                 </div>
@@ -350,85 +286,51 @@ export const Information = () => {
     )
 }
 export const SideBar = () => {
+    const [latestProducts, setLatestProducts] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/latest`)
+                setLatestProducts(result);
+            } catch (error) {
+                console.error('Error fetching latest products', error);
+            }
+        }
+        fetchData();
+    }, [])
+    console.log(latestProducts)
     return (
         <div id="secondary" className="sidebar widget-area order-1" role="complementary">
             <div id="widgetAccordion">
                 <div id="woocommerce_products-2" className="widget p-4d875 border my-4 woocommerce widget_products">
                     <h4 className="font-size-3 mb-4">Sản phẩm mới</h4>
                     <ul className="product_list_widget">
-                        <li className="mb-5">
+                        {latestProducts.map(product=>(<li className="mb-5">
                             <div className="media">
                                 <div className="media d-md-flex">
-                                    <a href="https://bookworm.madrasthemes.com/product/blindside-michael-bennett-book-12/"
+                                    <Link to={`/product-detail/${product.id}`}
                                        className="d-block">
                                         <img width="150" height="200"
-                                             src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/10-150x200.jpg"
-                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/> </a>
+                                             src={product.image}
+                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/> </Link>
                                     <div className="media-body ml-3 pl-1">
-                                        <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
-                                            href="https://bookworm.madrasthemes.com/product/blindside-michael-bennett-book-12/">
-                                            Blindside (Michael Bennett Book 12) </a></h6>
+                                        <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><Link
+                                            to={`/product-detail/${product.id}`}>
+                                            {product.title}</Link></h6>
                                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price" style={{fontSize: "14px"}}>130000</span>
+                                        <span className="price"
+                                              style={{fontSize: "14px"}}>{formatCurrency(product.current_price)}</span>
                                     </p>
                                     <p className="old-price pb-1">
-                                        <span className="price" style={{fontSize: "11px"}}>150000</span>
+                                        <span className="price"
+                                              style={{fontSize: "11px"}}>{formatCurrency(product.old_price)}</span>
                                     </p>
                                 </span>
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                        <li className="mb-5">
-                            <div className="media">
-                                <div className="media d-md-flex">
-                                    <a href="https://bookworm.madrasthemes.com/product/until-the-end-of-time-mind-matter-and-our-search-for-meaning-in-an-evolving-universe/"
-                                       className="d-block">
-                                        <img width="150" height="200"
-                                             src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/9-150x200.jpg"
-                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/> </a>
-                                    <div className="media-body ml-3 pl-1">
-                                        <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
-                                            href="https://bookworm.madrasthemes.com/product/until-the-end-of-time-mind-matter-and-our-search-for-meaning-in-an-evolving-universe/">
-                                            Until the End of Time: Mind, Matter, and Our Search for Meaning in
-                                            an Evolving Universe </a></h6>
-                                        <span className="price d-flex justify-content-start align-items-center">
-                                    <p className="current-price mr-2">
-                                        <span className="price" style={{fontSize: "14px"}}>130000</span>
-                                    </p>
-                                    <p className="old-price pb-1">
-                                        <span className="price" style={{fontSize: "11px"}}>150000</span>
-                                    </p>
-                                </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li className="mb-5">
-                            <div className="media">
-                                <div className="media d-md-flex">
-                                    <a href="https://bookworm.madrasthemes.com/product/open-book-a-memoir/"
-                                       className="d-block">
-                                        <img width="150" height="200"
-                                             src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/8-150x200.jpg"
-                                             className="img-fluid" alt style={{maxWidth: "60px"}} loading="lazy"/> </a>
-                                    <div className="media-body ml-3 pl-1">
-                                        <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2"><a
-                                            href="https://bookworm.madrasthemes.com/product/open-book-a-memoir/">
-                                            Open Book: A Memoir </a></h6>
-                                        <span className="price d-flex justify-content-start align-items-center">
-                                            <p className="current-price mr-2">
-                                                <span className="price" style={{fontSize: "14px"}}>130000</span>
-                                            </p>
-                                            <p className="old-price pb-1">
-                                                <span className="price" style={{fontSize: "11px"}}>150000</span>
-                                            </p>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        </li>))}
                     </ul>
                 </div>
                 <div id="bookworm_features_block_widget-2"
@@ -528,6 +430,21 @@ export const PageLink = () => {
     )
 }
 export const Detail = () => {
+    const {id} = useParams();
+    const [product, setProduct] = useState({});
+    console.log(product)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/products/${id}`);
+                setProduct(result)
+            } catch (error) {
+                console.error('Error fetching product', error);
+            }
+        }
+        fetchData();
+    }, [])
     return (
         <div>
             <PageLink/>
@@ -537,8 +454,8 @@ export const Detail = () => {
                         <main id="main" className="site-main" role="main">
                             <div id="product-71"
                                  className="product type-product post-71 status-publish first instock product_cat-mystery product_cat-thriller-suspense has-post-thumbnail taxable shipping-taxable purchasable product-type-variable single-product__content single-product__v4">
-                                <SingleProduct/>
-                                <Information/>
+                                <SingleProduct product={product}/>
+                                <Information detail={product?.detail}/>
                             </div>
                         </main>
                     </div>

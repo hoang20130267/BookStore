@@ -10,7 +10,7 @@ const Product = (props) => {
                 <div className="product__inner overflow-hidden p-3">
                     <div className="position-relative d-block">
                         <div className="woocommerce-loop-product__header">
-                            <Link to="/product-detail"
+                            <Link to={`/product-detail/${productInfo.id}`}
                                   className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
                                 src={productInfo.image}
                                 className="img-fluid d-block mx-auto attachment-shop_catalog size-shop_catalog wp-post-image img-fluid"
