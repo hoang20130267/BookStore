@@ -1,10 +1,11 @@
 import {createSlice} from "@reduxjs/toolkit";
 
+const persistedUser = localStorage.getItem('currentUser');
 const authSlice = createSlice({
     name: "auth",
     initialState: {
-        login:{
-            currentUser: null,
+        login: {
+            currentUser: persistedUser ? JSON.parse(persistedUser) : null,
             isFetching: false,
             error: false
         },
@@ -50,11 +51,6 @@ const authSlice = createSlice({
         logoutFailure: (state) => {
             state.logout.isFetching = false;
             state.logout.error = true;
-        },
-        blogSuccess: (state, action) => {
-            state.blog.isFetching = false;
-            state.blog.currentBlog = action.payload;
-            state.blog.error = false;
         }
     }
 });
@@ -64,8 +60,6 @@ export const {
     logoutStart,
     logoutSuccess,
     logoutFailure,
-    blogSuccess
 } = authSlice.actions;
-
 
 export default authSlice.reducer;
