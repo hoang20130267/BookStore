@@ -32,7 +32,7 @@ export const SearchBar = ({setResults}) => {
     }
     return (
         <>
-        <div className="input-wrapper d-flex">
+        <div className="input-wrapper d-flex" style={{marginLeft: "224px"}}>
             <FaSearch id="#search-icon"/>
             <input type="text" class="searchInput" placeholder="Tìm kiếm..."
                    value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
@@ -70,7 +70,7 @@ export const Header = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories`)
+                const result = await apiService.fetchData(`http://localhost:8080/api/categories`)
                 const parent = result.find(cat => cat.parentCategory === null);
                 setParentCategory(parent)
                 const mainCategories = result.filter(cat => cat.parentCategory && cat.parentCategory.id === parent.id);
@@ -96,20 +96,6 @@ export const Header = () => {
                 <div className="bg-punch-light">
                     <div className="container">
                         <div className="d-flex align-items-center position-relative flex-wrap">
-                            <div className="d-none d-xl-flex align-items-center mt-3 mt-md-0 mr-md-auto">
-                                <a href="tel:+1246-345-0695">
-                                    <div className="d-flex align-items-center text-dark font-size-2 text-lh-sm">
-                                        <i className="fa-solid fa-phone font-size-5 mt-2 mr-1"></i>
-                                        <div className="ml-2">
-                                        <span className="text-secondary-gray-1090 font-size-1">
-                                            +84 765 999 111 </span>
-                                            <div className="h6 mb-0">
-                                                Gọi không tốn phí
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
                             <div className="site-branding pr-md-7 mx-md-0">
                                 <h1 className="beta site-title site-title text-uppercase font-weight-bold font-size-5 m-0 ">
                                     <Link to="/" style={{marginLeft:"20px"}}>GoldLeaf</Link></h1>
