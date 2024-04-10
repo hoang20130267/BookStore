@@ -10,6 +10,7 @@ import DetailItem from "./subcomponents/DetailItem";
 import {useSelector} from "react-redux";
 import Rating from '@mui/material/Rating';
 import { FaTrashCan } from "react-icons/fa6";
+import { FaRegEdit } from "react-icons/fa";
 import axios from "axios";
 
 export const SingleProduct = ({product}) => {
@@ -230,7 +231,6 @@ export const Comment = () => {
             setIsLogin(true)
         }
     }, [user]);
-
     return (
         <div
             className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--reviews panel entry-content wc-tab font-size-2"
@@ -345,6 +345,7 @@ export const Comment = () => {
                         rating={comment.rating}
                         content={comment.cmtDetail}
                         createdAt={comment.created_at}
+                        token={token}
                         updateListComment={updateListComment}
                     />
                 ))}
@@ -386,9 +387,12 @@ export const Comment = () => {
         </div>
     )
 }
-export const CommentItem = ({ id, username, rating, content, createdAt, updateListComment}) => {
+export const CommentItem = ({ id, username, rating, content, createdAt, token, updateListComment}) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [sameUser, setSameUser] = useState(false);
+    const [value, setValue] = React.useState(2);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [newContent, setNewContent] = useState('');
     const handleDelete = async () => {
         try {
             await axios.delete(`http://localhost:8080/api/comment/delete/${id}`);
@@ -398,8 +402,29 @@ export const CommentItem = ({ id, username, rating, content, createdAt, updateLi
             console.error("Error deleting blog:", error);
         }
     };
+    const handleEditClick = () => {
+        setShowEditForm(prevState => !prevState);
+    };
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`http://localhost:8080/api/comment/update/${id}`, {
+                rate: value,
+                detail: newContent
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            updateListComment();
+            console.log("Updated comment:", response);
+            setShowEditForm(false);
+        } catch (error) {
+            console.error("Error update comment:", error);
+        }
+    };
     useEffect(() => {
-        if (user.username===username) {
+        if (user && user.username=== username) {
             setSameUser(true)
         }
     }, []);
@@ -421,14 +446,44 @@ export const CommentItem = ({ id, username, rating, content, createdAt, updateLi
                         <div className="text-gray-600">{createdAt}</div>
                     </div>
                     {sameUser ? (
-                    <div className="delete-comment" style={{alignItems:"end"}}>
-                        <FaTrashCan size={"20px"} className={"trashcan"} onClick={handleDelete}/>
+                    <div className="delete-comment" style={{alignItems:"center", display:"flex"}}>
+                        <FaRegEdit size={"25px"} className={"edit-comment"} onClick={handleEditClick}/>
+                        <FaTrashCan size={"25px"} className={"trashcan"} onClick={handleDelete}/>
                     </div>
                     ) : (
                         <></>
                     )}
                 </div>
             </li>
+            {showEditForm && (
+                <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom" id={`edit-comment-${id}`}>
+                    <form onSubmit={handleUpdate} className="form-comment">
+                        <label htmlFor="rating" style={{ fontSize: "21px" }}>Chỉnh sửa đánh giá</label>
+                        <Rating
+                            name="simple-controlled"
+                            value={value}
+                            onChange={(event, newValue) => {
+                                setValue(newValue);
+                            }}
+                            size={"large"}
+                        />
+                        <p className="comment-form-comment">
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                cols={45}
+                                rows={8}
+                                maxLength={65525}
+                                required
+                                value={newContent}
+                                onChange={e => { setNewContent(e.target.value)
+                                }}
+                            />
+                        </p>
+                        <button name="submit" type="submit" id="submit" className="button-comment">Chỉnh sửa đánh giá</button>
+                    </form>
+                </li>
+            )}
         </ul>
     )
 }
