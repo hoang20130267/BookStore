@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from "react";
 import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
+import "../../assets/css/style-comment.css"
 import {Link, useParams} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
 import DetailItem from "./subcomponents/DetailItem";
 import {useSelector} from "react-redux";
+import Rating from '@mui/material/Rating';
+import BlogItem from "../blog-list/subcomponents/BlogItem";
+import axios from "axios";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
@@ -161,165 +165,241 @@ export const Information = ({detail}) => {
                         </table>
                     </div>
                 </div>
-                <div
-                    className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--reviews panel entry-content wc-tab font-size-2"
-                    id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
-                    <h4 className="font-size-3">Đánh giá khách hàng</h4>
-                    <div className="row mb-8 advanced-review-rating">
-                        <div className="col-md-12 mb-6">
-                            <div className="d-flex  align-items-center mb-4">
-                                <span className="font-size-15 font-weight-bold">4.0</span>
-                                <div className="ml-3 h6 mb-0">
+                <Comment/>
+            </div>
+        </div>
+    )
+}
+export const Comment = () => {
+    const [isLogin, setIsLogin] = useState(false);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const [value, setValue] = React.useState(2);
+    const [comments, setComments] = useState([]);
+    const apiService = new APIService();
+    const {id} = useParams();
+    const [content, setContent] = useState('');
+    const token = user ? user.token : null;
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
+                setComments(data);
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+            }
+        };
+        fetchComments();
+    }, []);
+
+    const updateListComment = async () => {
+        try {
+            const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
+            setComments(data);
+        } catch (error) {
+            console.error("Error fetching blogs:", error);
+        }
+    };
+    const handleAddComment = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`http://localhost:8080/api/comment/add/${id}`, {
+                rate: value,
+                detail: content
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            updateListComment();
+            setValue(2);
+            setContent('');
+            console.log("Product increased successfully:", response.data);
+        } catch (error) {
+            console.error("Error increasing product:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            setIsLogin(true)
+        }
+    }, [user]);
+
+    return (
+        <div
+            className="border p-3 my-4 woocommerce-Tabs-panel woocommerce-Tabs-panel--reviews panel entry-content wc-tab font-size-2"
+            id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
+            <h4 className="font-size-3">Đánh giá khách hàng</h4>
+            <div className="row mb-8 advanced-review-rating">
+                    <div className="d-flex  align-items-center mb-4">
+                        <span className="font-size-15 font-weight-bold">4.0</span>
+                        <div className="ml-3 h6 mb-0">
                                                         <span className="font-weight-normal">
                                                             1 review </span>
-                                    <div className="text-yellow-darker">
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className=""><i className="fa-solid fa-star"></i></span>
-                                        <span className=""><i className="fa-solid fa-star"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-md-flex">
-                                <a href="product-detail#reviews"
-                                   className="btn btn-outline-dark rounded-0 px-5 mb-3 mb-md-0"
-                                   data-scroll>Xem tất cả đánh giá</a>
-                            </div>
-                        </div>
-                        <div className="col-md-12">
-                            <ul className="list-unstyled p-0">
-                                <li className="py-2">
-                                    <a className="row align-items-center mx-gutters-2 font-size-2">
-                                        <div className="col-auto">
-                                            <span className="text-dark">5 sao</span>
-                                        </div>
-                                        <div className="col px-0">
-                                            <div className="progress bg-white-100" style={{height: "7px"}}>
-                                                <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                     style={{width: "0%"}} aria-valuenow="100" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 text-right zero"><span
-                                            className="text-secondary">0</span></div>
-                                    </a>
-                                </li>
-                                <li className="py-2">
-                                    <a className="row align-items-center mx-gutters-2 font-size-2">
-                                        <div className="col-auto">
-                                            <span className="text-dark">4 sao</span>
-                                        </div>
-                                        <div className="col px-0">
-                                            <div className="progress bg-white-100" style={{height: "7px"}}>
-                                                <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                     style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 text-right"><span className="text-secondary">1</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li className="py-2">
-                                    <a className="row align-items-center mx-gutters-2 font-size-2">
-                                        <div className="col-auto">
-                                            <span className="text-dark">3 sao</span>
-                                        </div>
-                                        <div className="col px-0">
-                                            <div className="progress bg-white-100" style={{height: "7px"}}>
-                                                <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                     style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 text-right zero"><span
-                                            className="text-secondary">0</span></div>
-                                    </a>
-                                </li>
-                                <li className="py-2">
-                                    <a className="row align-items-center mx-gutters-2 font-size-2">
-                                        <div className="col-auto">
-                                            <span className="text-dark">2 sao</span>
-                                        </div>
-                                        <div className="col px-0">
-                                            <div className="progress bg-white-100" style={{height: "7px"}}>
-                                                <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                     style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 text-right zero"><span
-                                            className="text-secondary">0</span></div>
-                                    </a>
-                                </li>
-                                <li className="py-2">
-                                    <a className="row align-items-center mx-gutters-2 font-size-2">
-                                        <div className="col-auto">
-                                            <span className="text-dark">1 sao</span>
-                                        </div>
-                                        <div className="col px-0">
-                                            <div className="progress bg-white-100" style={{height: "7px"}}>
-                                                <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                                     style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 text-right zero"><span
-                                            className="text-secondary">0</span></div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h4 className="font-size-3 mb-8 d-none">1-5 of 1 review </h4>
-                    <div id="reviews">
-                        <ul className="commentlist list-unstyled mb-8">
-                            <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom"
-                                id="li-comment-95">
-                                <div id="comment-95" className="comment_container">
-                                    <div className="comment-text">
-                                        <div className="d-md-flex align-items-center mb-3">
-                                            <h6 className="mb-0 mr-3">Nilofer</h6>
-                                            <div className="text-yellow-darker">
-                                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                                <span className=""><i className="fa-solid fa-star"></i></span>
-                                                <span className=""><i className="fa-solid fa-star"></i></span>
-                                            </div>
-                                        </div>
-                                        <div className="description mb-4 text-lh-md">
-                                            <p>I read this book shortly after I got it and didn&#8217;t just put it
-                                                on my TBR shelf mainly because I saw it on Reese Witherspoon&#8217;s
-                                                bookclub September read. It was one of the best books
-                                                I&#8217;ve read this year, and reminded me some of Kristen
-                                                Hannah&#8217;s The Great Alone.</p>
-                                        </div>
-                                        <div className="text-gray-600">September 1, 2020</div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <div id="review_form_wrapper">
-                            <div id="review_form">
-                                <div id="respond" className="comment-respond">
-                                    <h4 id="reply-title" className="comment-reply-title font-size-3 mb-4">Viết đánh
-                                        giá
-                                        <small><a rel="nofollow" id="cancel-comment-reply-link"
-                                                  href="/shop-product/the-lost-colony-the-long-winter-trilogy-book-3/#respond"
-                                                  style={{display: "none"}}>Cancel reply</a></small></h4>
-                                    <p className="must-log-in">Bạn phải <a
-                                        href="https://bookworm.madrasthemes.com/my-account/">Đăng nhập</a> để viết
-                                        đánh giá.</p>
-                                </div>
+                            <div className="text-yellow-darker">
+                                <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                <span className=""><i className="fa-solid fa-star"></i></span>
+                                <span className=""><i className="fa-solid fa-star"></i></span>
                             </div>
                         </div>
                     </div>
-                    {/*</div>*/}
+                <div className="col-md-12">
+                    <ul className="list-unstyled p-0">
+                        <li className="py-2">
+                            <a className="row align-items-center mx-gutters-2 font-size-2">
+                                <div className="col-auto">
+                                    <span className="text-dark">5 sao</span>
+                                </div>
+                                <div className="col px-0">
+                                    <div className="progress bg-white-100" style={{height: "7px"}}>
+                                        <div className="progress-bar bg-yellow-darker" role="progressbar"
+                                             style={{width: "0%"}} aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div className="col-2 text-right zero"><span
+                                    className="text-secondary">0</span></div>
+                            </a>
+                        </li>
+                        <li className="py-2">
+                            <a className="row align-items-center mx-gutters-2 font-size-2">
+                                <div className="col-auto">
+                                    <span className="text-dark">4 sao</span>
+                                </div>
+                                <div className="col px-0">
+                                    <div className="progress bg-white-100" style={{height: "7px"}}>
+                                        <div className="progress-bar bg-yellow-darker" role="progressbar"
+                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div className="col-2 text-right"><span className="text-secondary">1</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li className="py-2">
+                            <a className="row align-items-center mx-gutters-2 font-size-2">
+                                <div className="col-auto">
+                                    <span className="text-dark">3 sao</span>
+                                </div>
+                                <div className="col px-0">
+                                    <div className="progress bg-white-100" style={{height: "7px"}}>
+                                        <div className="progress-bar bg-yellow-darker" role="progressbar"
+                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div className="col-2 text-right zero"><span
+                                    className="text-secondary">0</span></div>
+                            </a>
+                        </li>
+                        <li className="py-2">
+                            <a className="row align-items-center mx-gutters-2 font-size-2">
+                                <div className="col-auto">
+                                    <span className="text-dark">2 sao</span>
+                                </div>
+                                <div className="col px-0">
+                                    <div className="progress bg-white-100" style={{height: "7px"}}>
+                                        <div className="progress-bar bg-yellow-darker" role="progressbar"
+                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div className="col-2 text-right zero"><span
+                                    className="text-secondary">0</span></div>
+                            </a>
+                        </li>
+                        <li className="py-2">
+                            <a className="row align-items-center mx-gutters-2 font-size-2">
+                                <div className="col-auto">
+                                    <span className="text-dark">1 sao</span>
+                                </div>
+                                <div className="col px-0">
+                                    <div className="progress bg-white-100" style={{height: "7px"}}>
+                                        <div className="progress-bar bg-yellow-darker" role="progressbar"
+                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div className="col-2 text-right zero"><span
+                                    className="text-secondary">0</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h4 className="font-size-3 mb-8 d-none">1-5 of 1 review </h4>
+            <div id="reviews">
+                {comments.map(comment => (
+                    <CommentItem
+                        id={comment.id}
+                        username={comment.user.username}
+                        rating={comment.rating}
+                        content={comment.cmtDetail}
+                        createdAt={comment.created_at}
+                    />
+                ))}
+                <div id="review_form_wrapper">
+                    <div id="review_form">
+                        <div id="respond" className="comment-respond">
+                            <h4 id="reply-title" className="comment-reply-title font-size-3 mb-4">Viết đánh
+                                giá
+                            </h4>
+                            {isLogin ? (
+                                <form onSubmit={handleAddComment}
+                                      className="form-comment">
+                                    <label htmlFor="rating" style={{fontSize:"21px"}}>Đánh giá của bạn</label>
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={value}
+                                        onChange={(event, newValue) => {
+                                            setValue(newValue);
+                                        }}
+                                        size={"large"}
+                                    />
+                                    <p className="comment-form-comment">
+                                        <textarea id="comment" name="comment" cols={45} rows={8}
+                                                  maxLength={65525} required defaultValue={""}
+                                                  onChange={e => setContent(e.target.value)}/>
+                                    </p>
+                                    <button name="submit" type="submit" id="submit" className="submit"
+                                               >Gửi đánh giá</button>
+                                </form>
+                            ) : (
+                                <p className="must-log-in">Bạn phải <a
+                                    href={"/sign-in"}>Đăng nhập</a> để viết
+                                    đánh giá.</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    )
+}
+export const CommentItem = ({ id, username, rating, content, createdAt}) => {
+    return(
+        <ul className="commentlist list-unstyled mb-8" key={id}>
+            <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom"
+                id="li-comment-95">
+                <div id="comment-95" className="comment_container">
+                    <div className="comment-text">
+                        <div className="d-md-flex align-items-center mb-3">
+                            <h6 className="mb-0 mr-3">{username}</h6>
+                            <div className="text-yellow-darker">
+                                <Rating name="read-only" value={rating} readOnly/>
+                            </div>
+                        </div>
+                        <div className="description mb-4 text-lh-md">
+                            <p>{content}</p>
+                        </div>
+                        <div className="text-gray-600">{createdAt}</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
     )
 }
 export const SideBar = () => {
@@ -336,7 +416,6 @@ export const SideBar = () => {
         }
         fetchData();
     }, [])
-    console.log(latestProducts)
     return (
         <div id="secondary" className="sidebar widget-area order-1" role="complementary">
             <div id="widgetAccordion">
@@ -472,7 +551,6 @@ export const Detail = () => {
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
-    console.log(product)
 
     useEffect(() => {
         const fetchData = async () => {
