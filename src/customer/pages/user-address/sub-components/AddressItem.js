@@ -1,7 +1,47 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
+import ConfirmationModal from "./ConfirmationModal";
+import APIService from "../../../../service/APIService";
 
-const AddressItem = ({address}) => {
+const AddressItem = ({address, updateAddresses}) => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const deleteAddress = async ()=>{
+        try {
+            const response = apiService.deleteData(`http://localhost:8080/api/user/addresses/${address.id}`)
+            console.log("Address deleted successfully:", response.data);
+            updateAddresses();
+        }catch (error){
+            console.log("Error deleting address:", error);
+        }
+    }
+
+    const setDefaultAddress = async ()=>{
+        try{
+            const response = apiService.updateData(`http://localhost:8080/api/user/addresses/default/${address.id}`)
+            console.log("Address set default successfully:", response.data);
+            updateAddresses();
+        }catch (error){
+            console.log("Error setting default address", error);
+        }
+    }
+
+    const handleDeleteClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirm = () => {
+        deleteAddress();
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="address-item-container">
             <div className="address-item">
@@ -21,7 +61,12 @@ const AddressItem = ({address}) => {
                             <button className="function-button update-button">Cập nhật</button>
                         </Link>
                         {address.default === false && (
-                            <button className="function-button delete-button">Xóa</button>)}
+                            <button onClick={handleDeleteClick} className="function-button delete-button">Xóa</button>)}
+                        <ConfirmationModal
+                            isOpen={isModalOpen}
+                            onCancel={handleCancel}
+                            onConfirm={handleConfirm}
+                        />
                     </div>
                 </div>
                 <div className="address-card_content d-flex justify-content-between"
@@ -39,7 +84,7 @@ const AddressItem = ({address}) => {
                     </div>
                     <div className="d-flex justify-content-end"
                          style={{paddingTop: "4px", flexBasis: "40px"}}>
-                        <button className="set-default-button" disabled={address.default}>Thiết lập mặc
+                        <button onClick={setDefaultAddress} className="set-default-button" disabled={address.default}>Thiết lập mặc
                             định
                         </button>
                     </div>

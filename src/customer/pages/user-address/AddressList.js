@@ -10,20 +10,19 @@ import APIService from "../../../service/APIService";
 const AddressList = () => {
     const location = useLocation();
     const user = useSelector(state => state.auth.login.currentUser);
-    const user_id = user ? user.id : null;
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const [addresses, setAddresses] = useState([]);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
-                setAddresses(result)
-            } catch (error) {
-                console.error('Error fetching addresses', error);
-            }
+    const fetchAddress = async () => {
+        try {
+            const result = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
+            setAddresses(result)
+        } catch (error) {
+            console.error('Error fetching addresses', error);
         }
-        fetchData();
+    }
+    useEffect(() => {
+        fetchAddress();
     }, [])
 
     return (
@@ -56,7 +55,7 @@ const AddressList = () => {
                                 <div style={{padding: "12px 10px 0"}}>
                                     <div className="list-title">Địa chỉ</div>
                                     {addresses.map(addressInfo => (
-                                        <AddressItem key={addressInfo.id} address={addressInfo}/>))}
+                                        <AddressItem key={addressInfo.id} address={addressInfo} updateAddresses={fetchAddress}/>))}
                                 </div>
                             </div>
                         </div>
