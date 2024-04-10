@@ -20,7 +20,7 @@
     resize: vertical;
 }
 
-.form-comment input[type="submit"] {
+.button-comment {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -29,6 +29,13 @@
     cursor: pointer;
 }
 
-.form-comment input[type="submit"]:hover {
+.button-comment:hover {
     background-color: #0056b3;
+}
+.trashcan{
+    margin-top: 35px;
+    color: red;
+}
+.trashcan:hover{
+    color: #a92222;
 }
