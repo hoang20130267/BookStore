@@ -1,7 +1,47 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
+import ConfirmationModal from "./ConfirmationModal";
+import APIService from "../../../../service/APIService";
 
-const AddressItem = ({isDefault}) => {
+const AddressItem = ({address, updateAddresses}) => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const deleteAddress = async ()=>{
+        try {
+            const response = apiService.deleteData(`http://localhost:8080/api/user/addresses/${address.id}`)
+            console.log("Address deleted successfully:", response.data);
+            updateAddresses();
+        }catch (error){
+            console.log("Error deleting address:", error);
+        }
+    }
+
+    const setDefaultAddress = async ()=>{
+        try{
+            const response = apiService.updateData(`http://localhost:8080/api/user/addresses/default/${address.id}`)
+            console.log("Address set default successfully:", response.data);
+            updateAddresses();
+        }catch (error){
+            console.log("Error setting default address", error);
+        }
+    }
+
+    const handleDeleteClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirm = () => {
+        deleteAddress();
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="address-item-container">
             <div className="address-item">
@@ -9,16 +49,24 @@ const AddressItem = ({isDefault}) => {
                      style={{marginBottom: "4px"}}>
                     <div className="address-card_header">
                                                 <span className="name-span">
-                                                    <div className="user-name">Nguyễn Nhất Đăng Khoa</div>
+                                                    <div className="user-name">{address.full_name}</div>
                                                 </span>
                         <div className="separate"></div>
                         <div role="row"
-                             className="phone-number d-flex align-items-center">(+84) 123456789
+                             className="phone-number d-flex align-items-center">(+84) {address.phone_number}
                         </div>
                     </div>
                     <div className="d-flex justify-content-end" style={{flexBasis: "40px"}}>
-                        <Link to="/user/address/update"><button className="function-button update-button">Cập nhật</button></Link>
-                        {isDefault === false && (<button className="function-button delete-button">Xóa</button>)}
+                        <Link to="/user/address/update">
+                            <button className="function-button update-button">Cập nhật</button>
+                        </Link>
+                        {address.default === false && (
+                            <button onClick={handleDeleteClick} className="function-button delete-button">Xóa</button>)}
+                        <ConfirmationModal
+                            isOpen={isModalOpen}
+                            onCancel={handleCancel}
+                            onConfirm={handleConfirm}
+                        />
                     </div>
                 </div>
                 <div className="address-card_content d-flex justify-content-between"
@@ -26,25 +74,23 @@ const AddressItem = ({isDefault}) => {
                     <div className="flex-grow-1 d-flex"
                          style={{overflowX: "hidden", marginRight: "8px"}}>
                         <div className="address-content">
-                            <div role="row" className="d-flex align-items-center">KTX Khu B DHQG
+                            <div role="row" className="d-flex align-items-center">{address.hnum_sname}
                             </div>
-                            <div role="row" className="d-flex align-items-center">Phường
-                                Linh
-                                Xuân, Thành Phố Thủ
-                                Đức,
-                                TP. Hồ Chí Minh
+                            <div role="row"
+                                 className="d-flex align-items-center">{address.ward_commune}, {address.county_district},
+                                {address.province_city}
                             </div>
                         </div>
                     </div>
                     <div className="d-flex justify-content-end"
                          style={{paddingTop: "4px", flexBasis: "40px"}}>
-                        <button className="set-default-button" disabled={isDefault}>Thiết lập mặc
+                        <button onClick={setDefaultAddress} className="set-default-button" disabled={address.default}>Thiết lập mặc
                             định
                         </button>
                     </div>
                 </div>
-                {isDefault === true && (<div id="address-card_badge" role="row"
-                                              className="d-flex align-items-center">
+                {address.default === true && (<div id="address-card_badge" role="row"
+                                                   className="d-flex align-items-center">
                     <span role="mark" className="span-default">Mặc định</span>
                 </div>)}
             </div>

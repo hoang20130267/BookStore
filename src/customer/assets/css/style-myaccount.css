@@ -219,25 +219,34 @@ select.pdw {
     color: white;
     margin-left: 40px;
 }
-.left-side{
+
+.left-side {
     cursor: pointer;
     list-style: none;
     padding: 0;
 }
-.left-side:hover{
+
+.left-side:hover, .left-side.active {
     background-color: rgb(235, 235, 240);
 }
+
+.left-side.active .sidebar-item {
+    color: #ee4d2d;
+}
+
 .stardust-dropdown {
     position: relative;
 }
-.sidebar-item{
+
+.sidebar-item {
     align-items: center;
     color: #000;
     display: flex;
     text-decoration: none;
-    transition: color .1s cubic-bezier(.4,0,.2,1);
+    transition: color .1s cubic-bezier(.4, 0, .2, 1);
 }
-.sidebar-item-icon{
+
+.sidebar-item-icon {
     align-items: center;
     border-radius: 50%;
     display: flex;
@@ -249,19 +258,24 @@ select.pdw {
     text-align: center;
     width: 1.25rem;
 }
-.sidebar-item:hover{
-    color: #ee4d2d;
-}
-.sidebar-item:not(:hover){
+
+.sidebar-item:hover {
+    /*color: #ee4d2d;*/
     color: #000;
 }
-.select-birthday{
+
+.sidebar-item:not(:hover) {
+    color: #000;
+}
+
+.select-birthday {
     display: flex;
     /*flex: 1 1 0%;*/
     position: relative;
     z-index: 1;
 }
-.select-birthday select{
+
+.select-birthday select {
     width: 100px;
     border: 1px solid rgb(204, 204, 204);
     height: 34px;
@@ -271,12 +285,14 @@ select.pdw {
     margin: 0px 12px 0px 0px;
     box-shadow: none;
 }
-.label-radio{
+
+.label-radio {
     display: flex;
     margin-right: 15px;
     cursor: pointer;
     margin-bottom: 0;
 }
+
 .label-radio input[type="radio"] {
     position: absolute;
     height: 1px;
@@ -285,9 +301,11 @@ select.pdw {
     clip: rect(0px, 0px, 0px, 0px);
     opacity: 0;
 }
+
 .label-radio input[type="radio"]:checked + .radio-fake {
     border-color: rgb(13, 92, 182);
 }
+
 .label-radio .radio-fake {
     width: 18px;
     height: 18px;
@@ -301,16 +319,19 @@ select.pdw {
     color: rgb(120, 120, 120);
     flex-shrink: 0;
 }
-.label-radio .label{
+
+.label-radio .label {
     font-size: 13px;
     line-height: 20px;
     display: flex;
     -webkit-box-align: center;
     align-items: center;
 }
+
 .label-radio input[type="radio"]:checked + .radio-fake::before {
     transform: scale(1);
 }
+
 .label-radio .radio-fake::before {
     content: "";
     position: absolute;
@@ -323,25 +344,29 @@ select.pdw {
     transform: scale(0);
     transition: transform 0.3s ease 0s;
 }
-.account-of{
+
+.account-of {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     margin: 0px 0px 12px;
 }
-.account-of img{
+
+.account-of img {
     width: 45px;
     margin: 0px 12px 0px 0px;
     border-radius: 50%;
 }
-.account-of .info{
+
+.account-of .info {
     flex: 1 1 0%;
     font-size: 14px;
     line-height: 15px;
     color: rgb(51, 51, 51);
     font-weight: 300;
 }
-.account-of .info strong{
+
+.account-of .info strong {
     font-size: 16px;
     line-height: 19px;
     font-weight: 400;

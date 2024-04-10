@@ -6,7 +6,6 @@ import LeftSideBar from "./sub-components/LeftSideBar";
 
 const MyAccount = () => {
     const location = useLocation();
-    console.log(location)
     return (
         <>
             <Breadcrumb location={location}/>

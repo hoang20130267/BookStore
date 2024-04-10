@@ -41,6 +41,15 @@ class ApiService {
             throw error;
         }
     }
+    async deleteData(endpoint) {
+        try {
+            const response = await this.api.delete(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting data:', error);
+            throw error;
+        }
+    }
 }
 
 export default ApiService;

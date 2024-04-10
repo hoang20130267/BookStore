@@ -1,12 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import "../../assets/css/style-addresslist.css"
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import AddressItem from "./sub-components/AddressItem";
+import {useSelector} from "react-redux";
+import APIService from "../../../service/APIService";
 
 const AddressList = () => {
     const location = useLocation();
+    const user = useSelector(state => state.auth.login.currentUser);
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+    const [addresses, setAddresses] = useState([]);
+    const fetchAddress = async () => {
+        try {
+            const result = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
+            setAddresses(result)
+        } catch (error) {
+            console.error('Error fetching addresses', error);
+        }
+    }
+    useEffect(() => {
+        fetchAddress();
+    }, [])
+
     return (
         <>
             <Breadcrumb location={location}/>
@@ -36,8 +54,8 @@ const AddressList = () => {
                             <div>
                                 <div style={{padding: "12px 10px 0"}}>
                                     <div className="list-title">Địa chỉ</div>
-                                    <AddressItem isDefault={true}/>
-                                    <AddressItem isDefault={false}/>
+                                    {addresses.map(addressInfo => (
+                                        <AddressItem key={addressInfo.id} address={addressInfo} updateAddresses={fetchAddress}/>))}
                                 </div>
                             </div>
                         </div>
