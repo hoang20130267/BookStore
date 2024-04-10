@@ -70,7 +70,7 @@ export const Header = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_API_ENDPOINT}/categories`)
+                const result = await apiService.fetchData(`http://localhost:8080/api/categories`)
                 const parent = result.find(cat => cat.parentCategory === null);
                 setParentCategory(parent)
                 const mainCategories = result.filter(cat => cat.parentCategory && cat.parentCategory.id === parent.id);

@@ -52,7 +52,8 @@
     border-bottom: 1px solid rgba(0, 0, 0, .09);
     padding: 18px 0 20px;
 }
-.address-item-container:last-child{
+
+.address-item-container:last-child {
     border-bottom: 0;
 }
 
@@ -135,7 +136,8 @@
     margin-top: 4px;
     flex-wrap: wrap;
 }
-.span-default{
+
+.span-default {
     border-color: #ee4d2d;
     color: #ee4d2d;
     margin: 0 4px 4px 0;
@@ -144,6 +146,7 @@
     padding: 2px 4px;
     font-size: 14px;
 }
+
 .span-default:last-child {
     margin-right: 0;
 }

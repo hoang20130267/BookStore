@@ -33,7 +33,7 @@ export const SingleProduct = ({product}) => {
         setEditQuantity(!editQuantity);
     };
     const user = useSelector(state => state.auth.login.currentUser);
-    const {token} = user;
+    const token = user ? user.token : null;
     const apiService = new APIService(token);
     const addToCart = async () => {
         const requestData = {product: {id: product.id}, quantity: quantity};
