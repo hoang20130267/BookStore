@@ -1,20 +1,35 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import APIService from "../../../../service/APIService";
 import {useSelector} from "react-redux";
+import axios from "axios";
+import PopupNotification from "../../../components/general/PopupNotification";
 
 const Product = (props) => {
     const navigate = useNavigate();
     const productInfo = props.info;
-    const user = useSelector(state => state.auth.login.currentUser);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
-    const apiService = new APIService(token);
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupInfo, setPopupInfo] = useState('');
+    const handleButtonClick = (detail) => {
+        setPopupInfo(detail);
+        setShowPopup(true);
+    };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
     const addToCart = async () => {
-        const requestData = {product: {id: productInfo.id}, quantity: 1};
         try {
-            const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
+            const responseData = await axios.post(`http://localhost:8080/api/cart/add/${productInfo.id}`, null,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+            handleButtonClick("Sản phẩm đã được thêm vào giỏ hàng");
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
         }
@@ -67,6 +82,7 @@ const Product = (props) => {
                                       title="Thêm vào giỏ hàng">
                                     <i className="fa-solid fa-cart-shopping"></i>
                                 </Link>
+                                {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup} />}
                             </div>
                             <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                 <div className="yith-wcwl-add-button">
