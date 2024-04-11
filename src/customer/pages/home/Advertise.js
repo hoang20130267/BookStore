@@ -10,7 +10,7 @@ export const Advertise = () => {
                                 <div className="position-relative z-index-2 mt-lg-2">
                                     <h2 className="font-size-26 mt-lg-1 text-lh-md"><span
                                         className="bwgb-banner-title hero__title-line-1 font-weight-bold d-block">Sách đặc sắc</span><span
-                                        className="bwgb-banner-title2 hero__title-line-2 font-weight-normal d-block">of
+                                        className="bwgb-banner-title2 hero__title-line-2 font-weight-normal d-block">
                                                             trong tháng</span></h2><a href="src/customer/pages/home/Home#"
                                                                                       className="bwgb-banner-action product__add-to-cart d-inline-block text-dark"><span>Mua ngay</span></a>
                                 </div>
