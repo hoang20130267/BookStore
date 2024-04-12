@@ -1,3 +1,6 @@
+import React, {useState} from "react";
+import PopupNotification from "../../components/general/PopupNotification";
+
 export const Map = () => {
     return (
         <p>
@@ -133,7 +136,8 @@ export const InforContact = () => {
                                                         className="wpforms-submit m-0 btn btn-wide btn-dark text-white rounded-0 transition-3d-hover height-60"
                                                         data-alt-text="Sending..." data-submit-text="Submit Message"
                                                         aria-live="assertive"
-                                                        value="wpforms-submit">Submit Message
+                                                        value="wpforms-submit"
+                                                >Submit Message
                                                 </button>
                                             </div>
                                         </form>

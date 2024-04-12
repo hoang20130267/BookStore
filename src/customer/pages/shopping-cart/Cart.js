@@ -6,7 +6,7 @@ import {MdOutlineDelete} from "react-icons/md";
 import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
 
-export const Item = ({id, name, image, price, quantity, updateCart}) => {
+export const Item = ({id, productId, name, image, price, quantity, updateCart}) => {
     const handleIncrease = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
@@ -37,9 +37,9 @@ export const Item = ({id, name, image, price, quantity, updateCart}) => {
     return (
         <tr id={id}>
             <td className="shoping__cart__item" style={{display: "flex"}}>
-                <img src={image} alt=""
-                     style={{width: "85px", height: "85px", objectFit: "cover"}}/>
-                <p>{name}</p>
+                <Link to={`/product-detail/${productId}`}><img src={image} alt=""
+                           style={{width: "85px", height: "85px", objectFit: "cover"}}/></Link>
+                <Link to={`/product-detail/${productId}`}><p>{name}</p></Link>
             </td>
             <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
                 {formatCurrency(price)}
@@ -134,6 +134,7 @@ export const ProductsInCart = () => {
                                     <Item
                                         key={cart.id}
                                         id={cart.id}
+                                        productId={cart.product.id}
                                         name={cart.product.title}
                                         image={cart.product.image}
                                         price={cart.product.current_price}

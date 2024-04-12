@@ -15,7 +15,7 @@ import axios from "axios";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
-    const [editQuantity, setEditQuantity] = useState(false);
+    console.log(quantity)
     const handlePlus = () => {
         setQuantity(quantity + 1);
     };
@@ -34,9 +34,7 @@ export const SingleProduct = ({product}) => {
             setQuantity(parseInt(input));
         }
     };
-    const enableEdit = () => {
-        setEditQuantity(!editQuantity);
-    };
+
     const user = useSelector(state => state.auth.login.currentUser);
     const token = user ? user.token : null;
     const apiService = new APIService(token);
