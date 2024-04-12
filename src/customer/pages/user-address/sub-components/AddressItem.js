@@ -9,22 +9,22 @@ const AddressItem = ({address, updateAddresses}) => {
     const apiService = new APIService(token);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const deleteAddress = async ()=>{
+    const deleteAddress = async () => {
         try {
-            const response = apiService.deleteData(`http://localhost:8080/api/user/addresses/${address.id}`)
+            const response = await apiService.deleteData(`http://localhost:8080/api/user/addresses/${address.id}`)
             console.log("Address deleted successfully:", response.data);
             updateAddresses();
-        }catch (error){
+        } catch (error) {
             console.log("Error deleting address:", error);
         }
     }
 
-    const setDefaultAddress = async ()=>{
-        try{
-            const response = apiService.updateData(`http://localhost:8080/api/user/addresses/default/${address.id}`)
+    const setDefaultAddress = async () => {
+        try {
+            const response = await apiService.updateDataPut(`http://localhost:8080/api/user/addresses/default/${address.id}`)
             console.log("Address set default successfully:", response.data);
             updateAddresses();
-        }catch (error){
+        } catch (error) {
             console.log("Error setting default address", error);
         }
     }
@@ -84,7 +84,8 @@ const AddressItem = ({address, updateAddresses}) => {
                     </div>
                     <div className="d-flex justify-content-end"
                          style={{paddingTop: "4px", flexBasis: "40px"}}>
-                        <button onClick={setDefaultAddress} className="set-default-button" disabled={address.default}>Thiết lập mặc
+                        <button onClick={setDefaultAddress} className="set-default-button"
+                                disabled={address.default}>Thiết lập mặc
                             định
                         </button>
                     </div>

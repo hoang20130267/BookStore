@@ -32,9 +32,18 @@ class ApiService {
         }
     }
 
-    async updateData(endpoint, data) {
+    async updateDataPut(endpoint, data) {
         try {
             const response = await this.api.put(endpoint, data);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating data:', error);
+            throw error;
+        }
+    }
+    async updateDataPatch(endpoint, data) {
+        try {
+            const response = await this.api.patch(endpoint, data);
             return response.data;
         } catch (error) {
             console.error('Error updating data:', error);
