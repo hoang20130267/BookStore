@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 const FeaturedProduct = () => {
     const [isShown, setIsShown] = useState(true);
@@ -58,10 +59,10 @@ const FeaturedItem = () => {
                                 Meaning in an Evolving Universe </Link></h6>
                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price" style={{fontSize: "14px"}}>130000</span>
+                                        <span className="price" style={{fontSize: "14px"}}>{formatCurrency(130000)}</span>
                                     </p>
                                     <p className="old-price pb-1">
-                                        <span className="price" style={{fontSize: "11px"}}>150000</span>
+                                        <span className="price" style={{fontSize: "11px"}}>{formatCurrency(150000)}</span>
                                     </p>
                                 </span>
                     </div>
