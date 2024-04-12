@@ -6,6 +6,7 @@ import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import AddressItem from "./sub-components/AddressItem";
 import {useSelector} from "react-redux";
 import APIService from "../../../service/APIService";
+import axios from "axios";
 
 const AddressList = () => {
     const location = useLocation();
@@ -15,8 +16,9 @@ const AddressList = () => {
     const [addresses, setAddresses] = useState([]);
     const fetchAddress = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
-            setAddresses(result)
+            const response = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
+            setAddresses(response)
+            console.log(response)
         } catch (error) {
             console.error('Error fetching addresses', error);
         }

@@ -1,11 +1,10 @@
-import React, {useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import React from "react";
+import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import APIService from "../../../../service/APIService";
 import {useSelector} from "react-redux";
 
 const Product = (props) => {
-    const navigate = useNavigate();
     const productInfo = props.info;
     const user = useSelector(state => state.auth.login.currentUser);
     const token = user ? user.token : null;

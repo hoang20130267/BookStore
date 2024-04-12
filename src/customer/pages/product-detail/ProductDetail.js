@@ -29,9 +29,9 @@ export const SingleProduct = ({product}) => {
     const handleInputChange = (e) => {
         const input = e.target.value;
         if (input.trim() === '' || isNaN(input)) {
-            setQuantity(1); // Set quantity to 1 if the input is empty or not a number
+            setQuantity(1);
         } else {
-            setQuantity(parseInt(input)); // Set quantity to the parsed integer value of input
+            setQuantity(parseInt(input));
         }
     };
     const enableEdit = () => {

@@ -3,7 +3,6 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import React, {useEffect, useState} from "react";
 import {MdOutlineDelete} from "react-icons/md";
-import {useSelector} from "react-redux";
 import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
 

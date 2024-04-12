@@ -6,7 +6,7 @@ const LeftSideBar = () => {
         <div className="col-md-3 d-block p-0 pr-6">
             <div className="account-of">
                 <img
-                    src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=338&ext=jpg&ga=GA1.1.2082370165.1710633600&semt=ais"
+                    src={require("../../../assets/img/others/user.png")}
                     alt="avatar"/>
                 <div className="info">
                     Tài khoản của
