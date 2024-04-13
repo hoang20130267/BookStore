@@ -173,6 +173,7 @@ export const Information = ({detail}) => {
 }
 export const Comment = () => {
     const [isLogin, setIsLogin] = useState(false);
+    const [isBought, setIsBought] = useState(false);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [value, setValue] = React.useState(2);
     const [comments, setComments] = useState([]);
@@ -180,6 +181,7 @@ export const Comment = () => {
     const {id} = useParams();
     const [content, setContent] = useState('');
     const token = user ? user.token : null;
+    const idUser = user ? user.id : null;
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     useEffect(() => {
         const fetchComments = async () => {
@@ -191,6 +193,19 @@ export const Comment = () => {
             }
         };
         fetchComments();
+    }, []);
+
+    useEffect(() => {
+        const isBoughtYet = async () => {
+            try {
+                await apiService.fetchData(`http://localhost:8080/api/order/product/${id}/user/${idUser}`);
+                setIsBought(true);
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+                setIsBought(false);
+            }
+        };
+        isBoughtYet();
     }, []);
 
     const updateListComment = async () => {
@@ -356,6 +371,7 @@ export const Comment = () => {
                                 giá
                             </h4>
                             {isLogin ? (
+                                isBought ? (
                                 <form onSubmit={handleAddComment}
                                       className="form-comment">
                                     <label htmlFor="rating" style={{fontSize: "21px"}}>Đánh giá của bạn</label>
@@ -376,6 +392,9 @@ export const Comment = () => {
                                     >Gửi đánh giá
                                     </button>
                                 </form>
+                                ) : (
+                                    <p className="must-log-in">Bạn cần mua hàng trước khi viết đánh giá.</p>
+                                )
                             ) : (
                                 <p className="must-log-in">Bạn phải <a
                                     href={"/sign-in"}>Đăng nhập</a> để viết
