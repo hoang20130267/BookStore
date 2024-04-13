@@ -1,11 +1,11 @@
 import {Banner} from "./Banner";
 import {TopSeller} from "./TopSeller";
 import {TopBook} from "./TopBook";
-import {NewBooks} from "./NewBooks";
 import {Advertise} from "./Advertise";
 import {Categories} from "./Categories";
 import {Features} from "./Features";
-
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 export const Home = () => {
     return (
         <main id="main" className="site-main" role="main">
@@ -16,7 +16,6 @@ export const Home = () => {
                             <Banner/>
                             <TopSeller/>
                             <TopBook/>
-                            <NewBooks/>
                             <Advertise/>
                             <Categories/>
                             <Features/>

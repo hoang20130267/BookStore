@@ -1,18 +1,91 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "../../assets/css/style-myaccount.css"
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "./sub-components/LeftSideBar";
+import APIService from "../../../service/APIService";
+import {isEmpty} from "react-admin";
 
 const MyAccount = () => {
+    const [fullName, setFullName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [gender, setGender] = useState('');
+    const [day, setDay] = useState('0');
+    console.log(typeof day)
+    const [month, setMonth] = useState('0');
+    const [year, setYear] = useState('0');
+    console.log(day, month, year)
+    const [avatar, setAvatar] = useState('');
     const location = useLocation();
-    console.log(location)
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+    const [isChecked, setIsChecked] = useState(false);
+    const [information, setInformation] = useState({});
+    const fetchInformation = async () => {
+        const result = await apiService.fetchData("http://localhost:8080/api/user/info");
+        setInformation(result)
+        setFullName(result.userInfo.full_name);
+        setPhoneNumber(result.userInfo.phone_number);
+        setGender(result.userInfo.gender);
+        if (result.userInfo.date_of_birth) {
+            const [fetchedYear, fetchedMonth, fetchedDay] = result.userInfo.date_of_birth.split('-');
+            setDay(fetchedDay.padStart(2, '0'));
+            setMonth(fetchedMonth.padStart(2, '0'));
+            setYear(fetchedYear);
+        }
+        if (result.userInfo.avatar) {
+            setAvatar(result.userInfo.avatar);
+        }
+    }
+
+    const handleGenderChange = (event) => {
+        const selectedGender = event.target.value;
+        setGender(selectedGender);
+    };
+    const handlePhoneNumberChange = (event) => {
+        setPhoneNumber(event.target.value);
+    };
+    const handleFullNameChange = (event) => {
+        setFullName(event.target.value);
+    };
+
+    const updateInformation = async (requestData) => {
+        try {
+            const responseData = await apiService.updateDataPatch(`http://localhost:8080/api/user/info/${information.userInfo.id}`, requestData)
+            fetchInformation();
+            console.log("User information updated successfully:", responseData);
+        } catch (error) {
+            console.log("Error updating information:", error);
+        }
+    }
+    const handleButtonSave = (e) => {
+        e.preventDefault();
+        let formattedDate;
+        if (day !== '0' && month !== '0' && year !== '0') {
+            formattedDate = `${year}-${month}-${day}`;
+        } else {
+            formattedDate = '';
+        }
+        const requestData = {
+            full_name: !isEmpty(fullName) ? fullName : null,
+            phone_number: !isEmpty(phoneNumber) ? phoneNumber : null,
+            gender: !isEmpty(gender) ? gender : null,
+            date_of_birth: !isEmpty(formattedDate) ? formattedDate : null,
+            avatar: !isEmpty(avatar) ? avatar : null
+        };
+        updateInformation(requestData);
+    }
+
+    useEffect(() => {
+        fetchInformation();
+    }, [])
     return (
         <>
             <Breadcrumb location={location}/>
             <div className="container d-flex mt-5 mb-5 px-0">
                 <LeftSideBar/>
-                <form method="post" encType="multipart/form-data" className="infor_user">
+                <form onSubmit={handleButtonSave} className="infor_user">
                     <div className="row border py-3 m-0" style={{borderRadius: "10px"}}>
                         <div className="col-md-8 border-right">
                             <div className="">
@@ -29,39 +102,51 @@ const MyAccount = () => {
                                 </div>
                                 <div className="row mt-2">
                                     <div className="col-md-6"><label className="labels">Tên đăng nhập</label>
-                                        <input type="text" id="username" className="form-control" name="username"
+                                        <input type="text" id="username" value={information.username}
+                                               className="form-control" name="username"
                                                placeholder="Nhập username" readOnly/>
                                     </div>
                                     <div className="col-md-6"><label className="labels">Họ và tên</label>
-                                        <input type="text" id="fullname" className="form-control" name="fullname"
+                                        <input onChange={handleFullNameChange} type="text" id="fullname"
+                                               value={fullName}
+                                               className="form-control" name="fullname"
                                                placeholder="Nhập họ tên"/>
                                     </div>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-md-12"><label className="labels">Email</label>
-                                        <input type="email" id="email" className="form-control" name="email"
+                                        <input type="email" id="email" value={information.email}
+                                               className="form-control" name="email"
                                                placeholder="Nhập email tại đây" readOnly/>
                                     </div>
                                     <div className="col-md-12"><label className="labels" style={{paddingTop: "10px"}}>Số
                                         điện
-                                        thoại</label><input id="phone" type="text" className="form-control" name="phone"
+                                        thoại</label><input onChange={handlePhoneNumberChange} id="phone" type="text"
+                                                            value={phoneNumber}
+                                                            className="form-control" name="phone" maxLength="10"
                                                             placeholder="Nhập số điện thoại tại đây"/>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mt-4">
                                     <label className="mb-0 mr-8">Giới tính</label>
                                     <label className="label-radio">
-                                        <input type="radio" name="gender" value="male"/>
+                                        <input type="radio" name="gender" value="male"
+                                               checked={gender === 'male'}
+                                               onChange={handleGenderChange}/>
                                         <span className="radio-fake"></span>
                                         <span className="label">Nam</span>
                                     </label>
                                     <label className="label-radio">
-                                        <input type="radio" name="gender" value="female"/>
+                                        <input type="radio" name="gender" value="female"
+                                               checked={gender === 'female'}
+                                               onChange={handleGenderChange}/>
                                         <span className="radio-fake"></span>
                                         <span className="label">Nữ</span>
                                     </label>
                                     <label className="label-radio">
-                                        <input type="radio" name="gender" value="other"/>
+                                        <input type="radio" name="gender" value="other"
+                                               checked={gender === 'other'}
+                                               onChange={handleGenderChange}/>
                                         <span className="radio-fake"></span>
                                         <span className="label">Khác</span>
                                     </label>
@@ -69,92 +154,36 @@ const MyAccount = () => {
                                 <div className="d-flex align-items-center mt-4">
                                     <label className="labels mb-0 mr-8">Ngày sinh</label>
                                     <div className="select-birthday">
-                                        <select name="day">
+                                        <select name="day" value={day} onChange={(e) => setDay(e.target.value)}>
                                             <option value="0">Ngày</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                            <option value="13">13</option>
-                                            <option value="14">14</option>
-                                            <option value="15">15</option>
-                                            <option value="16">16</option>
-                                            <option value="17">17</option>
-                                            <option value="18">18</option>
-                                            <option value="19">19</option>
-                                            <option value="20">20</option>
-                                            <option value="21">21</option>
-                                            <option value="22">22</option>
-                                            <option value="23">23</option>
-                                            <option value="24">24</option>
-                                            <option value="25">25</option>
-                                            <option value="26">26</option>
-                                            <option value="27">27</option>
-                                            <option value="28">28</option>
-                                            <option value="29">29</option>
-                                            <option value="30">30</option>
+                                            {Array.from({length: 31}, (_, i) => (i + 1).toString().padStart(2, '0')).map((day) => (
+                                                <option key={day} value={day}>{day}</option>
+                                            ))}
                                         </select>
-                                        <select name="month">
+                                        <select name="month" value={month} onChange={(e) => setMonth(e.target.value)}>
                                             <option value="0">Tháng</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
+                                            {Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0')).map((month) => (
+                                                <option key={month} value={month}>{month}</option>
+                                            ))}
                                         </select>
-                                        <select name="year">
+                                        <select name="year" value={year} onChange={(e) => setYear(e.target.value)}>
                                             <option value="0">Năm</option>
-                                            <option value="2024">2024</option>
-                                            <option value="2023">2023</option>
-                                            <option value="2022">2022</option>
-                                            <option value="2021">2021</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                            <option value="2014">2014</option>
-                                            <option value="2013">2013</option>
-                                            <option value="2012">2012</option>
-                                            <option value="2011">2011</option>
-                                            <option value="2010">2010</option>
-                                            <option value="2009">2009</option>
-                                            <option value="2008">2008</option>
-                                            <option value="2007">2007</option>
-                                            <option value="2006">2006</option>
-                                            <option value="2005">2005</option>
-                                            <option value="2004">2004</option>
-                                            <option value="2003">2003</option>
-                                            <option value="2002">2002</option>
-                                            <option value="2001">2001</option>
-                                            <option value="2000">2000</option>
+                                            {Array.from({length: 25}, (_, i) => 2024 - i).map((year) => (
+                                                <option key={year} value={year}>{year}</option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-md-12 d-flex align-items-center">
                                         <input type="checkbox" id="checkbox" className="mr-2"
+                                               checked={isChecked}
+                                               onChange={() => setIsChecked(!isChecked)}
                                                style={{width: "15px", height: "15px"}}/>
                                         <label className="form-check-label" style={{marginTop: "2px"}}>Đổi mật
                                             khẩu</label>
                                     </div>
-                                    <div className="mt-3 w-100">
+                                    {isChecked && (<div className="mt-3 w-100">
                                         <div className="col-md-12"><label className="labels">Mật khẩu hiện
                                             tại</label><input
                                             type="password" id="current-password" className="form-control"
@@ -181,10 +210,10 @@ const MyAccount = () => {
                                             paddingTop: "5px"
                                         }}>
                                         </p>
-                                    </div>
+                                    </div>)}
                                 </div>
                                 <div className="mt-5 text-center">
-                                    <button className="btn btn-primary profile-button" type="submit">Lưu thông tin
+                                    <button className="btn btn-primary profile-button">Lưu thông tin
                                     </button>
                                 </div>
                             </div>
@@ -195,7 +224,7 @@ const MyAccount = () => {
                                     <div id="container">
                                         <div className="avatar-wrapper">
                                             <img className="img-avt-review profile-pic"
-                                                 src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=338&ext=jpg&ga=GA1.1.2082370165.1710633600&semt=ais"/>
+                                                 src={avatar ? avatar : require("../../assets/img/others/user.png")}/>
                                         </div>
                                     </div>
                                 </div>

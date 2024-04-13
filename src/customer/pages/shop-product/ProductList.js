@@ -13,7 +13,7 @@ const ProductList = () => {
     const params = useParams();
     const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
-    console.log(process.env.REACT_APP_API_ENDPOINT);
+    // console.log(process.env.REACT_APP_ENDPOINT_API)
 
     useEffect(() => {
         const fetchData = async () => {

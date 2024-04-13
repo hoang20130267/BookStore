@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export const Advertise = () => {
     return (
         <div className="style-13 wp-block-bwgb-banners bwgb-banners space-bottom-2 space-bottom-lg-3 bwgb-a9097cf"
@@ -11,8 +13,8 @@ export const Advertise = () => {
                                     <h2 className="font-size-26 mt-lg-1 text-lh-md"><span
                                         className="bwgb-banner-title hero__title-line-1 font-weight-bold d-block">Sách đặc sắc</span><span
                                         className="bwgb-banner-title2 hero__title-line-2 font-weight-normal d-block">
-                                                            trong tháng</span></h2><a href="src/customer/pages/home/Home#"
-                                                                                      className="bwgb-banner-action product__add-to-cart d-inline-block text-dark"><span>Mua ngay</span></a>
+                                                            trong tháng</span></h2><Link to={`/product-list/1`}
+                                                                                         className="bwgb-banner-action product__add-to-cart d-inline-block text-dark"><span>Mua ngay</span></Link>
                                 </div>
                                 <div
                                     className="d-flex d-md-block justify-content-end position-md-absolute right-md-55 mb-3 bottom-0">
@@ -30,8 +32,8 @@ export const Advertise = () => {
                                     <h2 className="font-size-26 mt-lg-1 text-lh-md"><span
                                         className="bwgb-banner-title hero__title-line-1 font-weight-bold d-block">Những cuốn sách</span><span
                                         className="bwgb-banner-title2 hero__title-line-2 font-weight-normal d-block">Bán chạy nhất</span>
-                                    </h2><a href="src/customer/pages/home/Home#"
-                                            className="bwgb-banner-action product__add-to-cart d-inline-block text-dark"><span>Mua ngay</span></a>
+                                    </h2><Link to={`/product-list/2`}
+                                               className="bwgb-banner-action product__add-to-cart d-inline-block text-dark"><span>Mua ngay</span></Link>
                                 </div>
                                 <div
                                     className="d-flex d-md-block justify-content-end position-md-absolute right-md-55 bottom-md-40">

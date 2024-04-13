@@ -9,13 +9,15 @@ import APIService from "../../../service/APIService";
 import DetailItem from "./subcomponents/DetailItem";
 import {useSelector} from "react-redux";
 import Rating from '@mui/material/Rating';
-import { FaTrashCan } from "react-icons/fa6";
-import { FaRegEdit } from "react-icons/fa";
+import {FaTrashCan} from "react-icons/fa6";
+import {FaRegEdit} from "react-icons/fa";
 import axios from "axios";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
-    const [editQuantity, setEditQuantity] = useState(false);
+    console.log(quantity)
     const handlePlus = () => {
         setQuantity(quantity + 1);
     };
@@ -29,14 +31,12 @@ export const SingleProduct = ({product}) => {
     const handleInputChange = (e) => {
         const input = e.target.value;
         if (input.trim() === '' || isNaN(input)) {
-            setQuantity(1); // Set quantity to 1 if the input is empty or not a number
+            setQuantity(1);
         } else {
-            setQuantity(parseInt(input)); // Set quantity to the parsed integer value of input
+            setQuantity(parseInt(input));
         }
     };
-    const enableEdit = () => {
-        setEditQuantity(!editQuantity);
-    };
+
     const user = useSelector(state => state.auth.login.currentUser);
     const token = user ? user.token : null;
     const apiService = new APIService(token);
@@ -252,20 +252,20 @@ export const Comment = () => {
             id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
             <h4 className="font-size-3">Đánh giá khách hàng</h4>
             <div className="row mb-8 advanced-review-rating">
-                    <div className="d-flex  align-items-center mb-4">
-                        <span className="font-size-15 font-weight-bold">4.0</span>
-                        <div className="ml-3 h6 mb-0">
+                <div className="d-flex align-items-center mb-4 pl-3">
+                    <span className="font-size-15 font-weight-bold">4.0</span>
+                    <div className="ml-3 h6 mb-0">
                                                         <span className="font-weight-normal">
                                                             1 review </span>
-                            <div className="text-yellow-darker">
-                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                <span className=""><i className="fa-solid fa-star"></i></span>
-                                <span className=""><i className="fa-solid fa-star"></i></span>
-                            </div>
+                        <div className="text-yellow-darker">
+                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                            <span className=""><i className="fa-solid fa-star"></i></span>
+                            <span className=""><i className="fa-solid fa-star"></i></span>
                         </div>
                     </div>
+                </div>
                 <div className="col-md-12">
                     <ul className="list-unstyled p-0">
                         <li className="py-2">
@@ -374,7 +374,7 @@ export const Comment = () => {
                                 isBought ? (
                                 <form onSubmit={handleAddComment}
                                       className="form-comment">
-                                    <label htmlFor="rating" style={{fontSize:"21px"}}>Đánh giá của bạn</label>
+                                    <label htmlFor="rating" style={{fontSize: "21px"}}>Đánh giá của bạn</label>
                                     <Rating
                                         name="simple-controlled"
                                         value={value}
@@ -389,7 +389,8 @@ export const Comment = () => {
                                                   onChange={e => setContent(e.target.value)}/>
                                     </p>
                                     <button name="submit" type="submit" id="submit" className="button-comment"
-                                               >Gửi đánh giá</button>
+                                    >Gửi đánh giá
+                                    </button>
                                 </form>
                                 ) : (
                                     <p className="must-log-in">Bạn cần mua hàng trước khi viết đánh giá.</p>
@@ -406,7 +407,7 @@ export const Comment = () => {
         </div>
     )
 }
-export const CommentItem = ({ id, username, rating, content, createdAt, token, updateListComment}) => {
+export const CommentItem = ({id, username, rating, content, createdAt, token, updateListComment}) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [sameUser, setSameUser] = useState(false);
     const [value, setValue] = React.useState(2);
@@ -443,16 +444,16 @@ export const CommentItem = ({ id, username, rating, content, createdAt, token, u
         }
     };
     useEffect(() => {
-        if (user && user.username=== username) {
+        if (user && user.username === username) {
             setSameUser(true)
         }
     }, []);
-    return(
+    return (
         <ul className="commentlist list-unstyled mb-8" key={id}>
             <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom"
                 id="li-comment-95">
-                <div id="comment-95" className="comment_container" style={{display:"flex"}}>
-                    <div className="comment-text" style={{width:"970px"}}>
+                <div id="comment-95" className="comment_container" style={{display: "flex"}}>
+                    <div className="comment-text" style={{width: "970px"}}>
                         <div className="d-md-flex align-items-center mb-3">
                             <h6 className="mb-0 mr-3">{username}</h6>
                             <div className="text-yellow-darker">
@@ -465,19 +466,20 @@ export const CommentItem = ({ id, username, rating, content, createdAt, token, u
                         <div className="text-gray-600">{createdAt}</div>
                     </div>
                     {sameUser ? (
-                    <div className="delete-comment" style={{alignItems:"center", display:"flex"}}>
-                        <FaRegEdit size={"25px"} className={"edit-comment"} onClick={handleEditClick}/>
-                        <FaTrashCan size={"25px"} className={"trashcan"} onClick={handleDelete}/>
-                    </div>
+                        <div className="delete-comment" style={{alignItems: "center", display: "flex"}}>
+                            <FaRegEdit size={"25px"} className={"edit-comment"} onClick={handleEditClick}/>
+                            <FaTrashCan size={"25px"} className={"trashcan"} onClick={handleDelete}/>
+                        </div>
                     ) : (
                         <></>
                     )}
                 </div>
             </li>
             {showEditForm && (
-                <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom" id={`edit-comment-${id}`}>
+                <li className="review byuser comment-author-nilofer even thread-even depth-1 mb-4 pb-5 border-bottom"
+                    id={`edit-comment-${id}`}>
                     <form onSubmit={handleUpdate} className="form-comment">
-                        <label htmlFor="rating" style={{ fontSize: "21px" }}>Chỉnh sửa đánh giá</label>
+                        <label htmlFor="rating" style={{fontSize: "21px"}}>Chỉnh sửa đánh giá</label>
                         <Rating
                             name="simple-controlled"
                             value={value}
@@ -495,11 +497,13 @@ export const CommentItem = ({ id, username, rating, content, createdAt, token, u
                                 maxLength={65525}
                                 required
                                 value={newContent}
-                                onChange={e => { setNewContent(e.target.value)
+                                onChange={e => {
+                                    setNewContent(e.target.value)
                                 }}
                             />
                         </p>
-                        <button name="submit" type="submit" id="submit" className="button-comment">Chỉnh sửa đánh giá</button>
+                        <button name="submit" type="submit" id="submit" className="button-comment">Chỉnh sửa đánh giá
+                        </button>
                     </form>
                 </li>
             )}
@@ -614,21 +618,50 @@ export const SideBar = () => {
         </div>
     )
 }
-export const RelatedProducts = () => {
+export const RelatedProducts = ({categoryId}) => {
+    const {id} = useParams();
+    const apiService = new APIService();
+    const responsive = {
+        superLargeDesktop: {
+            breakpoint: {max: 4000, min: 3000},
+            items: 5
+        },
+        desktop: {
+            breakpoint: {max: 3000, min: 1024},
+            items: 5
+        },
+        tablet: {
+            breakpoint: {max: 1024, min: 464},
+            items: 2
+        },
+        mobile: {
+            breakpoint: {max: 464, min: 0},
+            items: 1
+        }
+    };
     const [relatedProducts, setRelatedProducts] = useState([]);
+    console.log(relatedProducts)
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${categoryId}`);
+                const relatedProducts = result.filter(product => product.id !== id);
+                setRelatedProducts(relatedProducts);
+            } catch (error) {
+                console.log('Error fetching products', error);
+            }
+        }
+        fetchProducts();
+    }, [categoryId])
     return (
         <section className="related products space-bottom-3">
             <div className="container">
                 <header className="mb-5 d-md-flex justify-content-between align-items-center">
                     <h2 className="font-size-5 mb-3 mb-md-0">Sản phẩm liên quan</h2>
                 </header>
-                <div className="products-carousel-wrap related-product-carousel" data-ride="bk-slick-carousel"
-                     data-wrap=".products"
-                     data-slick="{&quot;slidesToShow&quot;:5,&quot;slidesToScroll&quot;:1,&quot;infinite&quot;:false,&quot;autoplay&quot;:false,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;responsive&quot;:[{&quot;breakpoint&quot;:554,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesToScroll&quot;:1}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesToScroll&quot;:1}},{&quot;breakpoint&quot;:1199,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesToScroll&quot;:2}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesToScroll&quot;:2}}]}">
-                    <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-5 row-cols-wd-5 border-top border-left mb-6">
-                        {relatedProducts.map(product => (<Product key={product.id} info={product}/>))}
-                    </ul>
-                </div>
+                <Carousel responsive={responsive}>
+                    {relatedProducts.map(product => (<div className="card mb-0 mx-2 no-gutters"><Product key={product.id} info={product}/></div>))}
+                </Carousel>
             </div>
         </section>
     )
@@ -655,12 +688,14 @@ export const Detail = () => {
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
+    const [categoryId, setCategoryId] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
                 setProduct(result)
+                setCategoryId(result.category.id)
             } catch (error) {
                 console.error('Error fetching product', error);
             }
@@ -683,7 +718,7 @@ export const Detail = () => {
                     </div>
                     <SideBar/>
                 </div>
-                <RelatedProducts/>
+                <RelatedProducts categoryId={categoryId}/>
             </div>
         </div>
     )
