@@ -11,10 +11,8 @@ const MyAccount = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setGender] = useState('');
     const [day, setDay] = useState('0');
-    console.log(typeof day)
     const [month, setMonth] = useState('0');
     const [year, setYear] = useState('0');
-    console.log(day, month, year)
     const [avatar, setAvatar] = useState('');
     const location = useLocation();
     const user = JSON.parse(localStorage.getItem('currentUser'));
@@ -25,16 +23,16 @@ const MyAccount = () => {
     const fetchInformation = async () => {
         const result = await apiService.fetchData("http://localhost:8080/api/user/info");
         setInformation(result)
-        setFullName(result.userInfo.full_name);
-        setPhoneNumber(result.userInfo.phone_number);
-        setGender(result.userInfo.gender);
-        if (result.userInfo.date_of_birth) {
-            const [fetchedYear, fetchedMonth, fetchedDay] = result.userInfo.date_of_birth.split('-');
+        setFullName(result.userInfo?.fullName);
+        setPhoneNumber(result.userInfo?.phoneNumber);
+        setGender(result.userInfo?.gender);
+        if (result.userInfo?.dateOfBirth) {
+            const [fetchedYear, fetchedMonth, fetchedDay] = result.userInfo?.dateOfBirth.split('-');
             setDay(fetchedDay.padStart(2, '0'));
             setMonth(fetchedMonth.padStart(2, '0'));
             setYear(fetchedYear);
         }
-        if (result.userInfo.avatar) {
+        if (result.userInfo?.avatar) {
             setAvatar(result.userInfo.avatar);
         }
     }
@@ -52,11 +50,21 @@ const MyAccount = () => {
 
     const updateInformation = async (requestData) => {
         try {
-            const responseData = await apiService.updateDataPatch(`http://localhost:8080/api/user/info/${information.userInfo.id}`, requestData)
+            const responseData = await apiService.updateData(`http://localhost:8080/api/user/info/${information.userInfo.id}`, requestData)
             fetchInformation();
             console.log("User information updated successfully:", responseData);
         } catch (error) {
             console.log("Error updating information:", error);
+        }
+    }
+
+    const createInformation = async (requestData) => {
+        try {
+            const responseData = await apiService.sendData("http://localhost:8080/api/user/info", requestData)
+            fetchInformation();
+            console.log("User information created successfully:", responseData);
+        } catch (error) {
+            console.log("Error creating information:", error);
         }
     }
     const handleButtonSave = (e) => {
@@ -68,13 +76,17 @@ const MyAccount = () => {
             formattedDate = '';
         }
         const requestData = {
-            full_name: !isEmpty(fullName) ? fullName : null,
-            phone_number: !isEmpty(phoneNumber) ? phoneNumber : null,
+            fullName: !isEmpty(fullName) ? fullName : null,
+            phoneNumber: !isEmpty(phoneNumber) ? phoneNumber : null,
             gender: !isEmpty(gender) ? gender : null,
-            date_of_birth: !isEmpty(formattedDate) ? formattedDate : null,
+            dateOfBirth: !isEmpty(formattedDate) ? formattedDate : null,
             avatar: !isEmpty(avatar) ? avatar : null
         };
-        updateInformation(requestData);
+        if(information.userInfo!=null){
+            updateInformation(requestData);
+        }else{
+            createInformation(requestData);
+        }
     }
 
     useEffect(() => {

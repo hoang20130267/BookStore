@@ -51,10 +51,10 @@ const Product = (props) => {
                             <div className="price-label">
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price">{formatCurrency(productInfo.current_price)}</span>
+                                        <span className="price">{formatCurrency(productInfo.currentPrice)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price">{formatCurrency(productInfo.old_price)}</span>
+                                        <span className="price">{formatCurrency(productInfo.oldPrice)}</span>
                                     </p>
                                 </span>
                             </div>

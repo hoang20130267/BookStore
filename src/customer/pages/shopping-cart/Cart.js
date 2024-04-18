@@ -79,7 +79,7 @@ export const ProductsInCart = () => {
         const calculateTotals = () => {
             let subtotalAmount = 0;
             cart.forEach(item => {
-                subtotalAmount += item.quantity * item.product.current_price;
+                subtotalAmount += item.quantity * item.product.currentPrice;
             });
             setTotal(subtotalAmount);
         };
@@ -137,7 +137,7 @@ export const ProductsInCart = () => {
                                         productId={cart.product.id}
                                         name={cart.product.title}
                                         image={cart.product.image}
-                                        price={cart.product.current_price}
+                                        price={cart.product.currentPrice}
                                         quantity={cart.quantity}
                                         updateCart={updateCart}
                                     />

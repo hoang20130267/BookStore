@@ -97,11 +97,11 @@ export const TopBook = () => {
                                                                         className="price d-flex justify-content-start align-items-center">
                                                                         <p className="current-price mr-2">
                                                                             <span
-                                                                                className="price">{formatCurrency(goodBook.current_price)}</span>
+                                                                                className="price">{formatCurrency(goodBook.currentPrice)}</span>
                                                                         </p>
                                                                         <p className="old-price">
                                                                             <span
-                                                                                className="price">{formatCurrency(goodBook.old_price)}</span>
+                                                                                className="price">{formatCurrency(goodBook.oldPrice)}</span>
                                                                         </p>
                                                                     </span>
                                                             </div>
@@ -157,11 +157,11 @@ export const TopBook = () => {
                                                             className="price d-flex justify-content-start align-items-center">
                                                             <p className="current-price mr-2">
                                                                 <span
-                                                                    className="price">{formatCurrency(book.current_price)}</span>
+                                                                    className="price">{formatCurrency(book.currentPrice)}</span>
                                                             </p>
                                                             <p className="old-price">
                                                                 <span
-                                                                    className="price">{formatCurrency(book.old_price)}</span>
+                                                                    className="price">{formatCurrency(book.oldPrice)}</span>
                                                             </p>
                                                         </span>
                                                     </div>
