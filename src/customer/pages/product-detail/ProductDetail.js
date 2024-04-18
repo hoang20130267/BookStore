@@ -74,10 +74,10 @@ export const SingleProduct = ({product}) => {
                             <div className="price-label">
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price">{formatCurrency(product.current_price)}</span>
+                                        <span className="price">{formatCurrency(product.currentPrice)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price">{formatCurrency(product.old_price)}</span>
+                                        <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
                             </div>
@@ -146,14 +146,14 @@ export const Information = ({detail}) => {
                     <div className="table-responsive">
                         <table
                             className="woocommerce-product-attributes shop_attributes table table-hover table-borderless">
-                            {productDetails.product_sku && (
-                                <DetailItem name={"Mã sản phẩm"} value={productDetails.product_sku}/>)}
+                            {productDetails.productSku && (
+                                <DetailItem name={"Mã sản phẩm"} value={productDetails.productSku}/>)}
                             {productDetails.supplier && (
                                 <DetailItem name={"Nhà cung cấp"} value={productDetails.supplier}/>)}
                             {productDetails.publisher && (
                                 <DetailItem name={"Nhà xuất bản"} value={productDetails.publisher}/>)}
-                            {productDetails.publish_year && (
-                                <DetailItem name={"Năm xuất bản"} value={productDetails.publish_year}/>)}
+                            {productDetails.publishYear && (
+                                <DetailItem name={"Năm xuất bản"} value={productDetails.publishYear}/>)}
                             {productDetails.author && (<DetailItem name={"Tác giả"} value={productDetails.author}/>)}
                             {productDetails.brand && (<DetailItem name={"Thương hiệu"} value={productDetails.brand}/>)}
                             {productDetails.origin && (<DetailItem name={"Xuất xứ"} value={productDetails.origin}/>)}
@@ -161,8 +161,8 @@ export const Information = ({detail}) => {
                             {productDetails.weight && (
                                 <DetailItem name={"Trọng lượng"} value={productDetails.weight}/>)}
                             {productDetails.size && (<DetailItem name={"Kích cỡ"} value={productDetails.size}/>)}
-                            {productDetails.quantity_of_page && productDetails.quantity_of_page !== -1 && (
-                                <DetailItem name={"Số trang"} value={productDetails.quantity_of_page}/>)}
+                            {productDetails.quantityOfPage && productDetails.quantityOfPage !== -1 && (
+                                <DetailItem name={"Số trang"} value={productDetails.quantityOfPage}/>)}
                         </table>
                     </div>
                 </div>
@@ -546,11 +546,11 @@ export const SideBar = () => {
                                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
                                         <span className="price"
-                                              style={{fontSize: "14px"}}>{formatCurrency(product.current_price)}</span>
+                                              style={{fontSize: "14px"}}>{formatCurrency(product.currentPrice)}</span>
                                     </p>
                                     <p className="old-price pb-1">
                                         <span className="price"
-                                              style={{fontSize: "11px"}}>{formatCurrency(product.old_price)}</span>
+                                              style={{fontSize: "11px"}}>{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
                                     </div>

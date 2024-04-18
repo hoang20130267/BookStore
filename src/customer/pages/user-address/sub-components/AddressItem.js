@@ -49,11 +49,11 @@ const AddressItem = ({address, updateAddresses}) => {
                      style={{marginBottom: "4px"}}>
                     <div className="address-card_header">
                                                 <span className="name-span">
-                                                    <div className="user-name">{address.full_name}</div>
+                                                    <div className="user-name">{address.fullName}</div>
                                                 </span>
                         <div className="separate"></div>
                         <div role="row"
-                             className="phone-number d-flex align-items-center">(+84) {address.phone_number}
+                             className="phone-number d-flex align-items-center">(+84) {address.phoneNumber}
                         </div>
                     </div>
                     <div className="d-flex justify-content-end" style={{flexBasis: "40px"}}>
@@ -74,11 +74,11 @@ const AddressItem = ({address, updateAddresses}) => {
                     <div className="flex-grow-1 d-flex"
                          style={{overflowX: "hidden", marginRight: "8px"}}>
                         <div className="address-content">
-                            <div role="row" className="d-flex align-items-center">{address.hnum_sname}
+                            <div role="row" className="d-flex align-items-center">{address.hnumSname}
                             </div>
                             <div role="row"
-                                 className="d-flex align-items-center">{address.ward_commune}, {address.county_district},
-                                {address.province_city}
+                                 className="d-flex align-items-center">{address.wardCommune}, {address.countyDistrict},
+                                {address.provinceCity}
                             </div>
                         </div>
                     </div>

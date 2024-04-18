@@ -1,21 +1,28 @@
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                           href="https://bookworm.madrasthemes.com">Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span>Wishlist
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
+import {Link, useLocation} from "react-router-dom";
+import Breadcrumb from "../../components/general/Breadcrumb";
+import {useEffect, useState} from "react";
+import APIService from "../../../service/APIService";
+import formatCurrency from "../../../utils/formatCurrency";
+
 export const ProductsInWishlist = () => {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
+
+    const fetchProducts = async () => {
+        try {
+            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            setFavoriteProducts(result);
+        } catch (error) {
+            console.log("Error fetching favorite products")
+        }
+    }
+    useEffect(() => {
+        fetchProducts();
+    }, [])
     return (
-        <section className="shoping-cart spad" style={{ margin: "0 90px 0 90px" }}>
+        <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -30,26 +37,29 @@ export const ProductsInWishlist = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td className="shoping__cart__item">
-                                        <img src="src/customer/pages/wishlist/Wishlist" alt=""
+                                {favoriteProducts.map(favorite => (<tr>
+                                    <td key={favorite.id} className="shoping__cart__item">
+                                        <img src={favorite.product?.image} alt=""
                                              style={{width: "85px", height: "85px", objectFit: "cover"}}/>
-                                            <a href="src/customer/pages/wishlist/Wishlist">
-                                                <h5>
-                                                    Đắc Nhân Tâm
-                                                </h5>
-                                            </a>
+                                        <Link to={`/product-detail/${favorite.product?.id}`}>
+                                            <h5>
+                                                {favorite.product?.title}
+                                            </h5>
+                                        </Link>
                                     </td>
-                                    <td className="shoping__cart__price" style={{paddingLeft: "10px", paddingTop:"60px"}}>
-                                        150.000₫
+                                    <td className="shoping__cart__price"
+                                        style={{paddingLeft: "10px", paddingTop: "60px"}}>
+                                        {formatCurrency(favorite.product?.currentPrice)}
                                     </td>
-                                    <td className="shoping__cart__total" style={{paddingLeft: "130px", paddingTop:"60px"}}>
+                                    <td className="shoping__cart__total"
+                                        style={{paddingLeft: "130px", paddingTop: "60px"}}>
                                         <i className="fa fa-heart">
                                         </i></td>
-                                    <td className="shoping__cart__item__close"style={{paddingRight: "80px", paddingTop:"60px"}}>
+                                    <td className="shoping__cart__item__close"
+                                        style={{paddingRight: "80px", paddingTop: "60px"}}>
                                         <i className="fa-solid fa-xmark"></i>
                                     </td>
-                                </tr>
+                                </tr>))}
                                 </tbody>
                             </table>
                         </div>
@@ -60,9 +70,10 @@ export const ProductsInWishlist = () => {
     )
 }
 export const Wishlist = () => {
+    const location = useLocation();
     return (
         <div>
-            <PageLink/>
+            <Breadcrumb location={location}/>
             <ProductsInWishlist/>
         </div>
     )
