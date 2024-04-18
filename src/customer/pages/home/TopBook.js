@@ -22,7 +22,7 @@ export const TopBook = () => {
                 setShortDescription(firstParagraph);
             }
         } catch (error) {
-            console.log('Error fetching product', error);
+            console.error('Error fetching product', error);
         }
     }
     const fetchProducts = async () => {
@@ -32,7 +32,7 @@ export const TopBook = () => {
             const limitProducts = result.slice(0, 2);
             setTopReviewBooks(limitProducts);
         } catch (error) {
-            console.log('Error fetching products', error);
+            console.error('Error fetching products', error);
         }
     }
     useEffect(() => {

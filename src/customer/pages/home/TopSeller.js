@@ -31,7 +31,7 @@ export const TopSeller = () => {
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
             } catch (error) {
-                console.log('Error fetching products', error);
+                console.error('Error fetching products', error);
             }
         }
         fetchProducts();

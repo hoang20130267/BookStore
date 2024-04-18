@@ -17,7 +17,6 @@ import "react-multi-carousel/lib/styles.css";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
-    console.log(quantity)
     const handlePlus = () => {
         setQuantity(quantity + 1);
     };
@@ -49,6 +48,14 @@ export const SingleProduct = ({product}) => {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
         }
     };
+    const addFavoriteProduct = async () => {
+        try {
+            const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
+            console.log("Product added to wishlist successfully", result);
+        } catch (error) {
+            console.error("Error adding favorite product");
+        }
+    }
     return (
         <div className="single-product-container border my-4 py-4">
             <div className="row single-product-wrapper m-0">
@@ -109,11 +116,11 @@ export const SingleProduct = ({product}) => {
                                 </button>
                             </div>
                             <div className="add-wishlist-button mt-4">
-                                <a href="?add_to_wishlist=71" rel="nofollow"
-                                   className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
+                                <Link to="" rel="nofollow" onClick={addFavoriteProduct}
+                                      className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
                                     <i className="fa-regular fa-heart"></i> <span
                                     className="text">Thêm vào yêu thích</span>
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -629,7 +636,7 @@ export const RelatedProducts = ({categoryId}) => {
                 const relatedProducts = result.filter(product => product.id !== id);
                 setRelatedProducts(relatedProducts);
             } catch (error) {
-                console.log('Error fetching products', error);
+                console.error('Error fetching products', error);
             }
         }
         fetchProducts();
@@ -641,7 +648,8 @@ export const RelatedProducts = ({categoryId}) => {
                     <h2 className="font-size-5 mb-3 mb-md-0">Sản phẩm liên quan</h2>
                 </header>
                 <Carousel responsive={responsive}>
-                    {relatedProducts.map(product => (<div className="card mb-0 mx-2 no-gutters"><Product key={product.id} info={product}/></div>))}
+                    {relatedProducts.map(product => (
+                        <div className="card mb-0 mx-2 no-gutters"><Product key={product.id} info={product}/></div>))}
                 </Carousel>
             </div>
         </section>
@@ -669,14 +677,14 @@ export const Detail = () => {
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
                 setProduct(result)
-                setCategoryId(result.category.id)
+                setCategoryId(result.category?.id)
             } catch (error) {
                 console.error('Error fetching product', error);
             }
@@ -699,7 +707,7 @@ export const Detail = () => {
                     </div>
                     <SideBar/>
                 </div>
-                <RelatedProducts categoryId={categoryId}/>
+                {categoryId && (<RelatedProducts categoryId={categoryId}/>)}
             </div>
         </div>
     )

@@ -30,6 +30,15 @@ const Product = (props) => {
         }
     };
 
+    const addFavoriteProduct = async () => {
+        try {
+            const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
+            console.log("Product added to wishlist successfully", result);
+        } catch (error) {
+            console.error("Error adding favorite product");
+        }
+    }
+
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
             <div className="bookworm-product-grid">
@@ -81,11 +90,11 @@ const Product = (props) => {
                             </div>
                             <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                 <div className="yith-wcwl-add-button">
-                                    <a href="shop-product/sub-components?add_to_wishlist=108"
+                                    <Link to="" onClick={addFavoriteProduct}
                                        className="add_to_wishlist single_add_to_wishlist"
                                        title="Thêm vào yêu thích">
                                         <i className="fa-regular fa-heart"></i>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
