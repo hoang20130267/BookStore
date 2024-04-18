@@ -22,7 +22,7 @@ class ApiService {
         }
     }
 
-    async sendData(endpoint, data) {
+    async sendData(endpoint, data = {}) {
         try {
             const response = await this.api.post(endpoint, data);
             return response.data;

@@ -15,12 +15,22 @@ export const ProductsInWishlist = () => {
             const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
             setFavoriteProducts(result);
         } catch (error) {
-            console.log("Error fetching favorite products")
+            console.error("Error fetching favorite products")
         }
     }
     useEffect(() => {
         fetchProducts();
     }, [])
+
+    const deleteFavoriteProduct = async (id) => {
+        try {
+            await apiService.deleteData(`http://localhost:8080/api/user/favorites/${id}`);
+            console.log("Favorite product deleted successfully");
+            fetchProducts();
+        } catch (error) {
+            console.error("Error deleting favorite product");
+        }
+    }
     return (
         <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
             <div className="container">
@@ -37,8 +47,8 @@ export const ProductsInWishlist = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {favoriteProducts.map(favorite => (<tr>
-                                    <td key={favorite.id} className="shoping__cart__item">
+                                {favoriteProducts.map(favorite => (<tr key={favorite.id}>
+                                    <td className="shoping__cart__item">
                                         <img src={favorite.product?.image} alt=""
                                              style={{width: "85px", height: "85px", objectFit: "cover"}}/>
                                         <Link to={`/product-detail/${favorite.product?.id}`}>
@@ -56,6 +66,7 @@ export const ProductsInWishlist = () => {
                                         <i className="fa fa-heart">
                                         </i></td>
                                     <td className="shoping__cart__item__close"
+                                        onClick={() => deleteFavoriteProduct(favorite.id)}
                                         style={{paddingRight: "80px", paddingTop: "60px"}}>
                                         <i className="fa-solid fa-xmark"></i>
                                     </td>

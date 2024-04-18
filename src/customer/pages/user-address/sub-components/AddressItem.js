@@ -15,7 +15,7 @@ const AddressItem = ({address, updateAddresses}) => {
             console.log("Address deleted successfully:", response.data);
             updateAddresses();
         } catch (error) {
-            console.log("Error deleting address:", error);
+            console.error("Error deleting address:", error);
         }
     }
 
@@ -25,7 +25,7 @@ const AddressItem = ({address, updateAddresses}) => {
             console.log("Address set default successfully:", response.data);
             updateAddresses();
         } catch (error) {
-            console.log("Error setting default address", error);
+            console.error("Error setting default address", error);
         }
     }
 

@@ -54,7 +54,7 @@ const MyAccount = () => {
             fetchInformation();
             console.log("User information updated successfully:", responseData);
         } catch (error) {
-            console.log("Error updating information:", error);
+            console.error("Error updating information:", error);
         }
     }
 
@@ -64,7 +64,7 @@ const MyAccount = () => {
             fetchInformation();
             console.log("User information created successfully:", responseData);
         } catch (error) {
-            console.log("Error creating information:", error);
+            console.error("Error creating information:", error);
         }
     }
     const handleButtonSave = (e) => {
