@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
-import ConfirmationModal from "./ConfirmationModal";
 import APIService from "../../../../service/APIService";
+import ConfirmationModal from "../../../components/general/ConfirmationModal";
 
 const AddressItem = ({address, updateAddresses}) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));

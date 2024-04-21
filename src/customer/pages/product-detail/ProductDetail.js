@@ -7,51 +7,112 @@ import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
 import DetailItem from "./subcomponents/DetailItem";
-import {useSelector} from "react-redux";
 import Rating from '@mui/material/Rating';
 import {FaTrashCan} from "react-icons/fa6";
 import {FaRegEdit} from "react-icons/fa";
 import axios from "axios";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import ModalRequiresLogin from "../../components/general/ModalRequiresLogin";
+import PopupNotification from "../../components/general/PopupNotification";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
+    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+    const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [favoriteId, setFavoriteId] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupInfo, setPopupInfo] = useState('');
     const handlePlus = () => {
-        setQuantity(quantity + 1);
+        setQuantity(prevQuantity => prevQuantity + 1);
     };
 
     const handleMinus = () => {
         if (quantity > 1) {
-            setQuantity(quantity - 1);
+            setQuantity(prevQuantity => prevQuantity - 1);
         }
     };
 
     const handleInputChange = (e) => {
-        const input = parseInt(e.target.value, 10);
-        setQuantity(input);
+        const input = e.target.value;
+        const numberInput = parseInt(input, 10);
+        if (input === '' || !isNaN(numberInput)) {
+            setQuantity(input === '' ? '' : numberInput);
+        }
+    };
+
+    const handleCloseCartModal = () => {
+        setIsCartModalOpen(false);
+    }
+
+    const handleCloseWishlistModal = () => {
+        setIsWishlistModalOpen(false);
+    }
+
+    const handleButtonClick = (detail) => {
+        setPopupInfo(detail);
+        setShowPopup(true);
+    };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
     };
 
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const addToCart = async () => {
+        if (!user) {
+            setIsCartModalOpen(true);
+        }
         const requestData = {product: {id: product.id}, quantity: quantity};
         try {
             const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
             console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+            handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
         }
     };
     const addFavoriteProduct = async () => {
+        if (!user) {
+            setIsWishlistModalOpen(true);
+        }
         try {
             const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
             console.log("Product added to wishlist successfully", result);
+            setIsFavorite(true);
+            handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
         } catch (error) {
             console.error("Error adding favorite product");
         }
     }
+    const deleteFavoriteProduct = async () => {
+        try {
+            await apiService.deleteData(`http://localhost:8080/api/user/favorites/${favoriteId}`);
+            console.log("Favorite product deleted successfully");
+            setIsFavorite(false);
+            handleButtonClick("Sản phẩm đã được xoá khỏi Yêu thích");
+        } catch (error) {
+            console.error("Error deleting favorite product");
+        }
+    }
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+                const favoriteProduct = result.find(favorite => favorite.product?.id === product.id);
+                const isFavoriteProduct = favoriteProduct ? true : false;
+                const favoriteProductId = favoriteProduct ? favoriteProduct.id : null;
+                setFavoriteId(favoriteProductId);
+                setIsFavorite(isFavoriteProduct)
+            } catch (error) {
+                console.error("Error fetching favorite products")
+            }
+        }
+        fetchProducts();
+    }, [product.id, isFavorite])
     return (
         <div className="single-product-container border my-4 py-4">
             <div className="row single-product-wrapper m-0">
@@ -106,18 +167,37 @@ export const SingleProduct = ({product}) => {
                                     <i className="fa-solid fa-cart-shopping"></i>
                                     thêm vào giỏ hàng
                                 </button>
+                                <ModalRequiresLogin isOpen={isCartModalOpen}
+                                                    onClose={handleCloseCartModal}
+                                                    toDo={"thêm vào Giỏ hàng"}/>
+                                {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
                                 <button type="button" className="buy_now_btn">
                                     <i className="fa-solid fa-wallet"></i>
                                     mua ngay
                                 </button>
                             </div>
-                            <div className="add-wishlist-button mt-4">
-                                <Link to="" rel="nofollow" onClick={addFavoriteProduct}
-                                      className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
-                                    <i className="fa-regular fa-heart"></i> <span
-                                    className="text">Thêm vào yêu thích</span>
-                                </Link>
-                            </div>
+                            {!isFavorite ? (<div className="add-wishlist-button mt-4">
+                                    <Link to="" rel="nofollow" onClick={addFavoriteProduct}
+                                          className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
+                                        <i className="fa-regular fa-heart"></i> <span
+                                        className="text">Thêm vào yêu thích</span>
+                                    </Link>
+                                    <ModalRequiresLogin isOpen={isWishlistModalOpen}
+                                                        onClose={handleCloseWishlistModal}
+                                                        toDo={"thêm vào Yêu thích"}/>
+                                </div>) :
+                                (<div className="add-wishlist-button mt-4">
+                                    <Link style={{color: '#f75454'}} to="" rel="nofollow"
+                                          onClick={deleteFavoriteProduct}
+                                          className="add_to_wishlist single_add_to_wishlist"
+                                          data-title="Add to wishlist">
+                                        <i className="fa-solid fa-heart"></i> <span
+                                        className="text">Yêu thích</span>
+                                    </Link>
+                                    <ModalRequiresLogin isOpen={isWishlistModalOpen}
+                                                        onClose={handleCloseWishlistModal}
+                                                        toDo={"thêm vào Yêu thích"}/>
+                                </div>)}
                         </div>
                     </div>
                 </div>
@@ -648,14 +728,15 @@ export const RelatedProducts = ({categoryId}) => {
         const fetchProducts = async () => {
             try {
                 const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${categoryId}`);
-                const relatedProducts = result.filter(product => product.id !== id);
+                const relatedProducts = result.filter(product => product.id.toString() !== id.toString());
+                console.log(relatedProducts)
                 setRelatedProducts(relatedProducts);
             } catch (error) {
                 console.error('Error fetching products', error);
             }
         }
         fetchProducts();
-    }, [categoryId])
+    }, [categoryId, id])
     return (
         <section className="related products space-bottom-3">
             <div className="container">
@@ -694,18 +775,18 @@ export const Detail = () => {
     const [product, setProduct] = useState({});
     const [categoryId, setCategoryId] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
-                setProduct(result)
-                setCategoryId(result.category?.id)
-            } catch (error) {
-                console.error('Error fetching product', error);
-            }
+    const fetchData = async () => {
+        try {
+            const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
+            setProduct(result)
+            setCategoryId(result.category?.id)
+        } catch (error) {
+            console.error('Error fetching product', error);
         }
+    }
+    useEffect(() => {
         fetchData();
-    }, [])
+    }, [id])
     return (
         <div>
             <PageLink/>
