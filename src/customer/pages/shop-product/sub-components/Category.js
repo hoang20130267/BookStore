@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import APIService from "../../../../service/APIService";
 
 const apiService = new APIService();
@@ -41,6 +41,10 @@ const Category = () => {
     );
 }
 const CategoryItem = ({category, subMainCategories, subCategories}) => {
+    const location = useLocation();
+    const toPath = `/product-list/${category.id}`;
+
+    console.log(location)
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedMainCategory, setSelectedMainCategory] = useState(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
@@ -64,39 +68,41 @@ const CategoryItem = ({category, subMainCategories, subCategories}) => {
         setExpandedSubCategories(true)
     };
 
-
     return (
         <>
             <li className={`cat-item cat-item-${category.id}`}>
-                <Link to={`/product-list/${category.id}`}
+                <Link to={toPath}
+                    // className={`${selectedCategory === category.id || location.pathname === toPath ? 'active' : ''}`}
                       className={`${selectedCategory === category.id ? 'active' : ''}`}
                       onClick={() => handleCategoryClick(category.id)}>
                     {category.name}
                 </Link>
                 <ul className={`children ml-3 d-block`}>
-                    {subMainCategories.map(subCate => (
-                        <li key={subCate.id}
-                            className={`cat-item cat-item-${subCate.id}`}
-                            style={{display: selectedMainCategory === null || selectedMainCategory === subCate.id ? 'block' : 'none'}}>
-                            <Link to={`/product-list/${category.id}/${subCate.id}`}
-                                  className={`${selectedMainCategory === subCate.id && selectedSubCategory === null ? 'active' : ''}`}
-                                  onClick={() => handleMainCategoryClick(subCate.id)}>
-                                {subCate.name}
+                    {subMainCategories.map(mainCate => {
+                        const toPathMain = `/product-list/${category.id}/${mainCate.id}`;
+                        return (<li key={mainCate.id}
+                                    className={`cat-item cat-item-${mainCate.id}`}
+                                    style={{display: selectedMainCategory === null || selectedMainCategory === mainCate.id ? 'block' : 'none'}}>
+                            <Link to={toPathMain}
+                                  className={`${selectedMainCategory === mainCate.id && selectedSubCategory === null ? 'active' : ''}`}
+                                  onClick={() => handleMainCategoryClick(mainCate.id)}>
+                                {mainCate.name}
                             </Link>
-                            {expandedSubCategories && selectedMainCategory === subCate.id && (
-                                <ul key={subCate.id} className={`children ml-3 d-block`}>
-                                    {subCategories.map(child => (
-                                        <li key={child.id} className={`cat-item cat-item-${child.id}`}>
-                                            <Link to={`/product-list/${category.id}/${subCate.id}/${child.id}`}
+                            {expandedSubCategories && selectedMainCategory === mainCate.id && (
+                                <ul key={mainCate.id} className={`children ml-3 d-block`}>
+                                    {subCategories.map(child => {
+                                        const toPathChild = `/product-list/${category.id}/${mainCate.id}/${child.id}`;
+                                        return (<li key={child.id} className={`cat-item cat-item-${child.id}`}>
+                                            <Link to={toPathChild}
                                                   className={`${selectedSubCategory === child.id ? 'active' : ''}`}
                                                   onClick={() => handleSubCategoryClick(child.id)}>
                                                 {child.name}
                                             </Link>
-                                        </li>
-                                    ))}
+                                        </li>)
+                                    })}
                                 </ul>)}
-                        </li>
-                    ))}
+                        </li>)
+                    })}
                 </ul>
             </li>
         </>

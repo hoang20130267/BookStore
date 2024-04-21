@@ -24,7 +24,7 @@ const Product = (props) => {
         try {
             const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
             console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
-            handleButtonClick("Sản phẩm đã được thêm vào giỏ hàng");
+            handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
         }
@@ -34,6 +34,7 @@ const Product = (props) => {
         try {
             const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
             console.log("Product added to wishlist successfully", result);
+            handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
         } catch (error) {
             console.error("Error adding favorite product");
         }
@@ -86,7 +87,6 @@ const Product = (props) => {
                                       title="Thêm vào giỏ hàng">
                                     <i className="fa-solid fa-cart-shopping"></i>
                                 </Link>
-                                {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup} />}
                             </div>
                             <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                 <div className="yith-wcwl-add-button">
@@ -98,6 +98,7 @@ const Product = (props) => {
                                 </div>
                             </div>
                         </div>
+                        {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup} />}
                     </div>
                 </div>
             </div>
