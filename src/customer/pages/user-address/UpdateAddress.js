@@ -1,10 +1,170 @@
-import React from "react";
-import {useLocation} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
+import APIService from "../../../service/APIService";
+import {isEmpty} from "react-admin";
 
 const UpdateAddress = () => {
     const location = useLocation();
+    const {id} = useParams();
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiServiceWithToken = new APIService(token);
+    const apiService = new APIService();
+    const [addressInfo, setAddressInfo] = useState({});
+    const [fullName, setFullName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [hnumSname, setHnumSname] = useState('');
+    const [wardCommune, setWardCommune] = useState('');
+    const [countyDistrict, setCountyDistrict] = useState('');
+    const [provinceCity, setProvinceCity] = useState('');
+    const [provinces, setProvinces] = useState([]);
+    const [selectedProvince, setSelectedProvince] = useState('');
+    const [districts, setDistricts] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState('');
+    const [wards, setWards] = useState([]);
+    const [selectedWard, setSelectedWard] = useState('');
+    const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
+    const navigate = useNavigate();
+    console.log(selectedProvince)
+    console.log(selectedDistrict)
+    console.log(selectedWard)
+    console.log(hnumSname)
+    const checkSaveButton = () => {
+        setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
+            !isEmpty(countyDistrict) && !isEmpty(wardCommune));
+    };
+    useEffect(() => {
+        checkSaveButton();
+    }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune])
+    useEffect(() => {
+        const fetchAddress = async () => {
+            try {
+                const response = await apiServiceWithToken.fetchData(`http://localhost:8080/api/user/addresses/${id}`);
+                setFullName(response.fullName);
+                setPhoneNumber(response.phoneNumber);
+                setHnumSname(response.hnumSname);
+                setProvinceCity(response.provinceCity)
+                setCountyDistrict(response.countyDistrict)
+                setWardCommune(response.wardCommune)
+            } catch (error) {
+                console.error("Error fetching address")
+            }
+        }
+        fetchAddress();
+    }, [])
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            try {
+                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province`);
+                console.log(response.results)
+                setProvinces(response.results)
+                const provinceToSelect = provinces.find(province => province.province_name === provinceCity);
+                const provinceValue = provinceToSelect ? provinceToSelect.province_id : '';
+                setSelectedProvince(provinceValue);
+            } catch (error) {
+                console.error('Error fetching province', error);
+            }
+        }
+        fetchProvinces();
+    }, [provinces.length > 0])
+
+    const fetchDistrict = async (selectedProvince) => {
+        if (selectedProvince) {
+            try {
+                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province/district/${selectedProvince}`);
+                setDistricts(response.results)
+                const districtToSelect = districts.find(district => district.district_name === countyDistrict);
+                const districtValue = districtToSelect ? districtToSelect.district_id : '';
+                setSelectedDistrict(districtValue);
+            } catch (error) {
+                console.error('Error fetching province', error);
+            }
+        }
+    }
+    useEffect(() => {
+        fetchDistrict(selectedProvince);
+    }, [selectedProvince, districts.length > 0])
+
+    const fetchWard = async (selectedDistrict) => {
+        if (selectedDistrict) {
+            try {
+                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province/ward/${selectedDistrict}`);
+                setWards(response.results)
+                const wardToSelect = wards.find(ward => ward.ward_name === wardCommune);
+                const wardValue = wardToSelect ? wardToSelect.ward_id : '';
+                setSelectedWard(wardValue);
+            } catch (error) {
+                console.error('Error fetching province', error);
+            }
+        }
+    }
+    useEffect(() => {
+        fetchWard(selectedDistrict);
+    }, [selectedDistrict, wards.length > 0])
+    const handleProvinceChange = (e) => {
+        const selectedValue = e.target.value;
+        if (selectedValue !== '') {
+            fetchDistrict(selectedValue);
+            const selectedProvince = provinces.find(province => province.province_id === selectedValue);
+            if (selectedProvince) {
+                setProvinceCity(selectedProvince.province_name);
+            } else {
+                setProvinceCity('');
+            }
+        }
+    }
+
+    const handleDistrictChange = (e) => {
+        const selectedValue = e.target.value;
+        if (selectedValue !== '') {
+            fetchWard(selectedValue);
+            const selectedDistrict = districts.find(district => district.district_id === selectedValue);
+
+            if (selectedDistrict) {
+                setCountyDistrict(selectedDistrict.district_name);
+            } else {
+                setCountyDistrict('');
+            }
+        }
+    }
+
+    const handleWardChange = (e) => {
+        const selectedValue = e.target.value;
+        if (selectedValue !== '') {
+            const selectedWard = wards.find(ward => ward.ward_id === selectedValue);
+
+            if (selectedWard) {
+                setWardCommune(selectedWard.ward_name);
+            } else {
+                setWardCommune('');
+            }
+        }
+    }
+    const updateAddress = async () => {
+        const request = {
+            fullName: fullName,
+            phoneNumber: phoneNumber,
+            provinceCity: provinceCity,
+            countyDistrict: countyDistrict,
+            wardCommune: wardCommune,
+            hnumSname: hnumSname,
+        }
+        try {
+            const response = apiServiceWithToken.updateData(`http://localhost:8080/api/user/addresses/${id}`, request)
+            console.log("Address updated successfully", response)
+        } catch (error) {
+            console.error("Error updating address");
+        }
+    }
+    const handleButtonUpdate = (e) => {
+        e.preventDefault();
+        updateAddress();
+        navigate('/user/address');
+    }
+
     return (
         <>
             <Breadcrumb location={location}/>
@@ -30,15 +190,21 @@ const UpdateAddress = () => {
                                     </div>
                                     <div className="row mt-3">
                                         <div className="col-md-12"><label className="labels">Họ và tên</label>
-                                            <input type="text" id="fullname" className="form-control" name="fullname"
-                                                   placeholder="Nhập họ tên"/>
+                                            <input value={fullName} onChange={(e) => setFullName(e.target.value)}
+                                                   type="text" id="fullname" className="form-control" name="fullname"
+                                                   placeholder="Nhập họ tên" required/>
                                         </div>
                                         <div className="col-md-12"><label className="labels"
                                                                           style={{paddingTop: "10px"}}>Số
                                             điện
-                                            thoại</label><input id="phone" type="text" className="form-control"
+                                            thoại</label><input value={phoneNumber}
+                                                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                                                id="phone" type="text"
+                                                                className="form-control"
                                                                 name="phone"
-                                                                placeholder="Nhập số điện thoại tại đây"/>
+                                                                placeholder="Nhập số điện thoại tại đây"
+                                                                maxLength={10}
+                                                                required/>
                                         </div>
                                     </div>
                                 </div>
@@ -50,22 +216,40 @@ const UpdateAddress = () => {
                                     </div>
                                     <div className="col-md-12">
                                         <label>Tỉnh/Thành phố:</label>
-                                        <select id="province" className="pdw">
+                                        <select id="province" className="pdw"
+                                                onChange={handleProvinceChange} value={selectedProvince}>
                                             <option value="">Tỉnh/Thành phố</option>
+                                            {provinces.map(province => (
+                                                <option key={province.province_id}
+                                                        value={province.province_id}>
+                                                    {province.province_name}
+                                                </option>
+                                            ))}
                                         </select>
                                         <br/>
                                         <label>Quận/Huyện:</label>
-                                        <select id="district" className="pdw">
+                                        <select id="district" className="pdw" onChange={handleDistrictChange}
+                                                value={selectedDistrict}>
                                             <option value="">Quận/Huyện</option>
+                                            {districts.map(district => (
+                                                <option key={district.district_id} value={district.district_id}>
+                                                    {district.district_name}
+                                                </option>))}
                                         </select>
                                         <br/>
                                         <label>Phường/Xã:</label>
-                                        <select id="ward" className="pdw">
+                                        <select id="ward" className="pdw" onChange={handleWardChange}
+                                                value={selectedWard}>
                                             <option value="">Phường/Xã</option>
+                                            {wards.map(ward => (
+                                                <option key={ward.ward_id} value={ward.ward_id}>
+                                                    {ward.ward_name}
+                                                </option>))}
                                         </select>
                                         <br/>
-                                        <input type="text" id="soNha" className="form-control"
-                                               placeholder="Số nhà, Tên đường"/>
+                                        <input value={hnumSname} type="text" id="soNha" className="form-control"
+                                               placeholder="Số nhà, Tên đường"
+                                               onChange={(e) => setHnumSname(e.target.value)}/>
                                         <br/>
                                         <div id="error" style={{textAlign: "center", color: "red"}}></div>
                                     </div>
@@ -77,7 +261,9 @@ const UpdateAddress = () => {
                                     }}>
                                     </p>
                                     <div className="mt-3 text-center">
-                                        <button className="btn btn-primary profile-button" type="submit">Cập nhật
+                                        <button onClick={handleButtonUpdate} disabled={!saveButtonEnabled}
+                                                className="btn btn-primary profile-button"
+                                                type="submit">Cập nhật
                                         </button>
                                     </div>
                                 </div>

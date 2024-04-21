@@ -6,7 +6,6 @@ import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import AddressItem from "./sub-components/AddressItem";
 import {useSelector} from "react-redux";
 import APIService from "../../../service/APIService";
-import axios from "axios";
 
 const AddressList = () => {
     const location = useLocation();
@@ -25,7 +24,7 @@ const AddressList = () => {
     }
     useEffect(() => {
         fetchAddress();
-    }, [])
+    }, [location.pathname])
 
     return (
         <>

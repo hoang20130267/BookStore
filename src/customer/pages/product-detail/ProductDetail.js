@@ -28,15 +28,11 @@ export const SingleProduct = ({product}) => {
     };
 
     const handleInputChange = (e) => {
-        const input = e.target.value;
-        if (input.trim() === '' || isNaN(input)) {
-            setQuantity(1);
-        } else {
-            setQuantity(parseInt(input));
-        }
+        const input = parseInt(e.target.value, 10);
+        setQuantity(input);
     };
 
-    const user = useSelector(state => state.auth.login.currentUser);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const addToCart = async () => {

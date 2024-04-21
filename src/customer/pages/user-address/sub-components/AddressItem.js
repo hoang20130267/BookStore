@@ -21,7 +21,7 @@ const AddressItem = ({address, updateAddresses}) => {
 
     const setDefaultAddress = async () => {
         try {
-            const response = await apiService.updateDataPut(`http://localhost:8080/api/user/addresses/default/${address.id}`)
+            const response = await apiService.updateData(`http://localhost:8080/api/user/addresses/default/${address.id}`)
             console.log("Address set default successfully:", response.data);
             updateAddresses();
         } catch (error) {
@@ -57,7 +57,7 @@ const AddressItem = ({address, updateAddresses}) => {
                         </div>
                     </div>
                     <div className="d-flex justify-content-end" style={{flexBasis: "40px"}}>
-                        <Link to="/user/address/update">
+                        <Link to={`/user/address/update/${address.id}`}>
                             <button className="function-button update-button">Cập nhật</button>
                         </Link>
                         {address.default === false && (

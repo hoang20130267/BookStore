@@ -19,11 +19,8 @@ const AddNewAddress = () => {
     const [countyDistrict, setCountyDistrict] = useState('');
     const [provinceCity, setProvinceCity] = useState('');
     const [provinces, setProvinces] = useState([]);
-    const [selectedProvince, setSelectedProvince] = useState('')
     const [districts, setDistricts] = useState([]);
-    const [selectedDistrict, setSelectedDistrict] = useState('')
     const [wards, setWards] = useState([]);
-    const [selectedWard, setSelectedWard] = useState('');
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const navigate = useNavigate();
     console.log(fullName)
@@ -75,7 +72,6 @@ const AddNewAddress = () => {
     const handleProvinceChange = (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            setSelectedProvince(selectedValue);
             fetchDistrict(selectedValue);
             const selectedProvince = provinces.find(province => province.province_id === selectedValue);
 
@@ -90,7 +86,6 @@ const AddNewAddress = () => {
     const handleDistrictChange = (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            setSelectedDistrict(selectedValue);
             fetchWard(selectedValue);
             const selectedDistrict = districts.find(district => district.district_id === selectedValue);
 
@@ -105,7 +100,6 @@ const AddNewAddress = () => {
     const handleWardChange = (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            setSelectedWard(selectedValue);
             const selectedWard = wards.find(ward => ward.ward_id === selectedValue);
 
             if (selectedWard) {
@@ -164,7 +158,8 @@ const AddNewAddress = () => {
                                         <div className="col-md-12"><label className="labels">Họ và tên</label>
                                             <input type="text" id="fullname" className="form-control" name="fullname"
                                                    placeholder="Nhập họ tên"
-                                                   onChange={(e) => setFullName(e.target.value)}/>
+                                                   onChange={(e) => setFullName(e.target.value)}
+                                                   required/>
                                         </div>
                                         <div className="col-md-12"><label className="labels"
                                                                           style={{paddingTop: "10px"}}>Số
@@ -172,7 +167,9 @@ const AddNewAddress = () => {
                                             thoại</label><input id="phone" type="text" className="form-control"
                                                                 name="phone"
                                                                 placeholder="Nhập số điện thoại tại đây"
-                                                                onChange={(e) => setPhoneNumber(e.target.value)}/>
+                                                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                                                maxLength={10}
+                                                                required/>
                                         </div>
                                     </div>
                                 </div>
