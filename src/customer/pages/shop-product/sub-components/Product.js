@@ -1,16 +1,21 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, redirect, useNavigate} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import PopupNotification from "../../../components/general/PopupNotification";
 import APIService from "../../../../service/APIService";
+import ModalRequiresLogin from "../../../components/general/ModalRequiresLogin";
 
 const Product = (props) => {
+    const navigate = useNavigate();
     const productInfo = props.info;
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const [showPopup, setShowPopup] = useState(false);
     const [popupInfo, setPopupInfo] = useState('');
+    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+    const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
+
     const handleButtonClick = (detail) => {
         setPopupInfo(detail);
         setShowPopup(true);
@@ -19,24 +24,40 @@ const Product = (props) => {
     const handleClosePopup = () => {
         setShowPopup(false);
     };
+    const handleCloseCartModal = () => {
+        setIsCartModalOpen(false);
+    }
+
+    const handleCloseWishlistModal = () => {
+        setIsWishlistModalOpen(false);
+    }
+
     const addToCart = async () => {
-        const requestData = {product: {id: productInfo.id}, quantity: 1};
-        try {
-            const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-            console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
-            handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
-        } catch (error) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+        if (!user) {
+            setIsCartModalOpen(true);
+        } else {
+            const requestData = {product: {id: productInfo.id}, quantity: 1};
+            try {
+                const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
+                console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+                handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
+            } catch (error) {
+                console.error('Lỗi khi thêm vào giỏ hàng:', error);
+            }
         }
     };
 
     const addFavoriteProduct = async () => {
-        try {
-            const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
-            console.log("Product added to wishlist successfully", result);
-            handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
-        } catch (error) {
-            console.error("Error adding favorite product");
+        if (!user) {
+            setIsWishlistModalOpen(true);
+        } else {
+            try {
+                const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
+                console.log("Product added to wishlist successfully", result);
+                handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
+            } catch (error) {
+                console.error("Error adding favorite product");
+            }
         }
     }
 
@@ -91,14 +112,20 @@ const Product = (props) => {
                             <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                 <div className="yith-wcwl-add-button">
                                     <Link to="" onClick={addFavoriteProduct}
-                                       className="add_to_wishlist single_add_to_wishlist"
-                                       title="Thêm vào yêu thích">
+                                          className="add_to_wishlist single_add_to_wishlist"
+                                          title="Thêm vào yêu thích">
                                         <i className="fa-regular fa-heart"></i>
                                     </Link>
                                 </div>
                             </div>
                         </div>
-                        {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup} />}
+                        <ModalRequiresLogin isOpen={isCartModalOpen}
+                                            onClose={handleCloseCartModal}
+                                            toDo={"thêm vào Giỏ hàng"}/>
+                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
+                                            onClose={handleCloseWishlistModal}
+                                            toDo={"thêm vào Yêu thích"}/>
+                        {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
                     </div>
                 </div>
             </div>

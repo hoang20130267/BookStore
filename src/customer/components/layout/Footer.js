@@ -174,30 +174,30 @@ export const Footer = () => {
                     <div className="container">
                         <div className="d-lg-flex text-center text-lg-left justify-content-between align-items-center">
 
-                            <p className="mb-3 mb-lg-0 font-size-2">&copy;2020 Golđ Leaf. All rights reserved</p>
+                            <p className="mb-3 mb-lg-0 font-size-2">&copy;2020 Gold Leaf. All rights reserved</p>
 
-                            <div className="d-lg-flex justify-content-xl-end align-items-center">
-                                <div className="mb-4 mb-lg-0 ml-auto">
-                                    <img decoding="async" className="img-fluid"
-                                         src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/img1.png"
-                                         alt="Payment Info"/>
-                                </div>
-                                <select className="js-select selectpicker dropdown-select ml-md-3 mb-3 mb-md-0"
-                                        data-style="border px-4 py-2 rounded-0 bg-transparent height-5 outline-none shadow-none form-control font-size-2"
-                                        data-dropdown-align-right="true"
-                                        data-width="fit">
-                                    <option value="EN-US">
-                                        VI - EN
-                                    </option>
-                                </select>
-                                <select className="js-select selectpicker dropdown-select ml-md-3"
-                                        data-style="border px-4 py-2 rounded-0 bg-transparent height-5 outline-none shadow-none form-control font-size-2"
-                                        data-dropdown-align-right="true" data-width="fit">
-                                    <option value="USD">
-                                        Đồng
-                                    </option>
-                                </select>
-                            </div>
+                            {/*<div className="d-lg-flex justify-content-xl-end align-items-center">*/}
+                            {/*    <div className="mb-4 mb-lg-0 ml-auto">*/}
+                            {/*        <img decoding="async" className="img-fluid"*/}
+                            {/*             src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/img1.png"*/}
+                            {/*             alt="Payment Info"/>*/}
+                            {/*    </div>*/}
+                            {/*    <select className="js-select selectpicker dropdown-select ml-md-3 mb-3 mb-md-0"*/}
+                            {/*            data-style="border px-4 py-2 rounded-0 bg-transparent height-5 outline-none shadow-none form-control font-size-2"*/}
+                            {/*            data-dropdown-align-right="true"*/}
+                            {/*            data-width="fit">*/}
+                            {/*        <option value="EN-US">*/}
+                            {/*            VI - EN*/}
+                            {/*        </option>*/}
+                            {/*    </select>*/}
+                            {/*    <select className="js-select selectpicker dropdown-select ml-md-3"*/}
+                            {/*            data-style="border px-4 py-2 rounded-0 bg-transparent height-5 outline-none shadow-none form-control font-size-2"*/}
+                            {/*            data-dropdown-align-right="true" data-width="fit">*/}
+                            {/*        <option value="USD">*/}
+                            {/*            Đồng*/}
+                            {/*        </option>*/}
+                            {/*    </select>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                 </div>

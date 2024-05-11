@@ -12,7 +12,7 @@ export const SearchBar = ({setResults}) => {
     const [keyword, setKeyword] = useState("");
     const [hasResults, setHasResults] = useState(true);
     const fetchSearchProduct = (value) => {
-        fetch("http://localhost:8080/api/products")
+        fetch("http://localhost:8080/api/products/all")
             .then((response) => response.json())
             .then(json => {
                 const result = json.filter(product =>

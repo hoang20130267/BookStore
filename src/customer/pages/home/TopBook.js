@@ -13,7 +13,7 @@ export const TopBook = () => {
     console.log(shortDescription)
     const fetchGoodBook = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/198`);
+            const result = await apiService.fetchData(`http://localhost:8080/api/products/49`);
             console.log("Result from fetchGoodBook:", result);
             setGoodBook(result)
             const match = /<p[^>]*>(.*?)<\/p>/i.exec(result.detail?.description);

@@ -28,7 +28,15 @@ const MyAccount = () => {
         setGender(result.userInfo?.gender);
         if (result.userInfo?.dateOfBirth) {
             const [fetchedYear, fetchedMonth, fetchedDay] = result.userInfo?.dateOfBirth.split('-');
-            setDay(fetchedDay.padStart(2, '0'));
+            console.log(fetchedYear)
+            console.log(fetchedMonth)
+            console.log(fetchedDay)
+            const indexOfT = fetchedDay.indexOf('T');
+            let day;
+            if (indexOfT !== -1) {
+                day = fetchedDay.substring(0, indexOfT);
+            }
+            setDay(day.padStart(2, '0'));
             setMonth(fetchedMonth.padStart(2, '0'));
             setYear(fetchedYear);
         }
@@ -82,9 +90,9 @@ const MyAccount = () => {
             dateOfBirth: !isEmpty(formattedDate) ? formattedDate : null,
             avatar: !isEmpty(avatar) ? avatar : null
         };
-        if(information.userInfo!=null){
+        if (information.userInfo != null) {
             updateInformation(requestData);
-        }else{
+        } else {
             createInformation(requestData);
         }
     }

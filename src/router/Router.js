@@ -21,7 +21,7 @@ import UpdateAddress from "../customer/pages/user-address/UpdateAddress";
 import {Header} from "../customer/components/layout/Header";
 import {Footer} from "../customer/components/layout/Footer";
 
-const CustomerRouter = () => {
+const Router = () => {
     return (
         <div>
             <Header/>
@@ -51,4 +51,4 @@ const CustomerRouter = () => {
         </div>
     );
 }
-export default CustomerRouter;
+export default Router;

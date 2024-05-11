@@ -65,27 +65,29 @@ export const SingleProduct = ({product}) => {
     const addToCart = async () => {
         if (!user) {
             setIsCartModalOpen(true);
-        }
-        const requestData = {product: {id: product.id}, quantity: quantity};
-        try {
-            const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-            console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
-            handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
-        } catch (error) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+        } else {
+            const requestData = {product: {id: product.id}, quantity: quantity};
+            try {
+                const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
+                console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
+                handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
+            } catch (error) {
+                console.error('Lỗi khi thêm vào giỏ hàng:', error);
+            }
         }
     };
     const addFavoriteProduct = async () => {
         if (!user) {
             setIsWishlistModalOpen(true);
-        }
-        try {
-            const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
-            console.log("Product added to wishlist successfully", result);
-            setIsFavorite(true);
-            handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
-        } catch (error) {
-            console.error("Error adding favorite product");
+        } else {
+            try {
+                const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
+                console.log("Product added to wishlist successfully", result);
+                setIsFavorite(true);
+                handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
+            } catch (error) {
+                console.error("Error adding favorite product");
+            }
         }
     }
     const deleteFavoriteProduct = async () => {
@@ -111,7 +113,9 @@ export const SingleProduct = ({product}) => {
                 console.error("Error fetching favorite products")
             }
         }
-        fetchProducts();
+        if (user) {
+            fetchProducts();
+        }
     }, [product.id, isFavorite])
     return (
         <div className="single-product-container border my-4 py-4">
@@ -608,12 +612,12 @@ export const SideBar = () => {
         fetchData();
     }, [])
     return (
-        <div id="secondary" className="sidebar widget-area order-1" role="complementary">
+        <div id="secondary" className="sidebar wi5dget-area order-1" role="complementary">
             <div id="widgetAccordion">
                 <div id="woocommerce_products-2" className="widget p-4d875 border my-4 woocommerce widget_products">
                     <h4 className="font-size-3 mb-4">Sản phẩm mới</h4>
                     <ul className="product_list_widget">
-                        {latestProducts.map(product => (<li className="mb-5">
+                        {latestProducts.map(product => (<li key={product.id} className="mb-5">
                             <div className="media">
                                 <div className="media d-md-flex">
                                     <Link to={`/product-detail/${product.id}`}
@@ -745,7 +749,7 @@ export const RelatedProducts = ({categoryId}) => {
                 </header>
                 <Carousel responsive={responsive}>
                     {relatedProducts.map(product => (
-                        <div className="card mb-0 mx-2 no-gutters"><Product key={product.id} info={product}/></div>))}
+                        <div key={product.id} className="card mb-0 mx-2 no-gutters"><Product info={product}/></div>))}
                 </Carousel>
             </div>
         </section>

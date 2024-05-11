@@ -2,6 +2,7 @@ import APIService from "../../../service/APIService";
 import Product from "../shop-product/sub-components/Product";
 import Carousel from "react-multi-carousel";
 import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 export const TopSeller = () => {
     const apiService = new APIService();
@@ -36,21 +37,22 @@ export const TopSeller = () => {
         }
         fetchProducts();
     }, [])
-    return (<div
+    return (
+        <div
             className="wp-block-bwgb-products-carousel bwgb-products-carousel space-bottom-2 space-bottom-lg-3 bwgb-8b03692 bwgb-products-carousel__style-v2"
             id="bwgb-8b03692">
             <div className="wp-block-bwgb-products-carousel__inner container">
                 <header
                     className="mb-5 justify-content-between align-items-center bwgb-products-carousel__block-header d-md-flex ">
                     <h2 className="bwgb-products-carousel__block-title font-size-7 mb-3 mb-md-0">Top sách bán chạy
-                        nhất</h2><a href="https://bookworm.madrasthemes.com/shop/"
-                                    className="h-primary d-block bwgb-products-carousel__block-action-text"><span>Xem tất cả</span><i
-                    className="fa-solid fa-caret-right ml-1"></i></a></header>
+                        nhất</h2><Link to={`/product-list/1`}
+                                       className="h-primary d-block bwgb-products-carousel__block-action-text"><span>Xem tất cả</span><i
+                    className="fa-solid fa-caret-right ml-1"></i></Link></header>
             </div>
             <div className="wp-block-bwgb-products-carousel__content container">
                 <Carousel responsive={responsive}>
                     {topSellBooks.map(product => (
-                        <div className="card mb-0 mx-2 no-gutters"><Product key={product.id} info={product}/></div>))}
+                        <div key={product.id} className="card mb-0 mx-2 no-gutters"><Product info={product}/></div>))}
                 </Carousel>
             </div>
         </div>
