@@ -86,18 +86,26 @@ table td, table th {
     width: 40px;
     margin: 0px 4px;
 }
-.image-gallery-thumbnail.active, .image-gallery-thumbnail:focus,.image-gallery-thumbnail:hover{
+
+.image-gallery-thumbnail.active, .image-gallery-thumbnail:focus, .image-gallery-thumbnail:hover {
     outline: none;
     border: 2px solid #dee2e6 !important;
 }
-.image-gallery-thumbnail-image, .image-gallery-image{
+
+.image-gallery-thumbnail-image, .image-gallery-image {
     aspect-ratio: 1 / 1;
     object-fit: contain;
 }
-.add-wishlist-button a{
+
+.add-wishlist-button a {
     color: #161619;
     font-size: 1rem;
 }
-.add-wishlist-button a:hover{
+
+.add-wishlist-button a:hover {
     color: #f75454;
+}
+
+.react-multi-carousel-list {
+    padding: 10px 0 10px 0;
 }
