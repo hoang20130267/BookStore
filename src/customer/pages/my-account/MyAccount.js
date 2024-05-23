@@ -188,7 +188,7 @@ const MyAccount = () => {
                                         </select>
                                         <select name="year" value={year} onChange={(e) => setYear(e.target.value)}>
                                             <option value="0">Năm</option>
-                                            {Array.from({length: 25}, (_, i) => 2024 - i).map((year) => (
+                                            {Array.from({length: 75}, (_, i) => 2024 - i).map((year) => (
                                                 <option key={year} value={year}>{year}</option>
                                             ))}
                                         </select>
@@ -243,8 +243,8 @@ const MyAccount = () => {
                                 <div className="image-container">
                                     <div id="container">
                                         <div className="avatar-wrapper">
-                                            <img className="img-avt-review profile-pic"
-                                                 src={avatar ? avatar : require("../../assets/img/others/user.png")}/>
+                                            <img className="img-avt-review profile-pic" alt="User avatar"
+                                                 src={avatar ? avatar : "https://i.ibb.co/C1ymX1n/user.png"}/>
                                         </div>
                                     </div>
                                 </div>

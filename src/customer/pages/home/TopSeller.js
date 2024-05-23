@@ -28,7 +28,7 @@ export const TopSeller = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/category/3`);
+                const result = await apiService.fetchData(`http://localhost:8080/api/products/all`);
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
             } catch (error) {

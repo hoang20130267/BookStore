@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import SideBarItem from "./SideBarItem";
 
 const LeftSideBar = () => {
@@ -6,7 +6,7 @@ const LeftSideBar = () => {
         <div className="col-md-3 d-block p-0 pr-6">
             <div className="account-of">
                 <img
-                    src={require("../../../assets/img/others/user.png")}
+                    src="https://i.ibb.co/C1ymX1n/user.png"
                     alt="avatar"/>
                 <div className="info">
                     Tài khoản của
