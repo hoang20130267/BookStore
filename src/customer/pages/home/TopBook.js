@@ -29,7 +29,7 @@ export const TopBook = () => {
         try {
             const result = await apiService.fetchData(`http://localhost:8080/api/products/category/37`);
             console.log("Result from fetchProducts:", result);
-            const limitProducts = result.slice(0, 2);
+            const limitProducts = result.content.slice(0, 2);
             setTopReviewBooks(limitProducts);
         } catch (error) {
             console.error('Error fetching products', error);

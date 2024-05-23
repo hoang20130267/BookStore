@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import Product from "./sub-components/Product";
 import "../../assets/css/style-product.css"
 import Breadcrumb from "../../components/general/Breadcrumb";
@@ -7,27 +7,53 @@ import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
 import APIService from "../../../service/APIService";
 
-const apiService = new APIService();
 const ProductList = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const params = useParams();
     const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
+    const [page, setPage] = useState(() => {
+        const queryParams = new URLSearchParams(location.search);
+        return parseInt(queryParams.get('page') || '1', 10) - 1;
+    });
+    const [totalPages, setTotalPages] = useState(0);
+    const apiService = new APIService();
     // console.log(process.env.REACT_APP_ENDPOINT_API)
+
+    const getProductsByCategory = (categoryId, page = 0, perPage = 24, sort = 'id', filter = '{}', order = 'ASC') => {
+        const endpoint = `http://localhost:8080/api/products/category/${categoryId}`;
+        const params = {page, perPage, sort, filter, order};
+        return apiService.fetchData(endpoint, params);
+    };
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const pageParam = parseInt(queryParams.get('page') || '1', 10) - 1;
+        setPage(pageParam);
+    }, [location.search]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${lastParam}`);
-                const first24Products = result.slice(0, 24);
-                setProducts(first24Products);
-
+                const result = await getProductsByCategory(lastParam, page);
+                setProducts(result.content);
+                setTotalPages(result.totalPages);
             } catch (error) {
                 console.error('Error fetching products', error);
             }
-        }
+        };
         fetchData();
-    }, [lastParam])
+    }, [lastParam, page]);
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < totalPages) {
+            navigate({
+                pathname: location.pathname,
+                search: `?page=${newPage + 1}`,
+            });
+        }
+    };
     return (
         <>
             <Breadcrumb location={location}/>
@@ -78,7 +104,8 @@ const ProductList = () => {
                                     <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
                                         {products.map(product => (<Product key={product.id} info={product}/>))}
                                     </ul>
-                                    <Pagination/>
+                                    {totalPages > 1 && (<Pagination currentPage={page} totalPages={totalPages}
+                                                                    onPageChange={handlePageChange}/>)}
                                 </div>
                             </main>
                         </div>

@@ -12,9 +12,9 @@ class ApiService {
         }
     }
 
-    async fetchData(endpoint) {
+    async fetchData(endpoint, params ={}) {
         try {
-            const response = await this.api.get(endpoint);
+            const response = await this.api.get(endpoint, {params});
             return response.data;
         } catch (error) {
             console.error('Error fetching data:', error);
