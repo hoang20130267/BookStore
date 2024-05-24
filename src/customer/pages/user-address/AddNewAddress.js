@@ -4,7 +4,6 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
 import {isEmpty} from "react-admin";
-import {useHistory} from 'react-router-dom';
 
 const AddNewAddress = () => {
     const location = useLocation();

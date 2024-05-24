@@ -41,10 +41,10 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                            style={{width: "85px", height: "85px", objectFit: "cover"}}/></Link>
                 <Link to={`/product-detail/${productId}`}><p>{name}</p></Link>
             </td>
-            <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__price">
                 {formatCurrency(price)}
             </td>
-            <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
+            <td className="shoping__cart__quantity" style={{display: "flex", justifyContent: "center"}}>
                 <div className="value-button" id="decrease"
                      onClick={handleDecrease}>-
                 </div>
@@ -53,10 +53,10 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                      onClick={handleIncrease}>+
                 </div>
             </td>
-            <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__total">
                 {formatCurrency(quantity * price)}
             </td>
-            <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__item__close">
                 <MdOutlineDelete size={"30px"}
                                  onClick={handleDelete}
                 />
@@ -150,7 +150,7 @@ export const ProductsInCart = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="shoping__cart__btns">
-                            <a href="shopping-cart#" className="primary-btn cart-btn">TIẾP TỤC MUA SẮM</a>
+                            <Link to="shopping-cart#" className="primary-btn cart-btn">TIẾP TỤC MUA SẮM</Link>
                             <a href="shopping-cart#" className="primary-btn cart-btn cart-btn-right"><span
                                 className="icon_loading"></span>
                                 &nbsp; Cập nhật giỏ hàng</a>

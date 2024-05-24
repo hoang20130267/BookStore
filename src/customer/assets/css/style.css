@@ -224,6 +224,9 @@ address {
     font-style: normal;
     line-height: inherit
 }
+ul{
+    list-style: none;
+}
 
 ol, ul, dl {
     padding: 0;
