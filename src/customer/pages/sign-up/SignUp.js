@@ -26,16 +26,11 @@ const SignUp = () => {
             return;
         }
         try {
-            const response = registerUser(username, email, password);
-            if (response.status === 200) {
+            const response = registerUser(username, password, email);
                 dispatch(registerSuccess(response.data));
                 navigate("/sign-in");
-            } else {
-                setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
-                setShowErrorMessage(true);
-            }
         } catch (error) {
-            setErrorMessage("Lỗi không xác định!");
+            setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
             setShowErrorMessage(true);
         }
     }
