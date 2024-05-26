@@ -4,8 +4,9 @@ import {TopBook} from "./TopBook";
 import {Advertise} from "./Advertise";
 import {Categories} from "./Categories";
 import {Features} from "./Features";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import ScrollToTop from "../../components/general/ScrollToTop";
+
 export const Home = () => {
     return (
         <main id="main" className="site-main" role="main">
@@ -23,6 +24,7 @@ export const Home = () => {
                     </div>
                 </div>
             </div>
+            <ScrollToTop/>
         </main>
     )
 }

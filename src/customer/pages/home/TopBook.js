@@ -10,6 +10,7 @@ export const TopBook = () => {
     const secondImage = goodBook.images && goodBook.images[1];
     const secondImageUrl = secondImage && secondImage.image;
     const [shortDescription, setShortDescription] = useState('');
+
     console.log(shortDescription)
     const fetchGoodBook = async () => {
         try {
@@ -27,9 +28,9 @@ export const TopBook = () => {
     }
     const fetchProducts = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/category/37`);
+            const result = await apiService.fetchData(`http://localhost:8080/api/products/category/38`);
             console.log("Result from fetchProducts:", result);
-            const limitProducts = result.content.slice(0, 2);
+            const limitProducts = result.slice(0, 2);
             setTopReviewBooks(limitProducts);
         } catch (error) {
             console.error('Error fetching products', error);
@@ -146,7 +147,7 @@ export const TopBook = () => {
                                                             to={`/product-list/${book.category.parentCategory?.parentCategory?.id}/${book.category.parentCategory?.id}/${book.category.id}`}>{book.category.name}</Link>
                                                     </div>
                                                     <h6 className="bwgb-products-list__product-title font-weight-normal mb-1 text-lh-md crop-text-2">
-                                                        <Link to={`/product-detail/${book.id}`}>{book.title}</Link>
+                                                        <Link to={`/product-detail/${book.id}`} title={book.title}>{book.title}</Link>
                                                     </h6>
                                                     <div
                                                         className="woocommerce-loop-product__author font-size-2 text-truncate mb-1">

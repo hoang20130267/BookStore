@@ -3,6 +3,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import {useEffect, useState} from "react";
 import { CiClock1 } from "react-icons/ci";
 import APIService from "../../../service/APIService";
+import ScrollToTop from "../../components/general/ScrollToTop";
 
 const apiService = new APIService();
 export const BlogContent = ({ title, content, created_at, category }) => {
@@ -114,6 +115,7 @@ export const BlogDetail = () => {
                     </div>
                 </div>
             </div>
+            <ScrollToTop/>
         </div>
     )
 }

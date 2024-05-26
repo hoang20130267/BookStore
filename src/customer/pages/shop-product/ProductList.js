@@ -6,6 +6,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
 import APIService from "../../../service/APIService";
+import ScrollToTop from "../../components/general/ScrollToTop";
 
 const ProductList = () => {
     const location = useLocation();
@@ -13,6 +14,7 @@ const ProductList = () => {
     const params = useParams();
     const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(() => {
         const queryParams = new URLSearchParams(location.search);
         return parseInt(queryParams.get('page') || '1', 10) - 1;
@@ -26,6 +28,11 @@ const ProductList = () => {
         const params = {page, perPage, sort, filter, order};
         return apiService.fetchData(endpoint, params);
     };
+    useEffect(() => {
+        if (!isLoading) {
+            window.scrollTo(0, 0);
+        }
+    }, [isLoading]);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -51,6 +58,10 @@ const ProductList = () => {
             navigate({
                 pathname: location.pathname,
                 search: `?page=${newPage + 1}`,
+            });
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
             });
         }
     };
@@ -113,6 +124,7 @@ const ProductList = () => {
                     </div>
                 </div>
             </div>
+            <ScrollToTop/>
         </>
     );
 }
