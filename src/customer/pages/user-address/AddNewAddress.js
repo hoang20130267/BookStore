@@ -119,15 +119,15 @@ const AddNewAddress = () => {
             hnumSname: hnumSname,
         }
         try {
-            const response = apiServiceWithToken.sendData("http://localhost:8080/api/user/addresses", request)
+            const response = await apiServiceWithToken.sendData("http://localhost:8080/api/user/addresses", request)
             console.log("Address created successfully", response)
         } catch (error) {
             console.error("Error creating address");
         }
     }
-    const handleButtonSave = (e) => {
+    const handleButtonSave = async (e) => {
         e.preventDefault();
-        addAddress();
+        await addAddress();
         navigate('/user/address');
     }
     return (

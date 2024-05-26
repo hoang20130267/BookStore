@@ -167,7 +167,7 @@
     float: right;
 }
 
-.checkout__order .checkout__order__subtotal {
+.checkout__order .checkout__order__subtotal, .checkout__order .checkout__order__shipping{
     font-size: 18px;
     color: #1c1c1c;
     font-weight: 700;
@@ -177,8 +177,12 @@
     margin-bottom: 15px;
     padding-top: 15px;
 }
+.checkout__order .checkout__order__shipping{
+    border-top: none;
+    padding-top: 0;
+}
 
-.checkout__order .checkout__order__subtotal span {
+.checkout__order .checkout__order__subtotal span, .checkout__order .checkout__order__shipping span {
     float: right;
 }
 
@@ -201,7 +205,7 @@
 }
 
 .checkout__order button {
-    font-size: 18px;
+    font-size: 14px;
     letter-spacing: 2px;
     width: 100%;
     margin-top: 10px;
@@ -233,4 +237,7 @@
 
 .checkout_block_list_item label {
     padding: 4px 0;
+}
+button:disabled{
+    opacity: .65;
 }
