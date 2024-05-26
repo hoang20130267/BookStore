@@ -15,6 +15,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ModalRequiresLogin from "../../components/general/ModalRequiresLogin";
 import PopupNotification from "../../components/general/PopupNotification";
+import ScrollToTop from "../../components/general/ScrollToTop";
 
 export const SingleProduct = ({product}) => {
     const [quantity, setQuantity] = useState(1);
@@ -109,6 +110,10 @@ export const SingleProduct = ({product}) => {
                 const favoriteProductId = favoriteProduct ? favoriteProduct.id : null;
                 setFavoriteId(favoriteProductId);
                 setIsFavorite(isFavoriteProduct)
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
             } catch (error) {
                 console.error("Error fetching favorite products")
             }
@@ -118,28 +123,31 @@ export const SingleProduct = ({product}) => {
         }
     }, [product.id, isFavorite])
     return (
-        <div className="single-product-container border my-4 py-4">
-            <div className="row single-product-wrapper m-0">
-                <div className="bookworm-product-gallery col-lg-5">
-                    <ProductImagesSlider images={product?.images}/>
-                </div>
-                <div className="summary entry-summary col-lg-7 pl-lg-0">
-                    <div className="summary entry-summary">
-                        <div className="summary__inner px-lg-4">
-                            <h1 className="product_title entry-title">{product.title}</h1>
-                            <div className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
-                                <div className="rate d-flex align-items-center">
-                                    <Link to="#">
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                        <span className=""><i className="fa-solid fa-star"></i></span>
-                                        <span className=""><i className="fa-solid fa-star"></i></span>
-                                    </Link>
-                                    <Link to="#"><p className="ml-2" style={{color: "#CDCFD0"}}>(2 Đánh giá)</p></Link>
+        <>
+            <div className="single-product-container border my-4 py-4">
+                <div className="row single-product-wrapper m-0">
+                    <div className="bookworm-product-gallery col-lg-5">
+                        <ProductImagesSlider images={product?.images}/>
+                    </div>
+                    <div className="summary entry-summary col-lg-7 pl-lg-0">
+                        <div className="summary entry-summary">
+                            <div className="summary__inner px-lg-4">
+                                <h1 className="product_title entry-title">{product.title}</h1>
+                                <div
+                                    className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
+                                    <div className="rate d-flex align-items-center">
+                                        <Link to="#">
+                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
+                                            <span className=""><i className="fa-solid fa-star"></i></span>
+                                            <span className=""><i className="fa-solid fa-star"></i></span>
+                                        </Link>
+                                        <Link to="#"><p className="ml-2" style={{color: "#CDCFD0"}}>(2 Đánh giá)</p>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="price-label">
+                                <div className="price-label">
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
                                         <span className="price">{formatCurrency(product.currentPrice)}</span>
@@ -148,65 +156,68 @@ export const SingleProduct = ({product}) => {
                                         <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
-                            </div>
-                            {/*<div className="woocommerce-product-details__short-description">*/}
-                            {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor*/}
-                            {/*        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut*/}
-                            {/*        Excepteur sint occaecat.</p>*/}
-                            {/*</div>*/}
-                            <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                                <div className="lgdBsd"><p className="label">Số
-                                    Lượng</p>
-                                    <div className="group-input">
-                                        <button onClick={handleMinus}><i className="fa-solid fa-minus"></i></button>
-                                        <input type="text" value={quantity}
-                                               className="input"
-                                               onChange={handleInputChange}/>
-                                        <button onClick={handlePlus}><i className="fa-solid fa-plus"></i></button>
+                                </div>
+                                {/*<div className="woocommerce-product-details__short-description">*/}
+                                {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor*/}
+                                {/*        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut*/}
+                                {/*        Excepteur sint occaecat.</p>*/}
+                                {/*</div>*/}
+                                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                                    <div className="lgdBsd"><p className="label">Số
+                                        Lượng</p>
+                                        <div className="group-input">
+                                            <button onClick={handleMinus}><i className="fa-solid fa-minus"></i></button>
+                                            <input type="text" value={quantity}
+                                                   className="input"
+                                                   onChange={handleInputChange}/>
+                                            <button onClick={handlePlus}><i className="fa-solid fa-plus"></i></button>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="btn-groups">
+                                    <button type="button" className="add_cart_btn" onClick={addToCart}>
+                                        <i className="fa-solid fa-cart-shopping"></i>
+                                        thêm vào giỏ hàng
+                                    </button>
+                                    <ModalRequiresLogin isOpen={isCartModalOpen}
+                                                        onClose={handleCloseCartModal}
+                                                        toDo={"thêm vào Giỏ hàng"}/>
+                                    {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
+                                    <button type="button" className="buy_now_btn">
+                                        <i className="fa-solid fa-wallet"></i>
+                                        mua ngay
+                                    </button>
+                                </div>
+                                {!isFavorite ? (<div className="add-wishlist-button mt-4">
+                                        <Link to="" rel="nofollow" onClick={addFavoriteProduct}
+                                              className="add_to_wishlist single_add_to_wishlist"
+                                              data-title="Add to wishlist">
+                                            <i className="fa-regular fa-heart"></i> <span
+                                            className="text">Thêm vào yêu thích</span>
+                                        </Link>
+                                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
+                                                            onClose={handleCloseWishlistModal}
+                                                            toDo={"thêm vào Yêu thích"}/>
+                                    </div>) :
+                                    (<div className="add-wishlist-button mt-4">
+                                        <Link style={{color: '#f75454'}} to="" rel="nofollow"
+                                              onClick={deleteFavoriteProduct}
+                                              className="add_to_wishlist single_add_to_wishlist"
+                                              data-title="Add to wishlist">
+                                            <i className="fa-solid fa-heart"></i> <span
+                                            className="text">Yêu thích</span>
+                                        </Link>
+                                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
+                                                            onClose={handleCloseWishlistModal}
+                                                            toDo={"thêm vào Yêu thích"}/>
+                                    </div>)}
                             </div>
-                            <div className="btn-groups">
-                                <button type="button" className="add_cart_btn" onClick={addToCart}>
-                                    <i className="fa-solid fa-cart-shopping"></i>
-                                    thêm vào giỏ hàng
-                                </button>
-                                <ModalRequiresLogin isOpen={isCartModalOpen}
-                                                    onClose={handleCloseCartModal}
-                                                    toDo={"thêm vào Giỏ hàng"}/>
-                                {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
-                                <button type="button" className="buy_now_btn">
-                                    <i className="fa-solid fa-wallet"></i>
-                                    mua ngay
-                                </button>
-                            </div>
-                            {!isFavorite ? (<div className="add-wishlist-button mt-4">
-                                    <Link to="" rel="nofollow" onClick={addFavoriteProduct}
-                                          className="add_to_wishlist single_add_to_wishlist" data-title="Add to wishlist">
-                                        <i className="fa-regular fa-heart"></i> <span
-                                        className="text">Thêm vào yêu thích</span>
-                                    </Link>
-                                    <ModalRequiresLogin isOpen={isWishlistModalOpen}
-                                                        onClose={handleCloseWishlistModal}
-                                                        toDo={"thêm vào Yêu thích"}/>
-                                </div>) :
-                                (<div className="add-wishlist-button mt-4">
-                                    <Link style={{color: '#f75454'}} to="" rel="nofollow"
-                                          onClick={deleteFavoriteProduct}
-                                          className="add_to_wishlist single_add_to_wishlist"
-                                          data-title="Add to wishlist">
-                                        <i className="fa-solid fa-heart"></i> <span
-                                        className="text">Yêu thích</span>
-                                    </Link>
-                                    <ModalRequiresLogin isOpen={isWishlistModalOpen}
-                                                        onClose={handleCloseWishlistModal}
-                                                        toDo={"thêm vào Yêu thích"}/>
-                                </div>)}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <ScrollToTop/>
+        </>
     )
 }
 export const Information = ({detail}) => {

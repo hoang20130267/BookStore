@@ -1,12 +1,12 @@
 import React, {useState} from "react";
-import {Link, redirect, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import PopupNotification from "../../../components/general/PopupNotification";
 import APIService from "../../../../service/APIService";
 import ModalRequiresLogin from "../../../components/general/ModalRequiresLogin";
+import Rating from "@mui/material/Rating";
 
 const Product = (props) => {
-    const navigate = useNavigate();
     const productInfo = props.info;
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
@@ -76,7 +76,8 @@ const Product = (props) => {
                         <div className="woocommerce-loop-product__body product__body pt-3 bg-white">
                             <h2 className="woocommerce-loop-product__title product__title h6 text-lh-md mb-1 crop-text-2 h-dark  text-height-2">
                                 <Link to={`/product-detail/${productInfo.id}`}
-                                      className="woocommerce-LoopProduct-link woocommerce-loop-product__link">
+                                      className="woocommerce-LoopProduct-link woocommerce-loop-product__link"
+                                      title={productInfo.title}>
                                     {productInfo.title}</Link>
                             </h2>
                             <div className="price-label">
@@ -89,15 +90,9 @@ const Product = (props) => {
                                     </p>
                                 </span>
                             </div>
-                            <div className="rate d-flex align-items-center">
-                                <div className="star-container">
-                                    <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                    <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                    <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                    <span><i className="fa-solid fa-star"></i></span>
-                                    <span><i className="fa-solid fa-star"></i></span>
-                                </div>
-                                <span className="ml-1 pt-1" style={{color: "#CDCFD0"}}>(2)</span>
+                            <div className="d-flex align-items-center">
+                                <Rating name="size-small" value={2} readOnly size="small"/>
+                                <span className="ml-1" style={{color: "#CDCFD0"}}>(2)</span>
                             </div>
                         </div>
                         <div
