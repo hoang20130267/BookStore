@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import {FaSearch} from "react-icons/fa";
 import "../../assets/css/searchbar.css";
+import formatCurrency from "../../../utils/formatCurrency";
 
 const apiService = new APIService();
 
@@ -32,16 +33,16 @@ export const SearchBar = ({setResults}) => {
     }
     return (
         <>
-        <div className="input-wrapper d-flex" style={{marginLeft: "224px"}}>
-            <FaSearch id="#search-icon"/>
-            <input type="text" class="searchInput" placeholder="Tìm kiếm..."
-                   value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
-        </div>
-        {!hasResults && keyword.length > 0 &&
-            <div className="search-results">
-            <p className="result-notfound">Không tìm thấy sản phẩm</p>
+            <div className="input-wrapper d-flex" style={{marginLeft: "224px"}}>
+                <FaSearch id="#search-icon"/>
+                <input type="text" className="searchInput" placeholder="Tìm kiếm..."
+                       value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
             </div>
-        }
+            {!hasResults && keyword.length > 0 &&
+                <div className="search-results">
+                    <p className="result-notfound">Không tìm thấy sản phẩm</p>
+                </div>
+            }
         </>
     )
 }
@@ -62,10 +63,33 @@ export const SearchResults = ({results}) => {
 
 export const Header = () => {
     const user = useSelector(state => state.auth.login.currentUser);
+    const token = user ? user.token : null;
+    const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
     const [results, setResults] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                if (user) {
+                    const result = await apiServiceToken.fetchData("http://localhost:8080/api/cart/items");
+                    setCart(result);
+                    let totalAmount = 0;
+                    result.forEach(item => {
+                        totalAmount += item.quantity * item.product.currentPrice;
+                    });
+                    setTotal(totalAmount);
+                }
+            } catch (error) {
+
+            }
+        }
+        fetchCart();
+    }, [user, cart])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,7 +103,6 @@ export const Header = () => {
 
             }
         };
-
         fetchData();
     }, [])
 
@@ -98,7 +121,7 @@ export const Header = () => {
                         <div className="d-flex align-items-center position-relative flex-wrap">
                             <div className="site-branding pr-md-7 mx-md-0">
                                 <h1 className="beta site-title site-title text-uppercase font-weight-bold font-size-5 m-0 ">
-                                    <Link to="/" style={{marginLeft:"20px"}}>GoldLeaf</Link></h1>
+                                    <Link to="/" style={{marginLeft: "20px"}}>GoldLeaf</Link></h1>
                             </div>
                             <SearchBar setResults={setResults}/>
                             <SearchResults results={results}/>
@@ -148,7 +171,7 @@ export const Header = () => {
                                     <span
                                         className="position-absolute width-16 height-16 rounded-circle d-flex align-items-center justify-content-center font-size-n9 left-0 top-0 ml-n2 mt-n1 text-white bg-dark">
                                         <span className="cart-contents-count">
-                                            0
+                                            {cart.length}
                                         </span> </span>
                                     <Link to={"/cart"}>
                                         <i className="fa-solid fa-cart-shopping font-size-5 text-dark"></i>
@@ -157,8 +180,7 @@ export const Header = () => {
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Giỏ hàng </span>
                                         <div><span className="cart-contents-total">
-                                                <span className="woocommerce-Price-amount amount"><span
-                                                    className="woocommerce-Price-currencySymbol">&#036;</span>0.00</span>
+                                                <span className="woocommerce-Price-amount amount">{formatCurrency(total)}</span>
                                             </span>
                                         </div>
                                     </div>
@@ -178,7 +200,9 @@ export const Header = () => {
                                     <li><Link to={`/product-list/${parentCategory.id}`}>Danh mục sản phẩm</Link>
                                         <ul className="header__menu__dropdown">
                                             {mainCategories.map(category => (
-                                                <li key={category.id}><Link to={`/product-list/${parentCategory.id}/${category.id}`}>{category.name}</Link></li>))}
+                                                <li key={category.id}><Link
+                                                    to={`/product-list/${parentCategory.id}/${category.id}`}>{category.name}</Link>
+                                                </li>))}
                                         </ul>
                                     </li>
                                     <li><Link to={"/blog-list"}>Tin Tức</Link></li>

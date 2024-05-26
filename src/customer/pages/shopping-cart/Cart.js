@@ -38,13 +38,17 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
         <tr id={id}>
             <td className="shoping__cart__item" style={{display: "flex"}}>
                 <Link to={`/product-detail/${productId}`}><img src={image} alt=""
-                           style={{width: "85px", height: "85px", objectFit: "cover"}}/></Link>
+                                                               style={{
+                                                                   width: "85px",
+                                                                   height: "85px",
+                                                                   objectFit: "cover"
+                                                               }}/></Link>
                 <Link to={`/product-detail/${productId}`}><p>{name}</p></Link>
             </td>
-            <td className="shoping__cart__price" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__price">
                 {formatCurrency(price)}
             </td>
-            <td className="shoping__cart__quantity" style={{paddingTop: "50px"}}>
+            <td className="shoping__cart__quantity" style={{display: "flex", justifyContent: "center"}}>
                 <div className="value-button" id="decrease"
                      onClick={handleDecrease}>-
                 </div>
@@ -53,10 +57,10 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                      onClick={handleIncrease}>+
                 </div>
             </td>
-            <td className="shoping__cart__total" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__total">
                 {formatCurrency(quantity * price)}
             </td>
-            <td className="shoping__cart__item__close" style={{paddingTop: "60px"}}>
+            <td className="shoping__cart__item__close">
                 <MdOutlineDelete size={"30px"}
                                  onClick={handleDelete}
                 />
@@ -129,7 +133,7 @@ export const ProductsInCart = () => {
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                {cart.length > 0 ? (<tbody>
                                 {cart.map(cart => (
                                     <Item
                                         key={cart.id}
@@ -142,7 +146,9 @@ export const ProductsInCart = () => {
                                         updateCart={updateCart}
                                     />
                                 ))}
-                                </tbody>
+                                </tbody>) : <tr>
+                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ hàng.</td>
+                                </tr>}
                             </table>
                         </div>
                     </div>
@@ -150,10 +156,10 @@ export const ProductsInCart = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="shoping__cart__btns">
-                            <a href="shopping-cart#" className="primary-btn cart-btn">TIẾP TỤC MUA SẮM</a>
-                            <a href="shopping-cart#" className="primary-btn cart-btn cart-btn-right"><span
+                            <Link to="/product-list/1" className="primary-btn cart-btn">TIẾP TỤC MUA SẮM</Link>
+                            <Link to="#" className="primary-btn cart-btn cart-btn-right"><span
                                 className="icon_loading"></span>
-                                &nbsp; Cập nhật giỏ hàng</a>
+                                &nbsp; Cập nhật giỏ hàng</Link>
                         </div>
                     </div>
                     <div className="col-lg-6">
