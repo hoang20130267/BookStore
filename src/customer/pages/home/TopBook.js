@@ -2,6 +2,7 @@ import formatCurrency from "../../../utils/formatCurrency";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import {Link} from "react-router-dom";
+import Rating from "@mui/material/Rating";
 
 export const TopBook = () => {
     const apiService = new APIService();
@@ -10,8 +11,24 @@ export const TopBook = () => {
     const secondImage = goodBook.images && goodBook.images[1];
     const secondImageUrl = secondImage && secondImage.image;
     const [shortDescription, setShortDescription] = useState('');
+    const [rating, setRating] = useState(0);
+    const [commentQuantity, setCommentQuantity] = useState(0);
 
-    console.log(shortDescription)
+    useEffect(() => {
+        if (topReviewBooks) {
+            topReviewBooks.forEach(book => {
+                const comments = book?.comments;
+                let ratingTotal = 0;
+                comments.forEach(comment => {
+                    ratingTotal += comment.rating;
+                })
+                const rating = ratingTotal / comments.length;
+                setRating(rating);
+                setCommentQuantity(comments.length);
+            })
+        }
+    }, [topReviewBooks])
+
     const fetchGoodBook = async () => {
         try {
             const result = await apiService.fetchData(`http://localhost:8080/api/products/49`);
@@ -166,19 +183,9 @@ export const TopBook = () => {
                                                             </p>
                                                         </span>
                                                     </div>
-                                                    <div className="rate d-flex align-items-center">
-                                                        <div className="star-container">
-                                                        <span className="checked"><i
-                                                            className="fa-solid fa-star"></i></span>
-                                                            <span className="checked"><i
-                                                                className="fa-solid fa-star"></i></span>
-                                                            <span className="checked"><i
-                                                                className="fa-solid fa-star"></i></span>
-                                                            <span><i className="fa-solid fa-star"></i></span>
-                                                            <span><i className="fa-solid fa-star"></i></span>
-                                                        </div>
-                                                        <span className="ml-1 pt-1"
-                                                              style={{color: "#CDCFD0"}}>(2)</span>
+                                                    <div className="d-flex align-items-center">
+                                                        <Rating name="size-small" value={rating} readOnly size="small"/>
+                                                        <span className="ml-1" style={{color: "#CDCFD0"}}>({commentQuantity})</span>
                                                     </div>
                                                 </div>
                                             </div>

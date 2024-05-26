@@ -1,9 +1,24 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
+import APIService from "../../../../service/APIService";
 
 const FeaturedProduct = () => {
     const [isShown, setIsShown] = useState(true);
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await new APIService().fetchData(`http://localhost:8080/api/products/feature`);
+                setProducts(result);
+            } catch (error) {
+
+            }
+        }
+        fetchData()
+    }, []);
+
 
     const handleToggle = () => {
         setIsShown(!isShown)
@@ -32,37 +47,36 @@ const FeaturedProduct = () => {
                               className="mt-4 widget-content collapse show"
                               aria-labelledby="widgetHeading-woocommerce_products-3">
                 <ul className="product_list_widget">
-                    <FeaturedItem/>
+                    {products.map(product => (<FeaturedItem key={product.id} product={product}/>))}
                 </ul>
             </div>)}
         </div>
     );
 }
 
-const FeaturedItem = () => {
+const FeaturedItem = ({product}) => {
     return (
         <li className="mb-5">
             <div className="media">
                 <div className="media d-md-flex">
-                    <Link to="/product-detail"
+                    <Link to={`/product-detail/${product.id}`}
                           className="d-block">
                         <img width="150" height="200"
-                             src="https://bookworm.madrasthemes.com/wp-content/uploads/2020/08/9-150x200.jpg"
+                             src={product.image}
                              className="img-fluid" alt style={{maxWidth: "60px"}}
                              loading="lazy"/>
                     </Link>
                     <div className="media-body ml-3 pl-1">
                         <h6 className="font-size-2 text-lh-md font-weight-normal crop-text-2">
-                            <Link to="/product-detail">
-                                Until the End of Time: Mind, Matter, and Our Search
-                                for
-                                Meaning in an Evolving Universe </Link></h6>
+                            <Link to={`/product-detail/${product.id}`} title={product.title}>{product.title}</Link></h6>
                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price" style={{fontSize: "14px"}}>{formatCurrency(130000)}</span>
+                                        <span className="price"
+                                              style={{fontSize: "14px"}}>{formatCurrency(product.currentPrice)}</span>
                                     </p>
                                     <p className="old-price pb-1">
-                                        <span className="price" style={{fontSize: "11px"}}>{formatCurrency(150000)}</span>
+                                        <span className="price"
+                                              style={{fontSize: "11px"}}>{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
                     </div>
