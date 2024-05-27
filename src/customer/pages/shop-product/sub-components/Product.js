@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
 import PopupNotification from "../../../components/general/PopupNotification";
@@ -15,6 +15,8 @@ const Product = (props) => {
     const [popupInfo, setPopupInfo] = useState('');
     const [isCartModalOpen, setIsCartModalOpen] = useState(false);
     const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [commentQuantity, setCommentQuantity] = useState(0);
 
     const handleButtonClick = (detail) => {
         setPopupInfo(detail);
@@ -31,6 +33,18 @@ const Product = (props) => {
     const handleCloseWishlistModal = () => {
         setIsWishlistModalOpen(false);
     }
+    useEffect(() => {
+        if (productInfo) {
+            const comments = productInfo?.comments;
+            let ratingTotal = 0;
+            comments.forEach(comment => {
+                ratingTotal += comment.rating;
+            })
+            const rating = ratingTotal / comments.length;
+            setRating(rating);
+            setCommentQuantity(comments.length);
+        }
+    }, [productInfo])
 
     const addToCart = async () => {
         if (!user) {
@@ -91,8 +105,8 @@ const Product = (props) => {
                                 </span>
                             </div>
                             <div className="d-flex align-items-center">
-                                <Rating name="size-small" value={2} readOnly size="small"/>
-                                <span className="ml-1" style={{color: "#CDCFD0"}}>(2)</span>
+                                <Rating name="size-small" value={rating} readOnly size="small"/>
+                                <span className="ml-1" style={{color: "#CDCFD0"}}>({commentQuantity})</span>
                             </div>
                         </div>
                         <div

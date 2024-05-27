@@ -1,14 +1,17 @@
-import React, {useState} from "react";
+import React from "react";
 import FeaturedProduct from "./FeaturedProduct";
 import Category from "./Category";
 import FilterByPrice from "./FilterByPrice";
 
-const SideContent = () => {
+const SideContent = ({selectedPriceRange, handlePriceFilterChange}) => {
     return (
         <div id="secondary" className="sidebar widget-area order-1" role="complementary">
             <div id="widgetAccordion">
                 <Category/>
-                <FilterByPrice/>
+                <FilterByPrice
+                    selectedPriceRange={selectedPriceRange}
+                    handlePriceFilterChange={handlePriceFilterChange}
+                />
                 <FeaturedProduct/>
             </div>
         </div>

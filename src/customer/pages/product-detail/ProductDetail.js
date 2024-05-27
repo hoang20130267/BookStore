@@ -17,7 +17,9 @@ import ModalRequiresLogin from "../../components/general/ModalRequiresLogin";
 import PopupNotification from "../../components/general/PopupNotification";
 import ScrollToTop from "../../components/general/ScrollToTop";
 
-export const SingleProduct = ({product}) => {
+export const SingleProduct = (props) => {
+    const product = props?.product;
+    const comments = props.comments;
     const [quantity, setQuantity] = useState(1);
     const [isCartModalOpen, setIsCartModalOpen] = useState(false);
     const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
@@ -25,6 +27,22 @@ export const SingleProduct = ({product}) => {
     const [favoriteId, setFavoriteId] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [popupInfo, setPopupInfo] = useState('');
+    const [rating, setRating] = useState(0);
+    const [commentQuantity, setCommentQuantity] = useState(0);
+
+    useEffect(() => {
+        if (comments) {
+            let ratingTotal = 0;
+            comments.forEach(comment => {
+                ratingTotal += comment.rating;
+            })
+            const rating = ratingTotal / comments.length;
+            setRating(rating);
+            setCommentQuantity(comments.length);
+        }
+    }, [product])
+    console.log(props?.product)
+
     const handlePlus = () => {
         setQuantity(prevQuantity => prevQuantity + 1);
     };
@@ -135,15 +153,9 @@ export const SingleProduct = ({product}) => {
                                 <h1 className="product_title entry-title">{product.title}</h1>
                                 <div
                                     className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
-                                    <div className="rate d-flex align-items-center">
-                                        <Link to="#">
-                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                                            <span className=""><i className="fa-solid fa-star"></i></span>
-                                            <span className=""><i className="fa-solid fa-star"></i></span>
-                                        </Link>
-                                        <Link to="#"><p className="ml-2" style={{color: "#CDCFD0"}}>(2 Đánh giá)</p>
+                                    <div className="d-flex align-items-center">
+                                        <Rating name="size-small" value={rating} readOnly size="small"/>
+                                        <Link to="#"><p className="ml-2" style={{color: "#CDCFD0"}}>({commentQuantity} Đánh giá)</p>
                                         </Link>
                                     </div>
                                 </div>
@@ -271,7 +283,6 @@ export const Information = ({detail}) => {
 }
 export const Comment = () => {
     const [isLogin, setIsLogin] = useState(false);
-    const [isBought, setIsBought] = useState(false);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [value, setValue] = React.useState(2);
     const [comments, setComments] = useState([]);
@@ -279,7 +290,6 @@ export const Comment = () => {
     const {id} = useParams();
     const [content, setContent] = useState('');
     const token = user ? user.token : null;
-    const idUser = user ? user.id : null;
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     useEffect(() => {
         const fetchComments = async () => {
@@ -291,19 +301,6 @@ export const Comment = () => {
             }
         };
         fetchComments();
-    }, []);
-
-    useEffect(() => {
-        const isBoughtYet = async () => {
-            try {
-                await apiService.fetchData(`http://localhost:8080/api/order/product/${id}/user/${idUser}`);
-                setIsBought(true);
-            } catch (error) {
-                console.error("Error fetching blogs:", error);
-                setIsBought(false);
-            }
-        };
-        isBoughtYet();
     }, []);
 
     const updateListComment = async () => {
@@ -469,7 +466,6 @@ export const Comment = () => {
                                 giá
                             </h4>
                             {isLogin ? (
-                                isBought ? (
                                 <form onSubmit={handleAddComment}
                                       className="form-comment">
                                     <label htmlFor="rating" style={{fontSize: "21px"}}>Đánh giá của bạn</label>
@@ -490,9 +486,6 @@ export const Comment = () => {
                                     >Gửi đánh giá
                                     </button>
                                 </form>
-                                ) : (
-                                    <p className="must-log-in">Bạn cần mua hàng trước khi viết đánh giá.</p>
-                                )
                             ) : (
                                 <p className="must-log-in">Bạn phải <a
                                     href={"/sign-in"}>Đăng nhập</a> để viết
@@ -795,6 +788,10 @@ export const Detail = () => {
             const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
             setProduct(result)
             setCategoryId(result.category?.id)
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         } catch (error) {
             console.error('Error fetching product', error);
         }
@@ -811,7 +808,7 @@ export const Detail = () => {
                         <main id="main" className="site-main" role="main">
                             <div id="product-71"
                                  className="product type-product post-71 status-publish first instock product_cat-mystery product_cat-thriller-suspense has-post-thumbnail taxable shipping-taxable purchasable product-type-variable single-product__content single-product__v4">
-                                <SingleProduct product={product}/>
+                                <SingleProduct product={product} comments={product?.comments}/>
                                 <Information detail={product?.detail}/>
                             </div>
                         </main>
