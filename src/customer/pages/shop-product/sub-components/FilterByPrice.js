@@ -1,10 +1,21 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 
-const FilterByPrice = () => {
+const PriceFilterItem = ({priceRange, priceRangeText, isSelected, handlePriceFilterChange}) => {
+    return (
+        <li className={isSelected ? 'chosen' : ''}>
+            <a href="#" onClick={(event) => handlePriceFilterChange(priceRange, event)}>
+                {priceRangeText}
+            </a>
+        </li>
+    );
+}
+
+const FilterByPrice = ({selectedPriceRange, handlePriceFilterChange}) => {
     const [isShown, setIsShown] = useState(true);
 
-    const handleToggle = () => {
+    const handleToggle = (e) => {
+        e.preventDefault();
         setIsShown(!isShown)
     }
     return (
@@ -14,7 +25,7 @@ const FilterByPrice = () => {
                       to="" data-toggle="collapse"
                       data-target="#widget-collapse-woocommerce_price_filter-2"
                       aria-expanded="true"
-                      aria-controls="widget-collapse-woocommerce_price_filter-2" onClick={handleToggle}>
+                      aria-controls="widget-collapse-woocommerce_price_filter-2" onClick={(e) => handleToggle(e)}>
                     <h3 className="widget-title font-weight-medium font-size-3 mb-0">Giá</h3>
                     <svg className={`mins ${isShown ? 'd-block' : 'd-none'}`} width="15px" height="2px">
                         <path fill="rgb(22, 22, 25)"
@@ -32,31 +43,36 @@ const FilterByPrice = () => {
                               className="mt-4 widget-content collapse show"
                               aria-labelledby="widgetHeading-woocommerce_price_filter-2">
                 <ul>
-                    <li className="wc-layered-nav-price chosen">
-                        <a href="https://bookworm.madrasthemes.com/product-category/thriller-suspense/?rating_filter=5">
-                            0đ - 150,000đ
-                        </a>
-                    </li>
-                    <li className="wc-layered-nav-price">
-                        <a href="https://bookworm.madrasthemes.com/product-category/thriller-suspense/?rating_filter=5">
-                            150,000đ - 300,000đ
-                        </a>
-                    </li>
-                    <li className="wc-layered-nav-price">
-                        <a href="https://bookworm.madrasthemes.com/product-category/thriller-suspense/?rating_filter=5">
-                            300,000đ - 500,000đ
-                        </a>
-                    </li>
-                    <li className="wc-layered-nav-price">
-                        <a href="https://bookworm.madrasthemes.com/product-category/thriller-suspense/?rating_filter=5">
-                            500,000đ - 700,000đ
-                        </a>
-                    </li>
-                    <li className="wc-layered-nav-price">
-                        <a href="https://bookworm.madrasthemes.com/product-category/thriller-suspense/?rating_filter=5">
-                            700,000đ - trở lên
-                        </a>
-                    </li>
+                    <PriceFilterItem
+                        priceRange="0-150000"
+                        priceRangeText="0đ - 150,000đ"
+                        isSelected={selectedPriceRange === '0-150000'}
+                        handlePriceFilterChange={handlePriceFilterChange}
+                    />
+                    <PriceFilterItem
+                        priceRange="150000-300000"
+                        priceRangeText="150,000đ - 300,000đ"
+                        isSelected={selectedPriceRange === '150000-300000'}
+                        handlePriceFilterChange={handlePriceFilterChange}
+                    />
+                    <PriceFilterItem
+                        priceRange="300000-500000"
+                        priceRangeText="300,000đ - 500,000đ"
+                        isSelected={selectedPriceRange === '300000-500000'}
+                        handlePriceFilterChange={handlePriceFilterChange}
+                    />
+                    <PriceFilterItem
+                        priceRange="500000-700000"
+                        priceRangeText="500,000đ - 700,000đ"
+                        isSelected={selectedPriceRange === '500000-700000'}
+                        handlePriceFilterChange={handlePriceFilterChange}
+                    />
+                    <PriceFilterItem
+                        priceRange="700000-"
+                        priceRangeText="700,000đ - trở lên"
+                        isSelected={selectedPriceRange === '700000-'}
+                        handlePriceFilterChange={handlePriceFilterChange}
+                    />
                 </ul>
             </div>)}
         </div>

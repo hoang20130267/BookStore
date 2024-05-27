@@ -6,7 +6,8 @@ const apiService = new APIService();
 const Category = () => {
     const [isShown, setIsShown] = useState(true);
 
-    const handleToggle = () => {
+    const handleToggle = (e) => {
+        e.preventDefault();
         setIsShown(!isShown)
     }
 
@@ -15,10 +16,10 @@ const Category = () => {
              className="widget border p-4d875 woocommerce widget_product_categories">
             <div className="widget-head" id="widgetHeading-woocommerce_product_categories-2">
                 <Link className="d-flex align-items-center justify-content-between text-dark"
-                      to="" data-toggle="collapse"
+                      to="#" data-toggle="collapse"
                       data-target="#widget-collapse-woocommerce_product_categories-2"
                       aria-expanded="true"
-                      aria-controls="widget-collapse-woocommerce_product_categories-2" onClick={handleToggle}>
+                      aria-controls="widget-collapse-woocommerce_product_categories-2" onClick={(e) => handleToggle(e)}>
                     <h3 className="widget-title font-weight-medium font-size-3 mb-0">Danh mục</h3>
                     <svg className={`mins ${isShown ? 'd-block' : 'd-none'}`} width="15px" height="2px">
                         <path fill="rgb(22, 22, 25)"

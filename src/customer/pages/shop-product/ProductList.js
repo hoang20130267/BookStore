@@ -14,57 +14,120 @@ const ProductList = () => {
     const params = useParams();
     const lastParam = params['*'].split('/').pop();
     const [products, setProducts] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(() => {
         const queryParams = new URLSearchParams(location.search);
         return parseInt(queryParams.get('page') || '1', 10) - 1;
     });
     const [totalPages, setTotalPages] = useState(0);
+    const [sort, setSort] = useState('');
+    const [perPage, setPerPage] = useState(24);
+    const [filter, setFilter] = useState({});
+    const [order, setOrder] = useState('');
+    const [latestFilter, setLatestFilter] = useState('');
+    const [selectedPriceRange, setSelectedPriceRange] = useState(null);
     const apiService = new APIService();
     // console.log(process.env.REACT_APP_ENDPOINT_API)
 
-    const getProductsByCategory = (categoryId, page = 0, perPage = 24, sort = 'id', filter = '{}', order = 'ASC') => {
-        const endpoint = `http://localhost:8080/api/products/category/${categoryId}`;
-        const params = {page, perPage, sort, filter, order};
-        return apiService.fetchData(endpoint, params);
-    };
-    useEffect(() => {
-        if (!isLoading) {
-            window.scrollTo(0, 0);
+    const handleSortChange = (e) => {
+        const newSort = e.target.value;
+        let newOrder = 'ASC';
+        setSort(newSort);
+        if (newSort === 'atoz') {
+            newOrder = 'ASC';
+        } else if (newSort === 'ztoa') {
+            newOrder = 'DESC';
+        } else if (newSort === 'price-asc') {
+            newOrder = 'ASC';
+        } else if (newSort === 'price-desc') {
+            newOrder = 'DESC';
+        } else if (newSort === 'latest') {
+            newOrder = 'DESC';
         }
-    }, [isLoading]);
+        updateURL({sort: newSort, order: newOrder})
+    }
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const pageParam = parseInt(queryParams.get('page') || '1', 10) - 1;
-        setPage(pageParam);
-    }, [location.search]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await getProductsByCategory(lastParam, page);
-                setProducts(result.content);
-                setTotalPages(result.totalPages);
-            } catch (error) {
-                console.error('Error fetching products', error);
-            }
-        };
-        fetchData();
-    }, [lastParam, page]);
+    const handlePerPageChange = (e) => {
+        const newPerPage = e.target.value;
+        setPerPage(newPerPage);
+        updateURL({perPage: newPerPage});
+    };
 
     const handlePageChange = (newPage) => {
         if (newPage >= 0 && newPage < totalPages) {
-            navigate({
-                pathname: location.pathname,
-                search: `?page=${newPage + 1}`,
-            });
+            updateURL({page: newPage + 1});
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
             });
         }
     };
+
+    const handlePriceFilterChange = (priceRange, event) => {
+        event.preventDefault();
+        setSelectedPriceRange(priceRange);
+        setLatestFilter({currentPrice: priceRange});
+        const updatedFilter = {currentPrice: priceRange};
+        updateURL({filter: updatedFilter});
+    };
+
+    useEffect(() => {
+        updateURL({filter: latestFilter});
+    }, [lastParam]);
+
+    const updateURL = (params) => {
+        const searchParams = new URLSearchParams(location.search);
+
+        Object.keys(params).forEach(key => {
+            if (params[key]) {
+                // Nếu key là 'filter', cần chuyển đổi đối tượng thành chuỗi JSON và mã hóa URL
+                if (key === 'filter') {
+                    searchParams.set(key, encodeURIComponent(JSON.stringify(params[key])));
+                } else {
+                    searchParams.set(key, params[key]);
+                }
+            } else {
+                searchParams.delete(key);
+            }
+        });
+
+        navigate(`?${searchParams.toString()}`);
+    };
+
+    const getProductsByCategory = (categoryId, page = 0, perPage = 24, sort = 'id', filter = '{}', order = 'ASC') => {
+        const endpoint = `http://localhost:8080/api/products/category/${categoryId}`;
+        const params = {page, perPage, sort, filter, order};
+        return apiService.fetchData(endpoint, params);
+    };
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const pageParam = parseInt(queryParams.get('page') || '1', 10) - 1;
+        const perPageParam = parseInt(queryParams.get('perPage') || '24', 10);
+        const sortParam = queryParams.get('sort') || 'id';
+        const filterParam = queryParams.get('filter') || '{}';
+        const orderParam = queryParams.get('order') || 'ASC';
+        setPage(pageParam);
+        setPerPage(perPageParam);
+        setSort(sortParam);
+        setFilter(filterParam);
+        setOrder(orderParam);
+
+    }, [location.search]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await getProductsByCategory(lastParam, page, perPage, sort, filter, order);
+                setProducts(result.content);
+                console.log(result.content);
+                setTotalPages(result.totalPages);
+            } catch (error) {
+                console.error('Error fetching products', error);
+            }
+        };
+        fetchData();
+    }, [lastParam, page, perPage, sort, filter, order]);
+
     return (
         <>
             <Breadcrumb location={location}/>
@@ -87,14 +150,16 @@ const ProductList = () => {
                                                 <select name="orderby"
                                                         className="orderby js-select dropdown-select"
                                                         aria-label="Shop order"
-                                                        data-style="border-bottom shadow-none outline-none py-2">
-                                                    <option value="menu_order" defaultValue>Mặc định
-                                                    </option>
-                                                    <option value="popularity">A&rarr;Z</option>
-                                                    <option value="rating">Z&rarr;A</option>
-                                                    <option value="price">Giá tăng dần</option>
+                                                        data-style="border-bottom shadow-none outline-none py-2"
+                                                        value={sort}
+                                                        onChange={handleSortChange}
+                                                >
+                                                    <option value="id" defaultValue>Mặc định</option>
+                                                    <option value="atoz">A&rarr;Z</option>
+                                                    <option value="ztoa">Z&rarr;A</option>
+                                                    <option value="price-asc">Giá tăng dần</option>
                                                     <option value="price-desc">Giá giảm dần</option>
-                                                    <option value="date">Mới nhất</option>
+                                                    <option value="latest">Mới nhất</option>
                                                 </select>
                                                 <input type="hidden" name="paged" value="1"/>
                                             </form>
@@ -102,9 +167,12 @@ const ProductList = () => {
                                                   className="number-of-items ml-md-4 mb-4 m-md-0 d-none d-xl-block">
                                                 <select name="ppp"
                                                         className="dropdown-select orderby"
-                                                        data-style="border-bottom shadow-none outline-none py-2">
+                                                        data-style="border-bottom shadow-none outline-none py-2"
+                                                        value={perPage}
+                                                        onChange={handlePerPageChange}
+                                                >
                                                     <option value="24">24 sản phẩm</option>
-                                                    <option value="26">36 sản phẩm</option>
+                                                    <option value="36">36 sản phẩm</option>
                                                     <option value="48">48 sản phẩm</option>
                                                 </select>
                                             </form>
@@ -112,15 +180,20 @@ const ProductList = () => {
                                     </div>
                                 </div>
                                 <div className="grid-view">
-                                    <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
-                                        {products.map(product => (<Product key={product.id} info={product}/>))}
-                                    </ul>
+                                    {products.length > 0 ?
+                                        (
+                                            <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
+                                                {products.map(product => (<Product key={product.id} info={product}/>))}
+                                            </ul>)
+                                        :
+                                        <div style={{textAlign: 'center'}}>Không có sản phẩm phù hợp nào.</div>}
                                     {totalPages > 1 && (<Pagination currentPage={page} totalPages={totalPages}
                                                                     onPageChange={handlePageChange}/>)}
                                 </div>
                             </main>
                         </div>
-                        <SideContent/>
+                        <SideContent selectedPriceRange={selectedPriceRange}
+                                     handlePriceFilterChange={handlePriceFilterChange}/>
                     </div>
                 </div>
             </div>
@@ -128,4 +201,4 @@ const ProductList = () => {
         </>
     );
 }
-export default ProductList;
+    export default ProductList;

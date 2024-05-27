@@ -30,13 +30,6 @@ const UserMenu = () => {
                     <span>Tài khoản của tôi</span></Link>
             </div>
             <div style={{borderTop: "1px solid #F2F4F5"}}>
-                <Link className="fhs_center_left" to="/admin">
-                    <span className="icon_bill_gray" style={{marginRight: "8px"}}>
-                        <i className="fa-solid fa-shop"></i>
-                    </span>
-                    <span>Quản lý cửa hàng</span></Link>
-            </div>
-            <div style={{borderTop: "1px solid #F2F4F5"}}>
                 <Link className="fhs_center_left" to="/user/order">
                     <span className="icon_bill_gray" style={{marginRight: "8px"}}>
                         <i className="fa-solid fa-clipboard-list"></i>
