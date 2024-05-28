@@ -25,7 +25,8 @@ const ForgotPassword = () => {
         }
         try {
             const response = await sendEmail({
-                email: email
+                email: email,
+                type:1
             });
             if (response.status === 200) {
                 setChangePage(true);
