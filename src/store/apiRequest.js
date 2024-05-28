@@ -17,12 +17,13 @@ export const loginUser = async (username, password) => {
         throw err;
     }
 }
-export const registerUser = async (username,password,email) => {
+export const registerUser = async (username,password,email,otp) => {
     const url= "http://localhost:8080/api/auth/signup";
     const newUser = {
         username: username,
         password: password,
         email: email,
+        otp: otp,
         role: ["USER"]
     };
     try {
@@ -62,10 +63,11 @@ export const listCart = async (token) => {
     }
 }
 export const sendEmail = async (props:any) => {
-    const url = "http://localhost:8080/api/auth/forgot-password";
+    const url = "http://localhost:8080/api/auth/send-email";
     try {
         return await axios.post(url, {
-            email: props.email
+            email: props.email,
+            type: props.type
         });
     } catch (error) {
         console.error("Error fetching users:", error);
