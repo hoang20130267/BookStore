@@ -3,10 +3,13 @@ import {Link} from "react-router-dom";
 
 const BlogItem = ({ id, title, image, content, created_at }) => {
     const shortenContent = (content, maxLength) => {
-        if (content.length <= maxLength) {
-            return content;
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(content, 'text/html');
+        const textContent = htmlDoc.body.textContent || "";
+        if (textContent.length <= maxLength) {
+            return textContent;
         } else {
-            return content.substring(0, maxLength) + '...';
+            return textContent.substring(0, maxLength) + '...';
         }
     };
     return (
@@ -14,7 +17,7 @@ const BlogItem = ({ id, title, image, content, created_at }) => {
             <div className="mb-6">
                 <Link className="d-block mb-3" to={`/blog-detail/${id}`}>
                     <img
-                        style={{width: "445px", height: "300px"}}
+                        style={{width: "445px", height: "300px", objectFit: "cover"}}
                         src={image}
                         className="img-fluid w-100 rounded wp-post-image"
                         alt={title}

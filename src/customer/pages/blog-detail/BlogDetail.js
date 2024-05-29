@@ -19,13 +19,12 @@ export const BlogContent = ({ title, content, created_at, category }) => {
                             {title}
                         </h6>
                         <div className="single-post-meta text-secondary-gray-700">
-                                <CiClock1 style={{marginRight:"10px", marginBottom:"2px"}}/>
-                                {created_at}
+                            <CiClock1 style={{marginRight:"10px", marginBottom:"2px"}}/>
+                            {created_at}
                         </div>
                     </div>
                     <div className="mb-7">
-                        <div className="entry-content">
-                            <p>{content}</p>
+                        <div className="entry-content" dangerouslySetInnerHTML={{ __html: content }}>
                         </div>
                     </div>
                 </div>
@@ -74,20 +73,18 @@ export const BlogDetail = () => {
     const location = useLocation();
     const {id} = useParams();
     const [blog, setBlog] = useState([]);
-
     useEffect(() => {
         const fetchBlog = async () => {
             try {
                 const response = await apiService.fetchData(`http://localhost:8080/api/blog/${id}`);
                 setBlog(response);
+                console.log("blog : "+response + "response : "+response.data)
             } catch (error) {
                 console.error("Error fetching blog:", error);
             }
         };
         fetchBlog();
-    }, []);
-
-    console.log(blog);
+    }, [id]);
     return (
         <div>
             <Breadcrumb location={location}/>
@@ -100,16 +97,17 @@ export const BlogDetail = () => {
                                  src={blog.image}
                                  className="img-fluid d-block mx-auto wp-post-image" alt decoding="async"
                                  fetchPriority="high"
+                                 style={{maxHeight: '650px', objectFit: 'cover'}}
                                  sizes="(max-width: 1400px) 100vw, 1400px"/>
                             <BlogContent
                                 title={blog.title}
                                 content={blog.content}
                                 created_at={blog.created_at}
-                                category={blog.blog_cate_id.name}
+                                category={blog.blogCate ? blog.blogCate.name : ''}
                             />
                             <Author
-                                creator={blog.creator.username}
-                                email={blog.creator.email}
+                                creator={blog.createdBy ? blog.createdBy.username : ''}
+                                email={blog.createdBy ? blog.createdBy.email : ''}
                             />
                         </article>
                     </div>
