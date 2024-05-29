@@ -41,7 +41,7 @@ export const SingleProduct = (props) => {
             setCommentQuantity(comments.length);
         }
     }, [product])
-    console.log(props?.product)
+    // console.log(props?.product)
 
     const handlePlus = () => {
         setQuantity(prevQuantity => prevQuantity + 1);
@@ -286,6 +286,8 @@ export const Comment = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [value, setValue] = React.useState(2);
     const [comments, setComments] = useState([]);
+    const [commentCount, setCommentCount] = React.useState();
+    const [rating, setRating] = useState(0);
     const [isBought, setIsBought] = useState(false);
     const apiService = new APIService();
     const {id} = useParams();
@@ -297,6 +299,7 @@ export const Comment = () => {
         const fetchComments = async () => {
             try {
                 const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
+                setCommentCount(data.length);
                 setComments(data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);
@@ -305,13 +308,39 @@ export const Comment = () => {
         fetchComments();
     }, []);
 
+    const [fiveStarComments, setFiveStarComments] = useState(0);
+    const [fourStarComments, setFourStarComments] = useState(0);
+    const [threeStarComments, setThreeStarComments] = useState(0);
+    const [twoStarComments, setTwoStarComments] = useState(0);
+    const [oneStarComments, setOneStarComments] = useState(0);
+
+    useEffect(() => {
+        if (comments) {
+            setFiveStarComments(comments.filter(comment => comment.rating === 5).length);
+            setFourStarComments(comments.filter(comment => comment.rating === 4).length);
+            setThreeStarComments(comments.filter(comment => comment.rating === 3).length);
+            setTwoStarComments(comments.filter(comment => comment.rating === 2).length);
+            setOneStarComments(comments.filter(comment => comment.rating === 1).length);
+            let ratingTotal = 0;
+            comments.forEach(comment => {
+                ratingTotal += comment.rating;
+            })
+            setRating((ratingTotal / comments.length).toFixed(1));
+        } else {
+            setRating(0);
+        }
+    }, [comments])
+
     useEffect(() => {
         const isBoughtYet = async () => {
             try {
-                await apiService.fetchData(`http://localhost:8080/api/order/product/${id}/user/${idUser}`);
-                setIsBought(true);
+                const order = await apiService.fetchData(`http://localhost:8080/api/order/product/${id}/user/${idUser}`);
+                const comment = await apiService.fetchData(`http://localhost:8080/api/comment/auth/${idUser}/product/${id}`);
+                if(order.length > comment.length){
+                    setIsBought(true);
+                }
             } catch (error) {
-                console.error("Error fetching blogs:", error);
+                console.error("Error fetching comment:", error);
                 setIsBought(false);
             }
         };
@@ -323,7 +352,7 @@ export const Comment = () => {
             const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
             setComments(data);
         } catch (error) {
-            console.error("Error fetching blogs:", error);
+            console.error("Error update comment:", error);
         }
     };
     const handleAddComment = async (e) => {
@@ -363,10 +392,10 @@ export const Comment = () => {
             <h4 className="font-size-3">Đánh giá khách hàng</h4>
             <div className="row mb-8 advanced-review-rating">
                 <div className="d-flex align-items-center mb-4 pl-3">
-                    <span className="font-size-15 font-weight-bold">4.0</span>
+                    <span className="font-size-15 font-weight-bold">{rating}</span>
                     <div className="ml-3 h6 mb-0">
                                                         <span className="font-weight-normal">
-                                                            1 review </span>
+                                                            {commentCount} đánh giá </span>
                         <div className="text-yellow-darker">
                             <span className="checked"><i className="fa-solid fa-star"></i></span>
                             <span className="checked"><i className="fa-solid fa-star"></i></span>
@@ -386,12 +415,12 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "0%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
                                 <div className="col-2 text-right zero"><span
-                                    className="text-secondary">0</span></div>
+                                    className="text-secondary">{fiveStarComments}</span></div>
                             </a>
                         </li>
                         <li className="py-2">
@@ -406,7 +435,7 @@ export const Comment = () => {
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
-                                <div className="col-2 text-right"><span className="text-secondary">1</span>
+                                <div className="col-2 text-right"><span className="text-secondary">{fourStarComments}</span>
                                 </div>
                             </a>
                         </li>
@@ -423,7 +452,7 @@ export const Comment = () => {
                                     </div>
                                 </div>
                                 <div className="col-2 text-right zero"><span
-                                    className="text-secondary">0</span></div>
+                                    className="text-secondary">{threeStarComments}</span></div>
                             </a>
                         </li>
                         <li className="py-2">
@@ -439,7 +468,7 @@ export const Comment = () => {
                                     </div>
                                 </div>
                                 <div className="col-2 text-right zero"><span
-                                    className="text-secondary">0</span></div>
+                                    className="text-secondary">{twoStarComments}</span></div>
                             </a>
                         </li>
                         <li className="py-2">
@@ -455,7 +484,7 @@ export const Comment = () => {
                                     </div>
                                 </div>
                                 <div className="col-2 text-right zero"><span
-                                    className="text-secondary">0</span></div>
+                                    className="text-secondary">{oneStarComments}</span></div>
                             </a>
                         </li>
                     </ul>
@@ -750,13 +779,11 @@ export const RelatedProducts = ({categoryId}) => {
         }
     };
     const [relatedProducts, setRelatedProducts] = useState([]);
-    console.log(relatedProducts)
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${categoryId}`);
                 const relatedProducts = result.filter(product => product.id.toString() !== id.toString());
-                console.log(relatedProducts)
                 setRelatedProducts(relatedProducts);
             } catch (error) {
                 console.error('Error fetching products', error);
