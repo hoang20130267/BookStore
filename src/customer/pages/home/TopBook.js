@@ -4,6 +4,68 @@ import APIService from "../../../service/APIService";
 import {Link} from "react-router-dom";
 import Rating from "@mui/material/Rating";
 
+const Book = ({book}) => {
+    const [rating, setRating] = useState(0);
+    const [commentQuantity, setCommentQuantity] = useState(0);
+
+    useEffect(() => {
+        if (book) {
+            const comments = book?.comments;
+            let ratingTotal = 0;
+            comments.forEach(comment => {
+                ratingTotal += comment.rating;
+            })
+            const rating = ratingTotal / comments.length;
+            setRating(rating);
+            setCommentQuantity(comments.length);
+        }
+    }, [book])
+    return (
+        <div
+            className="border-top border-right border-left p-4 add-to-wishlist-after_add_to_cart product type-product post-14 status-publish first instock product_cat-c has-post-thumbnail sale taxable shipping-taxable purchasable product-type-simple">
+            <div className="media m-1">
+                <Link to={`/product-detail/${book.id}`}
+                      className="d-block bwgb-products-list__product-image"><img
+                    width="100" height="100"
+                    src={book.image}
+                    className="attachment-bookworm-120x183-crop size-bookworm-120x183-crop"
+                    alt=""
+                    loading="lazy" style={{maxWidth: '100px', minWidth: '100px'}}/></Link>
+                <div className="media-body ml-5">
+                    <div
+                        className="woocommerce-loop-product__format text-uppercase font-size-1 mb-1 text-truncate text-primary">
+                        <Link
+                            to={`/product-list/${book.category.parentCategory?.parentCategory?.id}/${book.category.parentCategory?.id}/${book.category.id}`}>{book.category.name}</Link>
+                    </div>
+                    <h6 className="bwgb-products-list__product-title font-weight-normal mb-1 text-lh-md crop-text-2">
+                        <Link to={`/product-detail/${book.id}`} title={book.title}>{book.title}</Link>
+                    </h6>
+                    <div
+                        className="woocommerce-loop-product__author font-size-2 text-truncate mb-1">
+                        <p className="text-gray-700 font-size-2">{book.detail.author}</p>
+                    </div>
+                    <div className="price-label">
+                        <span
+                            className="price d-flex justify-content-start align-items-center">
+                            <p className="current-price mr-2">
+                                <span
+                                    className="price">{formatCurrency(book.currentPrice)}</span>
+                            </p>
+                            <p className="old-price">
+                                <span
+                                    className="price">{formatCurrency(book.oldPrice)}</span>
+                            </p>
+                        </span>
+                    </div>
+                    <div className="d-flex align-items-center">
+                        <Rating name="size-small" value={rating} readOnly size="small"/>
+                        <span className="ml-1" style={{color: "#CDCFD0"}}>({commentQuantity})</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 export const TopBook = () => {
     const apiService = new APIService();
     const [topReviewBooks, setTopReviewBooks] = useState([]);
@@ -11,23 +73,6 @@ export const TopBook = () => {
     const secondImage = goodBook.images && goodBook.images[1];
     const secondImageUrl = secondImage && secondImage.image;
     const [shortDescription, setShortDescription] = useState('');
-    const [rating, setRating] = useState(0);
-    const [commentQuantity, setCommentQuantity] = useState(0);
-
-    useEffect(() => {
-        if (topReviewBooks) {
-            topReviewBooks.forEach(book => {
-                const comments = book?.comments;
-                let ratingTotal = 0;
-                comments.forEach(comment => {
-                    ratingTotal += comment.rating;
-                })
-                const rating = ratingTotal / comments.length;
-                setRating(rating);
-                setCommentQuantity(comments.length);
-            })
-        }
-    }, [topReviewBooks])
 
     const fetchGoodBook = async () => {
         try {
@@ -43,10 +88,10 @@ export const TopBook = () => {
             console.error('Error fetching product', error);
         }
     }
-    const fetchProducts = async () => {
+    const fetchTopReviewProducts = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/category/38`);
-            console.log("Result from fetchProducts:", result);
+            const result = await apiService.fetchData(`http://localhost:8080/api/products/top_review`);
+            console.log("Result from fetchTopReviewProducts:", result);
             const limitProducts = result.slice(0, 2);
             setTopReviewBooks(limitProducts);
         } catch (error) {
@@ -55,7 +100,7 @@ export const TopBook = () => {
     }
     useEffect(() => {
         fetchGoodBook();
-        fetchProducts();
+        fetchTopReviewProducts();
     }, [])
     return (<div className="wp-block-bwgb-columns bwgb-columns space-bottom-2 space-bottom-lg-3 bwgb-91f3a61"
                  id="bwgb-91f3a61">
@@ -99,8 +144,9 @@ export const TopBook = () => {
                                                             className="woocommerce-loop-product__body media-body ml-md-5d25">
                                                             <div
                                                                 className="woocommerce-loop-product__format text-uppercase font-size-1 mb-1 text-truncate text-primary">
-                                                                <Link to={`/product-list/${goodBook.category?.parentCategory?.parentCategory?.id}/${goodBook.category?.parentCategory?.id}/${goodBook.category?.id}`}
-                                                                      tabIndex="0">{goodBook.category?.name}</Link>
+                                                                <Link
+                                                                    to={`/product-list/${goodBook.category?.parentCategory?.parentCategory?.id}/${goodBook.category?.parentCategory?.id}/${goodBook.category?.id}`}
+                                                                    tabIndex="0">{goodBook.category?.name}</Link>
                                                             </div>
                                                             <h2 className="bwgb-products-deals-carousel__product-title woocommerce-loop-product__title font-size-3 text-lh-md mb-2 text-height-2 crop-text-2 font-weight-normal">
                                                                 <Link to={`/product-detail/${goodBook.id}`}
@@ -147,49 +193,8 @@ export const TopBook = () => {
                         <div className="wp-block-bwgb-products-list__content">
                             <div>
                                 <div className="woocommerce columns-2 ">
-                                    {topReviewBooks.map(book => (<div key={book.id}
-                                                                      className="border-top border-right border-left p-4 add-to-wishlist-after_add_to_cart product type-product post-14 status-publish first instock product_cat-c has-post-thumbnail sale taxable shipping-taxable purchasable product-type-simple">
-                                            <div className="media m-1">
-                                                <Link to={`/product-detail/${book.id}`}
-                                                      className="d-block bwgb-products-list__product-image"><img
-                                                    width="120" height="183"
-                                                    src={book.image}
-                                                    className="attachment-bookworm-120x183-crop size-bookworm-120x183-crop"
-                                                    alt=""
-                                                    loading="lazy"/></Link>
-                                                <div className="media-body ml-5">
-                                                    <div
-                                                        className="woocommerce-loop-product__format text-uppercase font-size-1 mb-1 text-truncate text-primary">
-                                                        <Link
-                                                            to={`/product-list/${book.category.parentCategory?.parentCategory?.id}/${book.category.parentCategory?.id}/${book.category.id}`}>{book.category.name}</Link>
-                                                    </div>
-                                                    <h6 className="bwgb-products-list__product-title font-weight-normal mb-1 text-lh-md crop-text-2">
-                                                        <Link to={`/product-detail/${book.id}`} title={book.title}>{book.title}</Link>
-                                                    </h6>
-                                                    <div
-                                                        className="woocommerce-loop-product__author font-size-2 text-truncate mb-1">
-                                                        <p className="text-gray-700 font-size-2">{book.detail.author}</p>
-                                                    </div>
-                                                    <div className="price-label">
-                                                        <span
-                                                            className="price d-flex justify-content-start align-items-center">
-                                                            <p className="current-price mr-2">
-                                                                <span
-                                                                    className="price">{formatCurrency(book.currentPrice)}</span>
-                                                            </p>
-                                                            <p className="old-price">
-                                                                <span
-                                                                    className="price">{formatCurrency(book.oldPrice)}</span>
-                                                            </p>
-                                                        </span>
-                                                    </div>
-                                                    <div className="d-flex align-items-center">
-                                                        <Rating name="size-small" value={rating} readOnly size="small"/>
-                                                        <span className="ml-1" style={{color: "#CDCFD0"}}>({commentQuantity})</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    {topReviewBooks.map(book => (
+                                        <Book book={book} key={book.id}/>
                                     ))}
                                 </div>
                             </div>
