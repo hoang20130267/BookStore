@@ -5,32 +5,67 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "./sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
 import {isEmpty} from "react-admin";
+import axios from "axios";
 
 const MyAccount = () => {
     const [fullName, setFullName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setGender] = useState('');
+    const [avatar, setAvatar] = useState('');
     const [day, setDay] = useState('0');
     const [month, setMonth] = useState('0');
     const [year, setYear] = useState('0');
-    const [avatar, setAvatar] = useState('');
     const location = useLocation();
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const [isChecked, setIsChecked] = useState(false);
     const [information, setInformation] = useState({});
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [updateSideBar, setUpdateSideBar] = useState(false);
+    const [isSaveEnabled, setIsSaveEnabled] = useState(false);
+
+    useEffect(() => {
+        let dayCheck;
+        let monthCheck;
+        let yearCheck;
+        if (information?.userInfo?.dateOfBirth) {
+            const [fetchedYear, fetchedMonth, fetchedDay] = information?.userInfo?.dateOfBirth.split('-');
+
+            const indexOfT = fetchedDay.indexOf('T');
+            if (indexOfT !== -1) {
+                dayCheck = fetchedDay.substring(0, indexOfT).padStart(2, '0');
+            }
+            monthCheck = fetchedMonth.padStart(2, '0');
+            yearCheck = fetchedYear;
+        }
+        const hasChanges = (fullName !== information?.userInfo?.fullName && fullName !== '') || (phoneNumber !== information?.userInfo?.phoneNumber && phoneNumber !== '') || gender !== information?.userInfo?.gender
+            || selectedFile !== null || (day !== dayCheck && day !== '0' && month !== '0' && year !== '0') || (month !== monthCheck && month !== '0' && day !== '0' && year !== '0') || (year !== yearCheck && year !== '0' && day !== '0' && month !== '0');
+        setIsSaveEnabled(hasChanges);
+    }, [fullName, phoneNumber, gender, day, month, year, selectedFile]);
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                setAvatar(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setSelectedFile(null);
+        }
+    };
     const fetchInformation = async () => {
         const result = await apiService.fetchData("http://localhost:8080/api/user/info");
-        setInformation(result)
+        setInformation(result);
         setFullName(result.userInfo?.fullName);
         setPhoneNumber(result.userInfo?.phoneNumber);
         setGender(result.userInfo?.gender);
         if (result.userInfo?.dateOfBirth) {
             const [fetchedYear, fetchedMonth, fetchedDay] = result.userInfo?.dateOfBirth.split('-');
-            console.log(fetchedYear)
-            console.log(fetchedMonth)
-            console.log(fetchedDay)
             const indexOfT = fetchedDay.indexOf('T');
             let day;
             if (indexOfT !== -1) {
@@ -44,6 +79,10 @@ const MyAccount = () => {
             setAvatar(result.userInfo.avatar);
         }
     }
+
+    useEffect(() => {
+        fetchInformation();
+    }, [])
 
     const handleGenderChange = (event) => {
         const selectedGender = event.target.value;
@@ -59,24 +98,57 @@ const MyAccount = () => {
     const updateInformation = async (requestData) => {
         try {
             const responseData = await apiService.updateData(`http://localhost:8080/api/user/info/${information.userInfo.id}`, requestData)
+            alert('Thông tin người dùng đã được cập nhật.');
             fetchInformation();
+            setUpdateSideBar(true);
             console.log("User information updated successfully:", responseData);
         } catch (error) {
             console.error("Error updating information:", error);
         }
     }
 
-    const createInformation = async (requestData) => {
-        try {
-            const responseData = await apiService.sendData("http://localhost:8080/api/user/info", requestData)
-            fetchInformation();
-            console.log("User information created successfully:", responseData);
-        } catch (error) {
-            console.error("Error creating information:", error);
+    // const createInformation = async (requestData) => {
+    //     try {
+    //         const responseData = await apiService.sendData("http://localhost:8080/api/user/info", requestData)
+    //         fetchInformation();
+    //         console.log("User information created successfully:", responseData);
+    //     } catch (error) {
+    //         console.error("Error creating information:", error);
+    //     }
+    // }
+    
+    const handleSaveAvatar = async () => {
+        if (selectedFile) {
+            setUploading(true);
+
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            try {
+                const response = await axios.post(`https://api.imgbb.com/1/upload?key=c383fa3727851be15a713c4c41085099`, formData);
+                if (response.data && response.data.data && response.data.data.url) {
+                    console.log('Uploaded image URL:', response.data.data.url);
+                    setSelectedFile(null);
+                    setUploading(false);
+                    return response.data.data.url;
+                } else {
+                    alert('Failed to upload image');
+                    setUploading(false);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Error uploading image');
+                setUploading(false);
+                return null;
+            }
         }
-    }
-    const handleButtonSave = (e) => {
+        return null;
+    };
+    const handleButtonSave = async (e) => {
         e.preventDefault();
+        const uploadedAvatarUrl = await handleSaveAvatar();
+
         let formattedDate;
         if (day !== '0' && month !== '0' && year !== '0') {
             formattedDate = `${year}-${month}-${day}`;
@@ -88,26 +160,20 @@ const MyAccount = () => {
             phoneNumber: !isEmpty(phoneNumber) ? phoneNumber : null,
             gender: !isEmpty(gender) ? gender : null,
             dateOfBirth: !isEmpty(formattedDate) ? formattedDate : null,
-            avatar: !isEmpty(avatar) ? avatar : null
+            avatar: !isEmpty(uploadedAvatarUrl) ? uploadedAvatarUrl : null,
         };
-        if (information.userInfo != null) {
-            updateInformation(requestData);
-        } else {
-            createInformation(requestData);
-        }
+        console.log(requestData);
+        await updateInformation(requestData);
     }
 
-    useEffect(() => {
-        fetchInformation();
-    }, [])
     return (
         <>
             <Breadcrumb location={location}/>
             <div className="container d-flex mt-5 mb-5 px-0">
-                <LeftSideBar/>
-                <form onSubmit={handleButtonSave} className="infor_user">
+                <LeftSideBar update={updateSideBar}/>
+                <form style={{width: '100%'}} onSubmit={handleButtonSave} className="infor_user">
                     <div className="row border py-3 m-0" style={{borderRadius: "10px"}}>
-                        <div className="col-md-8 border-right">
+                        <div className="col-md-9 border-right">
                             <div className="">
                                 <div className="d-flex justify-content-between align-items-center mb-3">
                                     <h4 className="text-right">Thông tin tài khoản</h4>
@@ -233,31 +299,28 @@ const MyAccount = () => {
                                     </div>)}
                                 </div>
                                 <div className="mt-5 text-center">
-                                    <button className="btn btn-primary profile-button">Lưu thông tin
+                                    <button disabled={!isSaveEnabled} className="btn btn-primary profile-button">Lưu
+                                        thông tin
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <div className="d-flex flex-column align-items-center text-center">
                                 <div className="image-container">
                                     <div id="container">
                                         <div className="avatar-wrapper">
                                             <img className="img-avt-review profile-pic" alt="User avatar"
-                                                 src={avatar ? avatar : "https://i.ibb.co/C1ymX1n/user.png"}/>
+                                                 src={selectedFile ? avatar : information?.userInfo?.avatar}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="image-container">
                                     <div id="container">
                                         <input type="file" id="imageUpload" name="files" className="input-file"
-                                               accept="image/*"/>
+                                               accept="image/*" onChange={handleImageChange} disabled={uploading}/>
                                     </div>
                                 </div>
-
-                                <input type="text" id="deletedFile" value="" style={{display: "none"}}/>
-                                <span className="font-weight-bold"></span>
-                                <span className="text-black-50"></span><span> </span>
                             </div>
                         </div>
                     </div>

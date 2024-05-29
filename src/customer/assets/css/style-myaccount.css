@@ -104,9 +104,9 @@
 
 .avatar-wrapper {
     position: relative;
-    height: 200px;
-    width: 200px;
-    margin: 50px auto;
+    height: 160px;
+    width: 160px;
+    margin: 40px auto;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 1px 1px 15px -5px black;
@@ -141,10 +141,17 @@
     text-align: center;
 }
 
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 .input-file {
-    color: transparent;
-    margin-left: 240px;
-    margin-bottom: 50px;
+    font-size: small;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
 }
 
 .input-file::before {
