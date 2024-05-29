@@ -338,6 +338,8 @@ export const Comment = () => {
                 const comment = await apiService.fetchData(`http://localhost:8080/api/comment/auth/${idUser}/product/${id}`);
                 if(order.length > comment.length){
                     setIsBought(true);
+                } else {
+                    setIsBought(false);
                 }
             } catch (error) {
                 console.error("Error fetching comment:", error);

@@ -1,46 +1,42 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import BlogTab from "./BlogTab";
+import axios from "axios";
 
 const BlogTabMenu = () => {
+    const [cate, setCate] = useState([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(0);
+    useEffect(() => {
+        const fetchCates = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/blogCate/all`);
+                setCate(response.data);
+            } catch (error) {
+                console.error("Error fetching cates:", error);
+            }
+        };
+        fetchCates();
+    }, []);
+    const handleCategoryClick = (event, categoryId) => {
+        event.preventDefault();
+        setSelectedCategoryId(categoryId);
+    }
     return (
         <>
             <ul className="nav justify-content-md-center nav-gray-700 mb-5 flex-nowrap flex-md-wrap overflow-auto overflow-md-visible"
                 id="featuredBooks" role="tablist">
                 <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-all_cats" className="nav-link px-0 active" data-toggle="tab" href="blog-list/subcomponents#all_cats"
-                       role="tab" aria-controls="all_cats" aria-selected="true">All</a>
+                    <a id="tab-all_cats" className={`nav-link px-0 ${selectedCategoryId === 0 ? 'active' : ''}`} data-toggle="tab"
+                       role="tab" aria-controls="all_cats" aria-selected="false" onClick={(event) => {event.preventDefault(); setSelectedCategoryId(0);}}>All</a>
                 </li>
-                <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-childrens-books" className="nav-link px-0" data-toggle="tab" href="blog-list/subcomponents#childrens-books"
-                       role="tab" aria-controls="childrens-books" aria-selected="false">
-                        Children&#039;s Books </a>
-                </li>
-                <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-science-math" className="nav-link px-0" data-toggle="tab" href="blog-list/subcomponents#science-math"
-                       role="tab"
-                       aria-controls="science-math" aria-selected="false">
-                        Science &amp; Math </a>
-                </li>
-                <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-arts-photography" className="nav-link px-0" data-toggle="tab"
-                       href="blog-list/subcomponents#arts-photography"
-                       role="tab" aria-controls="arts-photography" aria-selected="false">
-                        Arts &amp; Photography </a>
-                </li>
-                <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-biographies-memoirs" className="nav-link px-0" data-toggle="tab"
-                       href="blog-list/subcomponents#biographies-memoirs"
-                       role="tab" aria-controls="biographies-memoirs" aria-selected="false">
-                        Biographies &amp; Memoirs </a>
-                </li>
-                <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-romance" className="nav-link px-0" data-toggle="tab" href="blog-list/subcomponents#romance" role="tab"
-                       aria-controls="romance" aria-selected="false">
-                        Romance </a>
-                </li>
+                {cate.map((category) => (
+                    <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1" key={category.id}>
+                        <a id={`tab-${category.id}`} className={`nav-link px-0 ${selectedCategoryId === category.id ? 'active' : ''}`} data-toggle="tab"
+                           role="tab" aria-controls={category.id} aria-selected="false" onClick={(event) => handleCategoryClick(event, category.id)}>{category.name}</a>
+                    </li>
+                ))}
             </ul>
             <div className="tab-content">
-                <BlogTab/>
+                <BlogTab categoryId={selectedCategoryId}/>
             </div>
         </>
     );
