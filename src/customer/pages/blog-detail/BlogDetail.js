@@ -11,9 +11,9 @@ export const BlogContent = ({ title, content, created_at, category }) => {
         <div className="article-post max-width-940 mx-auto bg-white position-relative">
             <div className="article-post__inner mt-n10 mt-md-n13 pt-5 pt-lg-7 px-0 px-md-5 pl-xl-10 pr-xl-8 mb-8">
                 <div className="ml-xl-4">
-                    <div className="mb-5 mb-lg-7">
+                    <div className="mb-5 mb-lg-4">
                         <div className="mb-2 text-primary">
-                            <Link href="" className="font-size-3 text-primary">{category}</Link>
+                            <Link to="" className="font-size-3 text-primary">{category}</Link>
                         </div>
                         <h6 className="font-size-10 mb-3 crop-text-2 font-weight-medium text-lh-1dot4">
                             {title}
@@ -102,7 +102,7 @@ export const BlogDetail = () => {
                             <BlogContent
                                 title={blog.title}
                                 content={blog.content}
-                                created_at={blog.created_at}
+                                created_at={blog.createdAt}
                                 category={blog.blogCate ? blog.blogCate.name : ''}
                             />
                             <Author

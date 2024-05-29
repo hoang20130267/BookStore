@@ -205,7 +205,7 @@ export const Header = () => {
                                                 </li>))}
                                         </ul>
                                     </li>
-                                    <li><Link to={"/blog-list"}>Tin Tức</Link></li>
+                                    <li><Link to={"/blog-list/0"}>Tin Tức</Link></li>
                                     <li><Link to={"/contact"}>Liên Hệ</Link></li>
                                 </ul>
                             </nav>

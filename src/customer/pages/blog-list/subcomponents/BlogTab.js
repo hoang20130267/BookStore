@@ -2,11 +2,13 @@ import React, {useEffect, useState} from "react";
 import BlogItem from "./BlogItem";
 import Pagination from "../../../components/general/Pagination";
 import APIService from "../../../../service/APIService";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 
 const apiService = new APIService();
 const BlogTab = ({categoryId}) => {
     const location = useLocation();
+    const params = useParams();
+    const lastParam = params['*'].split('/').pop();
     const [blogs, setBlogs] = useState([]);
     const navigate = useNavigate();
     const [page, setPage] = useState(() => {
@@ -15,7 +17,7 @@ const BlogTab = ({categoryId}) => {
     });
     const [totalPages, setTotalPages] = useState(0);
     const [sort, setSort] = useState('');
-    const [perPage, setPerPage] = useState(24);
+    const [perPage, setPerPage] = useState(3);
     const [filter, setFilter] = useState({});
     const [order, setOrder] = useState('');
 
@@ -69,7 +71,7 @@ const BlogTab = ({categoryId}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getBlogsByCategory(categoryId, page, perPage, sort, filter, order);
+                const result = await getBlogsByCategory(lastParam, page, perPage, sort, filter, order);
                 setBlogs(result.content || []);
                 console.log(result.content);
                 setTotalPages(result.totalPages);
@@ -78,7 +80,7 @@ const BlogTab = ({categoryId}) => {
             }
         };
         fetchData();
-    }, [categoryId, page, perPage, sort, filter, order]);
+    }, [lastParam, page, perPage, sort, filter, order]);
     return (
         <>
             <div className="tab-pane fade active show" id="all_cats" role="tabpanel"
@@ -92,7 +94,7 @@ const BlogTab = ({categoryId}) => {
                             title={blog.title}
                             image={blog.image}
                             content={blog.content}
-                            created_at={blog.created_at}
+                            created_at={blog.createdAt}
                         />
                     ))}
                 </div>)

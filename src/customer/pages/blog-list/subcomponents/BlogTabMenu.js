@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import BlogTab from "./BlogTab";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const BlogTabMenu = () => {
     const [cate, setCate] = useState([]);
@@ -16,8 +17,7 @@ const BlogTabMenu = () => {
         };
         fetchCates();
     }, []);
-    const handleCategoryClick = (event, categoryId) => {
-        event.preventDefault();
+    const handleCategoryClick = (categoryId) => {
         setSelectedCategoryId(categoryId);
     }
     return (
@@ -25,13 +25,19 @@ const BlogTabMenu = () => {
             <ul className="nav justify-content-md-center nav-gray-700 mb-5 flex-nowrap flex-md-wrap overflow-auto overflow-md-visible"
                 id="featuredBooks" role="tablist">
                 <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1">
-                    <a id="tab-all_cats" className={`nav-link px-0 ${selectedCategoryId === 0 ? 'active' : ''}`} data-toggle="tab"
-                       role="tab" aria-controls="all_cats" aria-selected="false" onClick={(event) => {event.preventDefault(); setSelectedCategoryId(0);}}>All</a>
+                    <Link to={`/blog-list/0`} id="tab-all_cats"
+                          className={`nav-link px-0 ${selectedCategoryId === 0 ? 'active' : ''}`} data-toggle="tab"
+                          role="tab" aria-controls="all_cats" aria-selected="false" onClick={(event) => {
+                        setSelectedCategoryId(0)
+                    }}>All</Link>
                 </li>
                 {cate.map((category) => (
                     <li className="nav-item mx-5 mb-1 flex-shrink-0 flex-md-shrink-1" key={category.id}>
-                        <a id={`tab-${category.id}`} className={`nav-link px-0 ${selectedCategoryId === category.id ? 'active' : ''}`} data-toggle="tab"
-                           role="tab" aria-controls={category.id} aria-selected="false" onClick={(event) => handleCategoryClick(event, category.id)}>{category.name}</a>
+                        <Link to={`/blog-list/${category.id}`} id={`tab-${category.id}`}
+                              className={`nav-link px-0 ${selectedCategoryId === category.id ? 'active' : ''}`}
+                              data-toggle="tab"
+                              role="tab" aria-controls={category.id} aria-selected="false"
+                              onClick={(event) => handleCategoryClick(category.id)}>{category.name}</Link>
                     </li>
                 ))}
             </ul>
