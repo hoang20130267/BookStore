@@ -1,9 +1,27 @@
-import {useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
+import {useEffect, useState} from "react";
+import APIService from "../../../service/APIService";
 
 export const MyOrders = () => {
     const location = useLocation();
+    const [orders, setOrders] = useState([]);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const token = user ? user.token : null;
+    const apiService = new APIService(token);
+
+    const fetchData = async () => {
+        try {
+            const result = await apiService.fetchData(`http://localhost:8080/api/orders`);
+            setOrders(result);
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+    }
+    useEffect(() => {
+        fetchData();
+    }, []);
     return (
         <div>
             <Breadcrumb location={location}/>
@@ -33,36 +51,24 @@ export const MyOrders = () => {
                             </tr>
                             </thead>
                             <tbody className="list" id="table-latest-review-body">
-                            <tr className="hover-actions-trigger btn-reveal-trigger position-static">
-                                <td className="fs--1 align-middle ps-0 py-3">
-                                    <p className="mb-0 text-1100 fw-bold">015</p>
-                                </td>
-                                <td className="customer align-middle white-space-nowrap pe-5">
-                                    <p className="mb-0 ms-3 text-1100 fw-bold">150.000đ</p>
-                                </td>
-                                <td className="email align-middle white-space-nowrap pe-5">20/3/2024</td>
-                                <td className="email align-middle white-space-nowrap pe-5">
-                                    <p style={{color: "#22ff00"}}>Hoàn thành</p>
+                            {orders.map(order => (
+                                <tr key={order.id} className="hover-actions-trigger btn-reveal-trigger position-static">
+                                    <td className="fs--1 align-middle ps-0 py-3">
+                                        <p className="mb-0 text-1100 fw-bold">{order.orderCode}</p>
+                                    </td>
+                                    <td className="customer align-middle white-space-nowrap pe-5">
+                                        <p className="mb-0 ms-3 text-1100 fw-bold">{order.orderTotal}</p>
+                                    </td>
+                                    <td className="email align-middle white-space-nowrap pe-5">{order.orderDate}</td>
+                                    <td className="email align-middle white-space-nowrap pe-5">
+                                        <p style={{color: "#cccccc"}}>{order.status?.name}</p>
 
-                                </td>
-                                <td className="email align-middle white-space-nowrap pe-5"><a
-                                    className="fw-semi-bold text-1100" href="my-orders">Xem</a></td>
-                            </tr>
-                            <tr className="hover-actions-trigger btn-reveal-trigger position-static">
-                                <td className="fs--1 align-middle ps-0 py-3">
-                                    <p className="mb-0 text-1100 fw-bold">015</p>
-                                </td>
-                                <td className="customer align-middle white-space-nowrap pe-5">
-                                    <p className="mb-0 ms-3 text-1100 fw-bold">150.000đ</p>
-                                </td>
-                                <td className="email align-middle white-space-nowrap pe-5">20/3/2024</td>
-                                <td className="email align-middle white-space-nowrap pe-5">
-                                    <p style={{color: "blue"}}>Đang xử lý</p>
+                                    </td>
+                                    <td className="email align-middle white-space-nowrap pe-5">
+                                        <Link className="fw-semi-bold text-1100" to={`/user/order/${order.id}`}>Xem</Link>
+                                    </td>
+                                </tr>))}
 
-                                </td>
-                                <td className="email align-middle white-space-nowrap pe-5"><a
-                                    className="fw-semi-bold text-1100" style={{color: "red"}}>Xem</a></td>
-                            </tr>
                             </tbody>
                         </table>
 
