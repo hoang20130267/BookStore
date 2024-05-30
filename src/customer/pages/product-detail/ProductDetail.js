@@ -334,7 +334,7 @@ export const Comment = () => {
     useEffect(() => {
         const isBoughtYet = async () => {
             try {
-                const order = await apiService.fetchData(`http://localhost:8080/api/order/product/${id}/user/${idUser}`);
+                const order = await apiService.fetchData(`http://localhost:8080/api/orders/product/${id}/user/${idUser}`);
                 const comment = await apiService.fetchData(`http://localhost:8080/api/comment/auth/${idUser}/product/${id}`);
                 if(order.length > comment.length){
                     setIsBought(true);
