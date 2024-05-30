@@ -15,19 +15,17 @@ const AddNewAddress = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [hnumSname, setHnumSname] = useState('');
     const [wardCommune, setWardCommune] = useState('');
+    const [selectedWard, setSelectedWard] = useState('');
     const [countyDistrict, setCountyDistrict] = useState('');
+    const [selectedDistrict, setSelectedDistrict] = useState('');
     const [provinceCity, setProvinceCity] = useState('');
+    const [selectedProvince, setSelectedProvince] = useState('');
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const navigate = useNavigate();
-    console.log(fullName)
-    console.log(phoneNumber)
-    console.log(wardCommune)
-    console.log(countyDistrict)
-    console.log(provinceCity)
-    console.log(saveButtonEnabled)
+
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
             !isEmpty(countyDistrict) && !isEmpty(wardCommune));
@@ -68,13 +66,16 @@ const AddNewAddress = () => {
             console.error('Error fetching province', error);
         }
     }
-    const handleProvinceChange = (e) => {
+    const handleProvinceChange = async (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            fetchDistrict(selectedValue);
+            await fetchDistrict(selectedValue);
             const selectedProvince = provinces.find(province => province.province_id === selectedValue);
 
             if (selectedProvince) {
+                setSelectedDistrict('');
+                setSelectedWard('');
+                setSelectedProvince(selectedProvince.province_id);
                 setProvinceCity(selectedProvince.province_name);
             } else {
                 setProvinceCity('');
@@ -82,13 +83,15 @@ const AddNewAddress = () => {
         }
     }
 
-    const handleDistrictChange = (e) => {
+    const handleDistrictChange = async (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            fetchWard(selectedValue);
+            await fetchWard(selectedValue);
             const selectedDistrict = districts.find(district => district.district_id === selectedValue);
 
             if (selectedDistrict) {
+                setSelectedWard('');
+                setSelectedDistrict(selectedDistrict.district_id);
                 setCountyDistrict(selectedDistrict.district_name);
             } else {
                 setCountyDistrict('');
@@ -102,6 +105,7 @@ const AddNewAddress = () => {
             const selectedWard = wards.find(ward => ward.ward_id === selectedValue);
 
             if (selectedWard) {
+                setSelectedWard(selectedWard.ward_id);
                 setWardCommune(selectedWard.ward_name);
             } else {
                 setWardCommune('');
@@ -184,7 +188,8 @@ const AddNewAddress = () => {
                                                 onChange={handleProvinceChange}>
                                             <option value="">Tỉnh/Thành phố</option>
                                             {provinces.map(province => (
-                                                <option key={province.province_id} value={province.province_id}>
+                                                <option key={province.province_id} value={province.province_id}
+                                                        selected={selectedProvince === province.province_id}>
                                                     {province.province_name}
                                                 </option>
                                             ))}
@@ -194,7 +199,8 @@ const AddNewAddress = () => {
                                         <select id="district" className="pdw" onChange={handleDistrictChange}>
                                             <option value="">Quận/Huyện</option>
                                             {districts.map(district => (
-                                                <option key={district.district_id} value={district.district_id}>
+                                                <option key={district.district_id} value={district.district_id}
+                                                        selected={selectedDistrict === district.district_id}>
                                                     {district.district_name}
                                                 </option>))}
                                         </select>
@@ -203,7 +209,8 @@ const AddNewAddress = () => {
                                         <select id="ward" className="pdw" onChange={handleWardChange}>
                                             <option value="">Phường/Xã</option>
                                             {wards.map(ward => (
-                                                <option key={ward.ward_id} value={ward.ward_id}>
+                                                <option key={ward.ward_id} value={ward.ward_id}
+                                                        selected={selectedWard === ward.ward_id}>
                                                     {ward.ward_name}
                                                 </option>))}
                                         </select>
