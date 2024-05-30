@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
 import "../../assets/css/style-comment.css"
-import {Link, useParams} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
@@ -16,6 +16,7 @@ import "react-multi-carousel/lib/styles.css";
 import ModalRequiresLogin from "../../components/general/ModalRequiresLogin";
 import PopupNotification from "../../components/general/PopupNotification";
 import ScrollToTop from "../../components/general/ScrollToTop";
+import Breadcrumb from "../../components/general/Breadcrumb";
 
 export const SingleProduct = (props) => {
     const product = props?.product;
@@ -155,7 +156,8 @@ export const SingleProduct = (props) => {
                                     className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
                                     <div className="d-flex align-items-center">
                                         <Rating name="size-small" value={rating} readOnly size="small"/>
-                                        <Link to="#"><p className="ml-2" style={{color: "#CDCFD0"}}>({commentQuantity} Đánh giá)</p>
+                                        <Link to="#"><p className="ml-2"
+                                                        style={{color: "#CDCFD0"}}>({commentQuantity} Đánh giá)</p>
                                         </Link>
                                     </div>
                                 </div>
@@ -315,7 +317,7 @@ export const Comment = () => {
     const [oneStarComments, setOneStarComments] = useState(0);
 
     useEffect(() => {
-        if (comments) {
+        if (comments.length > 0) {
             setFiveStarComments(comments.filter(comment => comment.rating === 5).length);
             setFourStarComments(comments.filter(comment => comment.rating === 4).length);
             setThreeStarComments(comments.filter(comment => comment.rating === 3).length);
@@ -336,7 +338,7 @@ export const Comment = () => {
             try {
                 const order = await apiService.fetchData(`http://localhost:8080/api/orders/product/${id}/user/${idUser}`);
                 const comment = await apiService.fetchData(`http://localhost:8080/api/comment/auth/${idUser}/product/${id}`);
-                if(order.length > comment.length){
+                if (order.length > comment.length) {
                     setIsBought(true);
                 } else {
                     setIsBought(false);
@@ -399,11 +401,7 @@ export const Comment = () => {
                                                         <span className="font-weight-normal">
                                                             {commentCount} đánh giá </span>
                         <div className="text-yellow-darker">
-                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                            <span className="checked"><i className="fa-solid fa-star"></i></span>
-                            <span className=""><i className="fa-solid fa-star"></i></span>
-                            <span className=""><i className="fa-solid fa-star"></i></span>
+                            <Rating name="read-only" value={rating} readOnly/>
                         </div>
                     </div>
                 </div>
@@ -417,7 +415,8 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: fiveStarComments > 0 ? "100%" : "0%"}} aria-valuenow="100"
+                                             aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -433,11 +432,13 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: fourStarComments ? "100%" : "0%"}} aria-valuenow="100"
+                                             aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
-                                <div className="col-2 text-right"><span className="text-secondary">{fourStarComments}</span>
+                                <div className="col-2 text-right"><span
+                                    className="text-secondary">{fourStarComments}</span>
                                 </div>
                             </a>
                         </li>
@@ -449,7 +450,8 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: threeStarComments ? "100%" : "0%"}} aria-valuenow="100"
+                                             aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -465,7 +467,8 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: twoStarComments ? "100%" : "0%"}} aria-valuenow="100"
+                                             aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -481,7 +484,8 @@ export const Comment = () => {
                                 <div className="col px-0">
                                     <div className="progress bg-white-100" style={{height: "7px"}}>
                                         <div className="progress-bar bg-yellow-darker" role="progressbar"
-                                             style={{width: "100%"}} aria-valuenow="100" aria-valuemin="0"
+                                             style={{width: oneStarComments ? "100%" : "0%"}} aria-valuenow="100"
+                                             aria-valuemin="0"
                                              aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -513,26 +517,26 @@ export const Comment = () => {
                             </h4>
                             {isLogin ? (
                                 isBought ? (
-                                <form onSubmit={handleAddComment}
-                                      className="form-comment">
-                                    <label htmlFor="rating" style={{fontSize: "21px"}}>Đánh giá của bạn</label>
-                                    <Rating
-                                        name="simple-controlled"
-                                        value={value}
-                                        onChange={(event, newValue) => {
-                                            setValue(newValue);
-                                        }}
-                                        size={"large"}
-                                    />
-                                    <p className="comment-form-comment">
+                                    <form onSubmit={handleAddComment}
+                                          className="form-comment">
+                                        <label htmlFor="rating" style={{fontSize: "21px"}}>Đánh giá của bạn</label>
+                                        <Rating
+                                            name="simple-controlled"
+                                            value={value}
+                                            onChange={(event, newValue) => {
+                                                setValue(newValue);
+                                            }}
+                                            size={"large"}
+                                        />
+                                        <p className="comment-form-comment">
                                         <textarea id="comment" name="comment" cols={45} rows={8}
                                                   maxLength={65525} required value={content}
                                                   onChange={e => setContent(e.target.value)}/>
-                                    </p>
-                                    <button name="submit" type="submit" id="submit" className="button-comment"
-                                    >Gửi đánh giá
-                                    </button>
-                                </form>
+                                        </p>
+                                        <button name="submit" type="submit" id="submit" className="button-comment"
+                                        >Gửi đánh giá
+                                        </button>
+                                    </form>
                                 ) : (
                                     <p className="must-log-in">Bạn cần mua hàng trước khi viết đánh giá.</p>
                                 )
@@ -807,25 +811,8 @@ export const RelatedProducts = ({categoryId}) => {
         </section>
     )
 }
-export const PageLink = () => {
-    return (
-        <div className="page-header border-bottom">
-            <div className="container">
-                <div className="d-md-flex justify-content-between align-items-center py-4">
-                    <nav className="woocommerce-breadcrumb font-size-2"><a className="h-primary"
-                                                                           href="https://bookworm.madrasthemes.com">Home</a><span
-                        className="breadcrumb-separator mx-2"><i
-                        className="fas fa-angle-right"></i></span><a className="h-primary"
-                                                                     href="https://bookworm.madrasthemes.com/product-category/mystery/">Mystery</a><span
-                        className="breadcrumb-separator mx-2"><i className="fas fa-angle-right"></i></span>The Lost
-                        Colony (The Long Winter Trilogy Book 3)
-                    </nav>
-                </div>
-            </div>
-        </div>
-    )
-}
 export const Detail = () => {
+    const location = useLocation();
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
@@ -849,7 +836,7 @@ export const Detail = () => {
     }, [id])
     return (
         <div>
-            <PageLink/>
+            <Breadcrumb location={location}/>
             <div className="container">
                 <div className="row">
                     <div id="primary" className="content-area order-1">

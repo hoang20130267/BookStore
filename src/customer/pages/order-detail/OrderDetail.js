@@ -85,6 +85,10 @@ export const OrderDetail = () => {
                                     </div>
                                     <div>Phương thức thanh toán: <span
                                         style={{float: "right"}}>{order.paymentMethod}</span></div>
+                                    <div>Địa chỉ giao hàng: <span
+                                        style={{float: "right"}}>{order.shippingAddress?.wardCommune}, {order.shippingAddress?.countyDistrict}
+                                        , {order.shippingAddress?.provinceCity}                                        </span>
+                                    </div>
                                     <div>Ghi chú đơn hàng: <span style={{float: "right"}}>{order.note}
                                         </span></div>
                                     <div className="checkout__order__total text-right">Tổng tiền <span
