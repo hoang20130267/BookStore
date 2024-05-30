@@ -27,10 +27,7 @@ const UpdateAddress = () => {
     const [selectedWard, setSelectedWard] = useState('');
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const navigate = useNavigate();
-    console.log(selectedProvince)
-    console.log(selectedDistrict)
-    console.log(selectedWard)
-    console.log(hnumSname)
+
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
             !isEmpty(countyDistrict) && !isEmpty(wardCommune));
@@ -104,12 +101,16 @@ const UpdateAddress = () => {
     useEffect(() => {
         fetchWard(selectedDistrict);
     }, [selectedDistrict, wards.length > 0])
-    const handleProvinceChange = (e) => {
+
+    const handleProvinceChange = async (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            fetchDistrict(selectedValue);
+            await fetchDistrict(selectedValue);
             const selectedProvince = provinces.find(province => province.province_id === selectedValue);
+
             if (selectedProvince) {
+                setSelectedDistrict('');
+                setSelectedWard('');
                 setProvinceCity(selectedProvince.province_name);
             } else {
                 setProvinceCity('');
@@ -117,13 +118,14 @@ const UpdateAddress = () => {
         }
     }
 
-    const handleDistrictChange = (e) => {
+    const handleDistrictChange = async (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            fetchWard(selectedValue);
+            await fetchWard(selectedValue);
             const selectedDistrict = districts.find(district => district.district_id === selectedValue);
 
             if (selectedDistrict) {
+                setSelectedWard('');
                 setCountyDistrict(selectedDistrict.district_name);
             } else {
                 setCountyDistrict('');
@@ -217,32 +219,33 @@ const UpdateAddress = () => {
                                     <div className="col-md-12">
                                         <label>Tỉnh/Thành phố:</label>
                                         <select id="province" className="pdw"
-                                                onChange={handleProvinceChange} value={selectedProvince}>
+                                                onChange={handleProvinceChange}>
                                             <option value="">Tỉnh/Thành phố</option>
                                             {provinces.map(province => (
                                                 <option key={province.province_id}
-                                                        value={province.province_id}>
+                                                        value={province.province_id}
+                                                        selected={selectedProvince === province.province_id}>
                                                     {province.province_name}
                                                 </option>
                                             ))}
                                         </select>
                                         <br/>
                                         <label>Quận/Huyện:</label>
-                                        <select id="district" className="pdw" onChange={handleDistrictChange}
-                                                value={selectedDistrict}>
+                                        <select id="district" className="pdw" onChange={handleDistrictChange}>
                                             <option value="">Quận/Huyện</option>
                                             {districts.map(district => (
-                                                <option key={district.district_id} value={district.district_id}>
+                                                <option key={district.district_id} value={district.district_id}
+                                                        selected={selectedDistrict === district.district_id}>
                                                     {district.district_name}
                                                 </option>))}
                                         </select>
                                         <br/>
                                         <label>Phường/Xã:</label>
-                                        <select id="ward" className="pdw" onChange={handleWardChange}
-                                                value={selectedWard}>
+                                        <select id="ward" className="pdw" onChange={handleWardChange}>
                                             <option value="">Phường/Xã</option>
                                             {wards.map(ward => (
-                                                <option key={ward.ward_id} value={ward.ward_id}>
+                                                <option key={ward.ward_id} value={ward.ward_id}
+                                                        selected={selectedWard === ward.ward_id}>
                                                     {ward.ward_name}
                                                 </option>))}
                                         </select>
