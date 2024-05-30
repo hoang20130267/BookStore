@@ -18,6 +18,7 @@ const Breadcrumb = (props) => {
         '/cart': 'Giỏ hàng',
         '/checkout': 'Thanh toán',
         '/product-list': 'Tất cả sản phẩm',
+        '/product-detail': 'Chi tiết sản phẩm',
     }
     const getPathName = (path) => {
         return pathNameMap[path] || '';

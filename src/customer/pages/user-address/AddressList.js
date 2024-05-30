@@ -55,8 +55,11 @@ const AddressList = () => {
                             <div>
                                 <div style={{padding: "12px 10px 0"}}>
                                     <div className="list-title">Địa chỉ</div>
-                                    {addresses.map(addressInfo => (
-                                        <AddressItem key={addressInfo.id} address={addressInfo} updateAddresses={fetchAddress}/>))}
+                                    {addresses.length > 0 ? (
+                                        addresses.map(addressInfo => (
+                                            <AddressItem key={addressInfo.id} address={addressInfo}
+                                                         updateAddresses={fetchAddress}/>))
+                                    ) : (<div className="text-center">Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ mới.</div>)}
                                 </div>
                             </div>
                         </div>

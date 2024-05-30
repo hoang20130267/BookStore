@@ -6,6 +6,7 @@ const LeftSideBar = (props) => {
     const [information, setInformation] = useState({});
     const user = JSON.parse(localStorage.getItem("currentUser"));
     const token = user ? user.token : null;
+    const fullName = information?.userInfo?.fullName || user?.username || 'Guest';
 
     useEffect(() => {
         const fetchInformation = async () => {
@@ -23,7 +24,7 @@ const LeftSideBar = (props) => {
                     alt="avatar"/>
                 <div className="info">
                     Tài khoản của
-                    <strong>{information?.userInfo?.fullName ? information?.userInfo?.fullName : user.username}</strong>
+                    <strong>{fullName}</strong>
                 </div>
             </div>
             <ul style={{listStyle: "none", padding: 0, margin: 0}}>
