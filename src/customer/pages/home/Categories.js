@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export const Categories = () => {
     const apiService = new APIService();
@@ -18,10 +18,10 @@ export const Categories = () => {
                 const resultCate1 = await apiService.fetchData(`http://localhost:8080/api/categories/2/subcategories`);
                 setFirstCategories(resultCate1.slice(0, 6));
                 setFirst(resultCate1[0]);
-                const resultCate2 = await apiService.fetchData(`http://localhost:8080/api/categories/26/subcategories`);
+                const resultCate2 = await apiService.fetchData(`http://localhost:8080/api/categories/14/subcategories`);
                 setSecondCategories(resultCate2.slice(0, 6));
                 setSecond(resultCate2[0])
-                const resultCate3 = await apiService.fetchData(`http://localhost:8080/api/categories/37/subcategories`);
+                const resultCate3 = await apiService.fetchData(`http://localhost:8080/api/categories/21/subcategories`);
                 setThirdCategories(resultCate3.slice(0, 6))
                 setThird(resultCate3[0])
             } catch (error) {

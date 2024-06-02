@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 export const Footer = () => {
     return (
         <footer className="site-footer_v12">
@@ -14,19 +16,22 @@ export const Footer = () => {
                                         <ul id="menu-footer-widget-menu-1" className="menu">
                                             <li id="menu-item-203"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-203">
-                                                <a href="https://bookworm.madrasthemes.com/about-us/">Về chúng tôi</a>
+                                                <Link to="#">Về chúng
+                                                    tôi</Link>
                                             </li>
                                             <li id="menu-item-211"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-211">
-                                                <a href="https://bookworm.madrasthemes.com/contact-us/">Chính sách</a>
+                                                <Link to="#">Chính
+                                                    sách</Link>
                                             </li>
                                             <li id="menu-item-216"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-216">
-                                                <a href="https://bookworm.madrasthemes.com/blog/">Đánh dấu sách</a></li>
+                                                <Link to="#">Đánh dấu sách</Link>
+                                            </li>
                                             <li id="menu-item-218"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-218">
-                                                <a href="https://bookworm.madrasthemes.com/my-account/">Đăng nhập/Đăng
-                                                    ký</a>
+                                                <Link to="/sign-in">Đăng nhập/Đăng
+                                                    ký</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -41,17 +46,21 @@ export const Footer = () => {
                                         <ul id="menu-footer-widget-menu-2" className="menu">
                                             <li id="menu-item-225"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-225">
-                                                <a href="https://bookworm.madrasthemes.com/faq/">Trung tâm trợ giúp</a>
+                                                <Link to="#">Trung tâm trợ
+                                                    giúp</Link>
                                             </li>
                                             <li id="menu-item-220"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-220">
-                                                <a href="https://bookworm.madrasthemes.com/about-us/">Trả hàng</a></li>
+                                                <Link to="#">Trả hàng</Link>
+                                            </li>
                                             <li id="menu-item-223"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-223">
-                                                <a href="https://bookworm.madrasthemes.com/contact-us/">Liên hệ</a></li>
+                                                <Link to="/contact">Liên hệ</Link>
+                                            </li>
                                             <li id="menu-item-224"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-224">
-                                                <a href="https://bookworm.madrasthemes.com/shop/">Tìm cửa hàng</a></li>
+                                                <Link to="#">Tìm cửa hàng</Link>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -64,18 +73,22 @@ export const Footer = () => {
                                         <ul id="menu-footer-widget-menu-3" className="menu">
                                             <li id="menu-item-226"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-226">
-                                                <a href="https://bookworm.madrasthemes.com/faq/">Chính sách trả hàng</a>
+                                                <Link to="#">Chính sách trả
+                                                    hàng</Link>
                                             </li>
                                             <li id="menu-item-229"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-229">
-                                                <a href="https://bookworm.madrasthemes.com/terms-conditions/">Điều khoản
-                                                    sử dụng</a></li>
+                                                <Link to="#">Điều
+                                                    khoản
+                                                    sử dụng</Link></li>
                                             <li id="menu-item-232"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-232">
-                                                <a href="https://bookworm.madrasthemes.com/checkout/">Bảo mật</a></li>
+                                                <Link to="#">Bảo mật</Link>
+                                            </li>
                                             <li id="menu-item-233"
                                                 className="menu-item menu-item-type-post_type menu-item-object-page menu-item-233">
-                                                <a href="https://bookworm.madrasthemes.com/about-us/">Riêng tư</a></li>
+                                                <Link to="#">Riêng tư</Link>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -91,36 +104,37 @@ export const Footer = () => {
                                         </span>
                                         </address>
                                         <div className="mb-4">
-                                            <a href="mailto:sale@bookworm.com"
-                                               className="font-size-2 d-block link-black-100 mb-1">goldleaf@gmail.com</a>
-                                            <a href="tel:+1246-345-0695" className="font-size-2 d-block link-black-100">+84
-                                                765 999 111</a>
+                                            <Link to="mailto:sale@bookworm.com"
+                                                  className="font-size-2 d-block link-black-100 mb-1">goldleaf@gmail.com</Link>
+                                            <Link to="tel:+1246-345-0695"
+                                                  className="font-size-2 d-block link-black-100">+84
+                                                765 999 111</Link>
                                         </div>
                                         <ul className="list-unstyled mb-0 d-flex ml-0">
                                             <li className="btn1 pl-0">
-                                                <a className="link-black-100" href="src/customer/components/layout#">
+                                                <Link className="link-black-100" to="#">
                                                     <span className="fab fa-instagram"></span>
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="btn1">
-                                                <a className="link-black-100" href="src/customer/components/layout#">
+                                                <Link className="link-black-100" to="#">
                                                     <span className="fab fa-facebook-f"></span>
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="btn1">
-                                                <a className="link-black-100" href="src/customer/components/layout#">
+                                                <Link className="link-black-100" to="#">
                                                     <span className="fab fa-youtube"></span>
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="btn1">
-                                                <a className="link-black-100" href="src/customer/components/layout#">
+                                                <Link className="link-black-100" to="#">
                                                     <span className="fab fa-twitter"></span>
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="btn1">
-                                                <a className="link-black-100" href="src/customer/components/layout#">
+                                                <Link className="link-black-100" to="#">
                                                     <span className="fab fa-pinterest"></span>
-                                                </a>
+                                                </Link>
                                             </li>
                                         </ul>
                                     </div>
