@@ -199,7 +199,9 @@ export const InputInfor = ({cartItems, subTotal}) => {
             console.log("Order created successfully", response);
             handleButtonClick("Đơn hàng đã được đặt thành công!")
         } catch (error) {
-            console.error("Error creating order");
+            if (error.response && error.response.status === 400) {
+                alert(error.response.data);
+            }
         }
     }
 

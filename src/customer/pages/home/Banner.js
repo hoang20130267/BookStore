@@ -2,6 +2,7 @@ import bannerImage1 from '../../assets/img/banners/banner1.jpg';
 import bannerImage2 from '../../assets/img/banners/banner2.jpg';
 import bannerImage3 from '../../assets/img/banners/banner3.jpg';
 import bannerImage4 from '../../assets/img/banners/banner4.jpg';
+import {Link} from "react-router-dom";
 export const Banner = () => {
     return (<div className="wp-block-bwgb-columns bwgb-columns bwgb-62e911d" id="bwgb-62e911d">
         <div className="container">
@@ -21,10 +22,10 @@ export const Banner = () => {
                                             className="bwgb-banner-title hero__title-line-1 font-weight-regular d-block mb-1">Vũ trụ sách mở ra</span><span
                                             className="bwgb-banner-title2 hero__title-line-2 d-block font-weight-regular"><span
                                             className="font-weight-bold">Muôn vàn ưu đãi hot!</span></span>
-                                        </h2><a
+                                        </h2><Link
                                         className="bwgb-banner-action bwgb-button2 banner_btn text-white bwgb-button btn btn-primary btn-wide rounded-0"
-                                        href="https://bookworm.madrasthemes.com/product/the-last-sister-columbia-river-book-1-2/"
-                                        rel><span>Mua ngay</span></a>
+                                        to={`/product-list/1`}
+                                        rel><span>Mua ngay</span></Link>
                                     </div>
                                 </div>
                             </div>
