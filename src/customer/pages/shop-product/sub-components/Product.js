@@ -5,6 +5,7 @@ import PopupNotification from "../../../components/general/PopupNotification";
 import APIService from "../../../../service/APIService";
 import ModalRequiresLogin from "../../../components/general/ModalRequiresLogin";
 import Rating from "@mui/material/Rating";
+import axios from "axios";
 
 const Product = (props) => {
     const productInfo = props.info;
@@ -17,6 +18,7 @@ const Product = (props) => {
     const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
     const [rating, setRating] = useState(0);
     const [commentQuantity, setCommentQuantity] = useState(0);
+    const [discount, setDiscount] = useState(0);
 
     const handleButtonClick = (detail) => {
         setPopupInfo(detail);
@@ -43,6 +45,14 @@ const Product = (props) => {
             const rating = ratingTotal / comments.length;
             setRating(rating);
             setCommentQuantity(comments.length);
+
+            const promotions = productInfo?.promotion;
+            if (promotions && promotions.length > 0) {
+                promotions.forEach((promotion) => {
+                    setDiscount(promotion.discount)
+                });
+            }
+            setPrice();
         }
     }, [productInfo])
 
@@ -74,12 +84,27 @@ const Product = (props) => {
             }
         }
     }
+    const setPrice = async () => {
+        if (discount !== 0) {
+            const newPrice = productInfo.oldPrice - (productInfo.oldPrice * discount / 100);
+            await axios.put(`http://localhost:8080/api/products/set_discount/${productInfo.id}/price/${newPrice}`);
+            console.log("Set price successfully");
+            console.log("new price of product "+productInfo.id+ " is " + newPrice)
+        } else {
+            console.log("Discount is 0");
+        }
+    }
 
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
             <div className="bookworm-product-grid">
                 <div className="product__inner overflow-hidden p-3">
                     <div className="position-relative d-block">
+                        {discount !== 0 ? (
+                            <div className="discount-star">
+                                <span>{discount}% OFF</span>
+                            </div>
+                        ): <> </>}
                         <div className="woocommerce-loop-product__header">
                             <Link to={`/product-detail/${productInfo.id}`}
                                   className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
@@ -95,6 +120,7 @@ const Product = (props) => {
                                     {productInfo.title}</Link>
                             </h2>
                             <div className="price-label">
+                                {discount !== 0 ? (
                                 <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
                                         <span className="price">{formatCurrency(productInfo.currentPrice)}</span>
@@ -103,6 +129,11 @@ const Product = (props) => {
                                         <span className="price">{formatCurrency(productInfo.oldPrice)}</span>
                                     </p>
                                 </span>
+                                ): (<span className="price d-flex justify-content-start align-items-center">
+                                    <p className="current-price mr-2">
+                                        <span className="price">{formatCurrency(productInfo.oldPrice)}</span>
+                                    </p>
+                                </span>)}
                             </div>
                             <div className="d-flex align-items-center">
                                 <Rating name="size-small" value={rating} readOnly size="small"/>

@@ -180,7 +180,11 @@ export const ProductsInCart = () => {
                                 <li>Tạm tính <span>{formatCurrency(total)}</span></li>
                                 <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
-                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>
+                            {cart.length > 0 ? (
+                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>)
+                                :
+                                (<Link to={"/product-list/1"} className="primary-btn">TIẾP TỤC MUA SẮM</Link>)
+                            }
                         </div>
                     </div>
                 </div>
