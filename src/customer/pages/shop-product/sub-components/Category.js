@@ -45,7 +45,6 @@ const CategoryItem = ({category, subMainCategories, subCategories}) => {
     const location = useLocation();
     const toPath = `/product-list/${category.id}`;
 
-    console.log(location)
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedMainCategory, setSelectedMainCategory] = useState(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);

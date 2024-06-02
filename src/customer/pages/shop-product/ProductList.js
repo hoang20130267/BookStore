@@ -7,6 +7,7 @@ import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
 import APIService from "../../../service/APIService";
 import ScrollToTop from "../../components/general/ScrollToTop";
+import axios from "axios";
 
 const ProductList = () => {
     const location = useLocation();
@@ -26,6 +27,8 @@ const ProductList = () => {
     const [latestFilter, setLatestFilter] = useState('');
     const [selectedPriceRange, setSelectedPriceRange] = useState(null);
     const apiService = new APIService();
+
+    const [promotion, setPromotion] = useState([]);
     // console.log(process.env.REACT_APP_ENDPOINT_API)
 
     const handleSortChange = (e) => {
@@ -119,7 +122,6 @@ const ProductList = () => {
             try {
                 const result = await getProductsByCategory(lastParam, page, perPage, sort, filter, order);
                 setProducts(result.content);
-                console.log(result.content);
                 setTotalPages(result.totalPages);
             } catch (error) {
                 console.error('Error fetching products', error);
@@ -127,6 +129,18 @@ const ProductList = () => {
         };
         fetchData();
     }, [lastParam, page, perPage, sort, filter, order]);
+
+    useEffect(() => {
+        const fetchPromotions = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/products/promotion`);
+                setPromotion(response.data);
+            } catch (error) {
+                console.error("Error fetching cates:", error);
+            }
+        };
+        fetchPromotions();
+    }, []);
 
     return (
         <>
@@ -137,6 +151,19 @@ const ProductList = () => {
                         <div id="primary" className="content-area order-2">
                             <main id="main" className="site-main" role="main">
                                 <div className="container p-0">
+                                    <div>
+                                        <div className="wp-block-bwgb-products-carousel__inner"
+                                             style={{fontSize: "18px", fontWeight: 500, marginBottom:"10px"}}>
+                                            Sản phẩm giảm giá tốt
+                                        </div>
+                                        {promotion.length > 0 ?
+                                            (
+                                                <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
+                                                    {promotion.slice(0, 4).map(promotion => (<Product key={promotion.id} info={promotion}/>))}
+                                                </ul>)
+                                            :
+                                            <></>}
+                                    </div>
                                     <div
                                         className="shop-control-bar d-lg-flex justify-content-between align-items-center mb-5 text-center text-md-left">
                                         <div className="wp-block-bwgb-products-carousel__inner"
