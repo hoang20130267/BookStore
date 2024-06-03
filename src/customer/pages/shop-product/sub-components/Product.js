@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import formatCurrency from "../../../../utils/formatCurrency";
-import PopupNotification from "../../../components/general/PopupNotification";
 import APIService from "../../../../service/APIService";
-import ModalRequiresLogin from "../../../components/general/ModalRequiresLogin";
 import Rating from "@mui/material/Rating";
 import axios from "axios";
 
@@ -12,29 +10,11 @@ const Product = (props) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupInfo, setPopupInfo] = useState('');
-    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-    const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const [rating, setRating] = useState(0);
     const [commentQuantity, setCommentQuantity] = useState(0);
     const [discount, setDiscount] = useState(0);
 
-    const handleButtonClick = (detail) => {
-        setPopupInfo(detail);
-        setShowPopup(true);
-    };
-
-    const handleClosePopup = () => {
-        setShowPopup(false);
-    };
-    const handleCloseCartModal = () => {
-        setIsCartModalOpen(false);
-    }
-
-    const handleCloseWishlistModal = () => {
-        setIsWishlistModalOpen(false);
-    }
     useEffect(() => {
         if (productInfo) {
             const comments = productInfo?.comments;
@@ -58,27 +38,29 @@ const Product = (props) => {
 
     const addToCart = async () => {
         if (!user) {
-            setIsCartModalOpen(true);
+            const errorMessage = 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng!';
+            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
         } else {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
-                handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
+                const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
             } catch (error) {
-                console.error('Lỗi khi thêm vào giỏ hàng:', error);
+                console.error('Error adding product to cart:', error);
             }
         }
     };
 
     const addFavoriteProduct = async () => {
         if (!user) {
-            setIsWishlistModalOpen(true);
+            const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
+            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
         } else {
             try {
                 const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
-                console.log("Product added to wishlist successfully", result);
-                handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
+                const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
             } catch (error) {
                 console.error("Error adding favorite product");
             }
@@ -94,6 +76,23 @@ const Product = (props) => {
             console.log("Discount is 0");
         }
     }
+
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+
+    const handleAddToCartClick = async () => {
+        await addToCart();
+        await addFavoriteProduct();
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleAddToCartClick));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleAddToCartClick));
+        };
+    }, []);
 
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
@@ -159,16 +158,41 @@ const Product = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <ModalRequiresLogin isOpen={isCartModalOpen}
-                                            onClose={handleCloseCartModal}
-                                            toDo={"thêm vào Giỏ hàng"}/>
-                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
-                                            onClose={handleCloseWishlistModal}
-                                            toDo={"thêm vào Yêu thích"}/>
-                        {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
                     </div>
+
+                    <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                        <div className="popup__background"></div>
+                        <div className="popup__content">
+                            <h3 className="popup__content__title">
+                                Thành công
+                            </h3>
+                            <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                            <p>
+                                <button className="button-popup button--success" data-for="js_success-popup"
+                                        onClick={hidePopup}>Ẩn thông báo
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                        <div className="popup__background"></div>
+                        <div className="popup__content">
+                            <h3 className="popup__content__title">
+                                Thất bại
+                            </h3>
+                            <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                            <p>
+                                <button className="button-popup button--error" data-for="js_error-popup"
+                                        onClick={hidePopup}>Ẩn thông báo
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </li>);
+        </li>
+        );
 }
 export default Product;

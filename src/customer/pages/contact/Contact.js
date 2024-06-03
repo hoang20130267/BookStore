@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import PopupNotification from "../../components/general/PopupNotification";
 
 export const Map = () => {
     return (

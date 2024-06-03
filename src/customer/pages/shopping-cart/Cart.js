@@ -7,6 +7,7 @@ import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
 
 export const Item = ({id, productId, name, image, price, quantity, updateCart}) => {
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const handleIncrease = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
@@ -28,12 +29,24 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     const handleDelete = async () => {
         try {
             await axios.delete(`http://localhost:8080/api/cart/remove/${id}`);
-            alert("Xóa sản phẩm ra khỏi giỏ hàng thành công");
+            const successMessage = 'Xóa sản phẩm ra khỏi giỏ hàng thành công!';
+            setPopupInfo({ message: successMessage, type: 'success', visible: true });
             updateCart();
         } catch (error) {
             console.error("Error deleting blog:", error);
         }
     };
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleDelete));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleDelete));
+        };
+    }, []);
     return (
         <tr id={id}>
             <td className="shoping__cart__item" style={{display: "flex"}}>
@@ -65,6 +78,36 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                                  onClick={handleDelete}
                 />
             </td>
+
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
         </tr>
     )
 }
@@ -112,7 +155,7 @@ export const ProductsInCart = () => {
                 });
                 setCart(response.data);
             } catch (error) {
-                console.error("Error fetching blogs:", error);
+                console.error("Error fetching cart:", error);
             }
         };
         fetchCarts();
