@@ -1,11 +1,12 @@
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import "../../assets/css/style-checkout.css"
 import React, {useEffect, useState} from "react";
 import ApiService from "../../../service/APIService";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
 import {isEmpty} from "react-admin";
+import axios from "axios";
 
 export const Coupon = () => {
     return (
@@ -43,6 +44,10 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
     const apiService = new ApiService();
+    const { discount } = useParams();
+    const [discountPercent, setDiscountPercent] = useState(0);
+    const [discountId, setDiscountId] = useState(0);
+    const navigate = useNavigate();
 
 
     const fetchAddresses = async () => {
@@ -82,7 +87,6 @@ export const InputInfor = ({cartItems, subTotal}) => {
         const fetchProvinces = async () => {
             try {
                 const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province`);
-                console.log(response.results)
                 setProvinces(response.results)
             } catch (error) {
                 console.error('Error fetching province', error);
@@ -181,10 +185,10 @@ export const InputInfor = ({cartItems, subTotal}) => {
             paymentMethod: paymentMethod,
             status: {id: 1},
             shippingCost: shippingCost,
-            note: note
+            note: note,
         }
         try {
-            const response = await apiServiceWithToken.sendData("http://localhost:8080/api/orders", request);
+            const response = await apiServiceWithToken.sendData(`http://localhost:8080/api/orders/${discountId}`, request);
             console.log("Order created successfully", response);
             const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
             setPopupInfo({ message: successMessage, type: 'success', visible: true });
@@ -192,6 +196,18 @@ export const InputInfor = ({cartItems, subTotal}) => {
             console.error("Error creating order");
         }
     }
+    useEffect(() => {
+        const getDiscountCode = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
+                setDiscountPercent(response.data.discount);
+                setDiscountId(response.data.id)
+            } catch (error) {
+                console.error("Error fetching code:", error);
+            }
+        };
+        getDiscountCode();
+    }, []);
 
     const handleButtonPlaceOrder = async (e) => {
         e.preventDefault();
@@ -200,6 +216,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
 
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        navigate('/user/order');
     };
 
     useEffect(() => {
@@ -209,6 +226,17 @@ export const InputInfor = ({cartItems, subTotal}) => {
             buttons.forEach(button => button.removeEventListener('click', handleButtonPlaceOrder));
         };
     }, []);
+
+    const shortenContent = (content, maxLength) => {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(content, 'text/html');
+        const textContent = htmlDoc.body.textContent || "";
+        if (textContent.length <= maxLength) {
+            return textContent;
+        } else {
+            return textContent.substring(0, maxLength) + '...';
+        }
+    };
     return (
         <>
             <form method="post">
@@ -396,10 +424,13 @@ export const InputInfor = ({cartItems, subTotal}) => {
                             <div className="checkout__order__products">Sản phẩm <span>Tổng tiền</span></div>
                             <ul>
                                 {cartItems.map(item => (
-                                    <li key={item.id}>{item.product.title}
+                                    <li key={item.id}>{shortenContent(item.product.title, 30)}
                                         <span>{formatCurrency(item.product.currentPrice * item.quantity)}</span>
                                     </li>))}
                             </ul>
+                            {discountPercent > 0 && (
+                                <div className="checkout__order__products">Mã giảm giá<span>- {discountPercent}%</span></div>
+                            )}
                             <div className="checkout__order__subtotal">Tạm tính <span>{formatCurrency(subTotal)}</span>
                             </div>
                             <div className="checkout__order__shipping">Phí vận
@@ -463,7 +494,19 @@ export const Checkout = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceToken = new APIService(token);
+    const { discount } = useParams();
+    const [discountPercent, setDiscountPercent] = useState(0);
     useEffect(() => {
+        const getDiscountCode = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
+                setDiscountPercent(response.data.discount);
+            } catch (error) {
+                console.error("Error fetching code:", error);
+            }
+        };
+        getDiscountCode();
+    }, []);
         const fetchCart = async () => {
             try {
                 if (user) {
@@ -473,14 +516,18 @@ export const Checkout = () => {
                     result.forEach(item => {
                         totalAmount += item.quantity * item.product.currentPrice;
                     });
+                    if(discountPercent > 0) {
+                        totalAmount -= totalAmount * discountPercent / 100;
+                    }
                     setSubTotal(totalAmount);
                 }
             } catch (error) {
 
             }
         }
-        fetchCart();
-    }, [user, cart])
+        useEffect(() => {
+            fetchCart();
+        }, [user, cart, discountPercent]);
     return (
         <div>
             <Breadcrumb location={location}/>
