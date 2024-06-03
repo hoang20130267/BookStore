@@ -1,12 +1,11 @@
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import "../../assets/css/style-checkout.css"
 import React, {useEffect, useState} from "react";
 import ApiService from "../../../service/APIService";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
 import {isEmpty} from "react-admin";
-import PopupNotification from "../../components/general/PopupNotification";
 
 export const Coupon = () => {
     return (
@@ -39,23 +38,13 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const [wards, setWards] = useState([]);
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const [placeOrderButtonEnabled, setPlaceOrderButtonEnabled] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupInfo, setPopupInfo] = useState('');
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
     const apiService = new ApiService();
-    const navigate = useNavigate();
 
-    const handleButtonClick = (detail) => {
-        setPopupInfo(detail);
-        setShowPopup(true);
-    };
 
-    const handleClosePopup = () => {
-        setShowPopup(false);
-        navigate("/");
-    };
     const fetchAddresses = async () => {
         try {
             const result = await apiServiceWithToken.fetchData(`http://localhost:8080/api/user/addresses`);
@@ -197,7 +186,8 @@ export const InputInfor = ({cartItems, subTotal}) => {
         try {
             const response = await apiServiceWithToken.sendData("http://localhost:8080/api/orders", request);
             console.log("Order created successfully", response);
-            handleButtonClick("Đơn hàng đã được đặt thành công!")
+            const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
+            setPopupInfo({ message: successMessage, type: 'success', visible: true });
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 alert(error.response.data);
@@ -209,6 +199,18 @@ export const InputInfor = ({cartItems, subTotal}) => {
         e.preventDefault();
         await createOrder();
     }
+
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleButtonPlaceOrder));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleButtonPlaceOrder));
+        };
+    }, []);
     return (
         <>
             <form method="post">
@@ -418,11 +420,41 @@ export const InputInfor = ({cartItems, subTotal}) => {
                             <button disabled={!placeOrderButtonEnabled} onClick={handleButtonPlaceOrder} type="submit"
                                     className="site-btn">Mua hàng
                             </button>
+
+                            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                                <div className="popup__background"></div>
+                                <div className="popup__content">
+                                    <h3 className="popup__content__title">
+                                        Thành công
+                                    </h3>
+                                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                                    <p>
+                                        <button className="button-popup button--success" data-for="js_success-popup"
+                                                onClick={hidePopup}>Ẩn thông báo
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                                <div className="popup__background"></div>
+                                <div className="popup__content">
+                                    <h3 className="popup__content__title">
+                                        Thất bại
+                                    </h3>
+                                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                                    <p>
+                                        <button className="button-popup button--error" data-for="js_error-popup"
+                                                onClick={hidePopup}>Ẩn thông báo
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </form>
-            {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
         </>
     )
 }

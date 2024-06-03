@@ -13,8 +13,6 @@ import {FaRegEdit} from "react-icons/fa";
 import axios from "axios";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import ModalRequiresLogin from "../../components/general/ModalRequiresLogin";
-import PopupNotification from "../../components/general/PopupNotification";
 import ScrollToTop from "../../components/general/ScrollToTop";
 import Breadcrumb from "../../components/general/Breadcrumb";
 
@@ -22,12 +20,9 @@ export const SingleProduct = (props) => {
     const product = props?.product;
     const comments = props.comments;
     const [quantity, setQuantity] = useState(1);
-    const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-    const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const [isFavorite, setIsFavorite] = useState(false);
     const [favoriteId, setFavoriteId] = useState('');
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupInfo, setPopupInfo] = useState('');
     const [rating, setRating] = useState(0);
     const [commentQuantity, setCommentQuantity] = useState(0);
 
@@ -62,49 +57,35 @@ export const SingleProduct = (props) => {
         }
     };
 
-    const handleCloseCartModal = () => {
-        setIsCartModalOpen(false);
-    }
-
-    const handleCloseWishlistModal = () => {
-        setIsWishlistModalOpen(false);
-    }
-
-    const handleButtonClick = (detail) => {
-        setPopupInfo(detail);
-        setShowPopup(true);
-    };
-
-    const handleClosePopup = () => {
-        setShowPopup(false);
-    };
-
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const addToCart = async () => {
         if (!user) {
-            setIsCartModalOpen(true);
+            const errorMessage = 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng!';
+            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
         } else {
-            const requestData = {product: {id: product.id}, quantity: quantity};
+            const requestData = { product: { id: product.id }, quantity: quantity };
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                console.log('Sản phẩm đã được thêm vào giỏ hàng:', responseData);
-                handleButtonClick("Sản phẩm đã được thêm vào Giỏ hàng");
+                const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
             } catch (error) {
-                console.error('Lỗi khi thêm vào giỏ hàng:', error);
+                console.error('Error adding product to cart:', error);
             }
         }
     };
     const addFavoriteProduct = async () => {
         if (!user) {
-            setIsWishlistModalOpen(true);
+            const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
+            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
         } else {
             try {
                 const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
-                console.log("Product added to wishlist successfully", result);
+                const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
                 setIsFavorite(true);
-                handleButtonClick("Sản phẩm đã được thêm vào Yêu thích");
+
             } catch (error) {
                 console.error("Error adding favorite product");
             }
@@ -113,9 +94,10 @@ export const SingleProduct = (props) => {
     const deleteFavoriteProduct = async () => {
         try {
             await apiService.deleteData(`http://localhost:8080/api/user/favorites/${favoriteId}`);
-            console.log("Favorite product deleted successfully");
+            const successMessage = 'Sản phẩm đã được xóa khỏi yêu thích!';
+            setPopupInfo({ message: successMessage, type: 'success', visible: true });
             setIsFavorite(false);
-            handleButtonClick("Sản phẩm đã được xoá khỏi Yêu thích");
+
         } catch (error) {
             console.error("Error deleting favorite product");
         }
@@ -141,8 +123,57 @@ export const SingleProduct = (props) => {
             fetchProducts();
         }
     }, [product.id, isFavorite])
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+
+    const handleAddToCartClick = async () => {
+        await addToCart();
+        await addFavoriteProduct();
+        await deleteFavoriteProduct();
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleAddToCartClick));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleAddToCartClick));
+        };
+    }, []);
+
     return (
         <>
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+
             <div className="single-product-container border my-4 py-4">
                 <div className="row single-product-wrapper m-0">
                     <div className="bookworm-product-gallery col-lg-5">
@@ -162,7 +193,8 @@ export const SingleProduct = (props) => {
                                     </div>
                                 </div>
                                 <div className="price-label">
-                                <span className="price d-flex justify-content-start align-items-center">
+                                    {product.currentPrice !== product.oldPrice ? (
+                                        <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
                                         <span className="price">{formatCurrency(product.currentPrice)}</span>
                                     </p>
@@ -170,6 +202,11 @@ export const SingleProduct = (props) => {
                                         <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
+                                    ): (<span className="price d-flex justify-content-start align-items-center">
+                                    <p className="current-price mr-2">
+                                        <span className="price">{formatCurrency(product.oldPrice)}</span>
+                                    </p>
+                                </span>)}
                                 </div>
                                 {/*<div className="woocommerce-product-details__short-description">*/}
                                 {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor*/}
@@ -189,14 +226,10 @@ export const SingleProduct = (props) => {
                                     </div>
                                 </div>
                                 <div className="btn-groups">
-                                    <button type="button" className="add_cart_btn" onClick={addToCart}>
+                                    <button type="button" className="add_cart_btn" onClick={handleAddToCartClick}>
                                         <i className="fa-solid fa-cart-shopping"></i>
                                         thêm vào giỏ hàng
                                     </button>
-                                    <ModalRequiresLogin isOpen={isCartModalOpen}
-                                                        onClose={handleCloseCartModal}
-                                                        toDo={"thêm vào Giỏ hàng"}/>
-                                    {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup}/>}
                                     <button type="button" className="buy_now_btn">
                                         <i className="fa-solid fa-wallet"></i>
                                         mua ngay
@@ -209,9 +242,6 @@ export const SingleProduct = (props) => {
                                             <i className="fa-regular fa-heart"></i> <span
                                             className="text">Thêm vào yêu thích</span>
                                         </Link>
-                                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
-                                                            onClose={handleCloseWishlistModal}
-                                                            toDo={"thêm vào Yêu thích"}/>
                                     </div>) :
                                     (<div className="add-wishlist-button mt-4">
                                         <Link style={{color: '#f75454'}} to="" rel="nofollow"
@@ -221,9 +251,6 @@ export const SingleProduct = (props) => {
                                             <i className="fa-solid fa-heart"></i> <span
                                             className="text">Yêu thích</span>
                                         </Link>
-                                        <ModalRequiresLogin isOpen={isWishlistModalOpen}
-                                                            onClose={handleCloseWishlistModal}
-                                                            toDo={"thêm vào Yêu thích"}/>
                                     </div>)}
                             </div>
                         </div>

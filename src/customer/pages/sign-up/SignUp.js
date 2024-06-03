@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import {registerUser, sendEmail} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
 import {registerSuccess} from "../../../store/authSlice";
-import PopupNotification from "../../components/general/PopupNotification";
 
 const SignUp = () => {
     const location = useLocation();
@@ -18,20 +17,16 @@ const SignUp = () => {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = React.useState("");
     const [showErrorMessage, setShowErrorMessage] = React.useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupInfo, setPopupInfo] = useState('');
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
 
-    const handleClosePopup = () => {
-        setShowPopup(false);
-        navigate("/sign-in");
-    };
     const handleRegister = (e) => {
         e.preventDefault();
         try {
             const response = registerUser(username, password, email, otp);
                 dispatch(registerSuccess(response.data));
-                setPopupInfo('Đăng ký thành công!');
-                setShowPopup(true);
+                const successMessage = "Đăng ký tài khoản thành công!";
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
+                navigate("/sign-in");
         } catch (error) {
             setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
             setShowErrorMessage(true);
@@ -67,6 +62,8 @@ const SignUp = () => {
                 type:0
             });
             if (response.status === 200) {
+                const successMessage = "Mã OTP đã được gửi qua mail của bạn!";
+                setPopupInfo({ message: successMessage, type: 'success', visible: true });
                 setChangePage(true);
             }
         } catch (e) {
@@ -79,8 +76,54 @@ const SignUp = () => {
         setErrorMessage("");
         setShowErrorMessage(false);
     };
+
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+
+    const handleClick = async () => {
+        await handleSendEmail();
+        await handleRegister();
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleClick));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleClick));
+        };
+    }, []);
     return (
         <>
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
             <Breadcrumb location={location}/>
             <div className="content">
                 <div className="container">
@@ -154,7 +197,6 @@ const SignUp = () => {
                                                                 , fontWeight: "bold"
                                                             }}> Xác nhận
                                                     </button>
-                                                    {showPopup && <PopupNotification info={popupInfo} onClose={handleClosePopup} />}
                                                 </form>
                                             </>
                                         }
