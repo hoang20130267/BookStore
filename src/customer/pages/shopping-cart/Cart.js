@@ -7,7 +7,6 @@ import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
 
 export const Item = ({id, productId, name, image, price, quantity, updateCart}) => {
-    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const handleIncrease = async () => {
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
@@ -29,24 +28,11 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     const handleDelete = async () => {
         try {
             await axios.delete(`http://localhost:8080/api/cart/remove/${id}`);
-            const successMessage = 'Xóa sản phẩm ra khỏi giỏ hàng thành công!';
-            setPopupInfo({ message: successMessage, type: 'success', visible: true });
             updateCart();
         } catch (error) {
             console.error("Error deleting blog:", error);
         }
     };
-    const hidePopup = () => {
-        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
-    };
-
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', handleDelete));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', handleDelete));
-        };
-    }, []);
     return (
         <tr id={id}>
             <td className="shoping__cart__item" style={{display: "flex"}}>
@@ -78,36 +64,6 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                                  onClick={handleDelete}
                 />
             </td>
-
-            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
-                <div className="popup__background"></div>
-                <div className="popup__content">
-                    <h3 className="popup__content__title">
-                        Thành công
-                    </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
-                    <p>
-                        <button className="button-popup button--success" data-for="js_success-popup"
-                                onClick={hidePopup}>Ẩn thông báo
-                        </button>
-                    </p>
-                </div>
-            </div>
-
-            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
-                <div className="popup__background"></div>
-                <div className="popup__content">
-                    <h3 className="popup__content__title">
-                        Thất bại
-                    </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
-                    <p>
-                        <button className="button-popup button--error" data-for="js_error-popup"
-                                onClick={hidePopup}>Ẩn thông báo
-                        </button>
-                    </p>
-                </div>
-            </div>
         </tr>
     )
 }
@@ -116,23 +72,30 @@ export const ProductsInCart = () => {
     const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
     const user = JSON.parse(localStorage.getItem('currentUser'));
+    const [discountCode, setDiscountCode] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
     useEffect(() => {
         if (!user) {
             navigate("/sign-in");
         }
     }, [user, navigate]);
     const token = user ? user.token : null;
-    useEffect(() => {
-        const calculateTotals = () => {
-            let subtotalAmount = 0;
-            cart.forEach(item => {
-                subtotalAmount += item.quantity * item.product.currentPrice;
-            });
-            setTotal(subtotalAmount);
-        };
 
+    const calculateTotals = () => {
+        let subtotalAmount = 0;
+        cart.forEach(item => {
+            subtotalAmount += item.quantity * item.product.currentPrice;
+        });
+        if (discount > 0) {
+            subtotalAmount -= subtotalAmount * discount / 100;
+        }
+        setTotal(subtotalAmount);
+    };
+
+    useEffect(() => {
         calculateTotals();
-    }, [cart]);
+    }, [cart, discount]);
     const updateCart = async () => {
         try {
             const response = await axios.get("http://localhost:8080/api/cart/items", {
@@ -143,6 +106,45 @@ export const ProductsInCart = () => {
             setCart(response.data);
         } catch (error) {
             console.error("Error fetching carts:", error);
+        }
+    };
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', getDiscountCode));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', getDiscountCode));
+        };
+    }, []);
+    const getDiscountCode = async (e) => {
+        e.preventDefault();
+        if(discountCode === '') {
+            const errorMessage = 'Vui lòng nhập mã giảm giá!';
+            setPopupInfo({message: errorMessage, type: 'error', visible: true});
+        } else {
+            try {
+                await axios.get(`http://localhost:8080/api/orders/promo/${discountCode}/user/${user.id}`);
+                const errorMessage = 'Bạn đã sử dụng mã giảm giá này rồi!';
+                setPopupInfo({message: errorMessage, type: 'error', visible: true});
+            } catch (error) {
+                if (error.response.status === 404) {
+                    const errorMessage = 'Mã giảm giá không hợp lệ!';
+                    setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                } else {
+                    try {
+                        const response = await axios.get(`http://localhost:8080/api/promotion/code/${discountCode}`);
+                        setDiscount(response.data.discount)
+                        const successMessage = 'Áp dụng mã giảm giá thành công!';
+                        setPopupInfo({message: successMessage, type: 'success', visible: true});
+                    } catch (error) {
+                        const errorMessage = 'Mã giảm giá không hợp lệ!';
+                        setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                    }
+                }
+            }
         }
     };
     useEffect(() => {
@@ -162,6 +164,37 @@ export const ProductsInCart = () => {
     }, []);
     return (
         <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
+            <div
+                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div
+                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -190,7 +223,9 @@ export const ProductsInCart = () => {
                                     />
                                 ))}
                                 </tbody>) : <tr>
-                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ hàng.</td>
+                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ
+                                        hàng.
+                                    </td>
                                 </tr>}
                             </table>
                         </div>
@@ -209,8 +244,9 @@ export const ProductsInCart = () => {
                         <div className="shoping__continue">
                             <div className="shoping__discount">
                                 <h5>Mã giảm giá</h5>
-                                <form action="shopping-cart#">
-                                    <input type="text" placeholder="Nhập mã giảm giá"/>
+                                <form onSubmit={getDiscountCode}>
+                                    <input type="text" placeholder="Nhập mã giảm giá"
+                                           onChange={e => setDiscountCode(e.target.value)}/>
                                     <button type="submit" className="site-btn">APPLY</button>
                                 </form>
                             </div>
@@ -221,10 +257,12 @@ export const ProductsInCart = () => {
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
                                 <li>Tạm tính <span>{formatCurrency(total)}</span></li>
+                                {discount > 0 ? (<li>Áp dụng mã giảm giá<span>{discount}%</span></li>) : null}
                                 <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
                             {cart.length > 0 ? (
-                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>)
+                                    <Link to={`/checkout/${discountCode}`} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH
+                                        TOÁN</Link>)
                                 :
                                 (<Link to={"/product-list/1"} className="primary-btn">TIẾP TỤC MUA SẮM</Link>)
                             }

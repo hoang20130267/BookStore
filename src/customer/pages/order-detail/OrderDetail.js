@@ -3,6 +3,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
+import axios from "axios";
 
 export const OrderDetail = () => {
     const location = useLocation();
@@ -12,22 +13,26 @@ export const OrderDetail = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
-
-    const fetchData = async () => {
-        try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/orders/${id}`);
-            setOrder(result);
-            if (result.orderDetails) {
-                setOrderDetails(result.orderDetails);
-            }
-        } catch (error) {
-            console.log('Error fetching data', error)
-        }
-    }
+    const [promotion, setPromotion] = useState(0);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`http://localhost:8080/api/orders/${id}`);
+                setOrder(result);
+                if (result.orderDetails) {
+                    setOrderDetails(result.orderDetails);
+                }
+                if(result.promotion){
+                    setPromotion(result.promotion.discount);
+                }
+            } catch (error) {
+                console.log('Error fetching data', error)
+            }
+        }
         fetchData();
-    }, []);
+    }, [orderDetails]);
+    console.log(promotion)
     return (
         <div>
             <Breadcrumb location={location}/>
@@ -76,13 +81,18 @@ export const OrderDetail = () => {
                                         </tr>))}
                                         </tbody>
                                     </table>
-                                    <div style={{borderTop: "1px solid #e1e1e1"}}>Tạm tính: <span
-                                        style={{float: "right"}}>
-                                    {formatCurrency(order.orderTotal)}</span></div>
-                                    <input value="" id="provisional" style={{display: "none"}}/>
-                                    <div>Phí vận chuyển: <span style={{float: "right"}}
+                                    {promotion ? <div>Áp dụng voucher: <span
+                                        style={{float: "right"}}>{promotion}%</span></div> : null}
+                                    {promotion> 0 ? <div>Giá được giảm: <span
+                                        style={{float: "right"}}>{formatCurrency(orderDetails[0].totalMoney * promotion / 100)}</span> </div> : null}
+                                    <div style={{borderTop: "1px solid #e1e1e1"}}>Phí vận chuyển: <span style={{float: "right"}}
                                                                id="fee">{formatCurrency(order.shippingCost)}</span>
                                     </div>
+                                    <div>Tạm tính: <span
+                                        style={{float: "right"}}>
+                                        {formatCurrency(order.orderTotal)}
+                                    </span></div>
+                                    <input value="" id="provisional" style={{display: "none"}}/>
                                     <div>Phương thức thanh toán: <span
                                         style={{float: "right"}}>{order.paymentMethod?.name}</span></div>
                                     <div>Địa chỉ giao hàng: <span
@@ -92,7 +102,8 @@ export const OrderDetail = () => {
                                     <div>Ghi chú đơn hàng: <span style={{float: "right"}}>{order.note}
                                         </span></div>
                                     <div className="checkout__order__total text-right">Tổng tiền <span
-                                        id="tongtien"></span>{formatCurrency(order.orderTotal + order.shippingCost)}
+                                        id="tongtien"></span>
+                                        {formatCurrency(order.orderTotal)}
                                     </div>
                                     <div class="site-btn" style={{
                                         backgroundColor: "yellowgreen",
