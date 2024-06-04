@@ -101,6 +101,7 @@ export const ProductsInCart = () => {
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
+    const [isAddDiscount, setIsAddDiscount] = useState(false);
     useEffect(() => {
         if (!user) {
             navigate("/sign-in");
@@ -164,9 +165,15 @@ export const ProductsInCart = () => {
                 } else {
                     try {
                         const response = await axios.get(`http://localhost:8080/api/promotion/code/${discountCode}`);
-                        setDiscount(response.data.discount)
-                        const successMessage = 'Áp dụng mã giảm giá thành công!';
-                        setPopupInfo({message: successMessage, type: 'success', visible: true});
+                        if (isAddDiscount === true) {
+                            const errorMessage = 'Bạn đã sử dụng 1 mã giảm giá trước đó rồi!';
+                            setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                        } else {
+                            setDiscount(response.data.discount)
+                            setIsAddDiscount(true);
+                            const successMessage = 'Áp dụng mã giảm giá thành công!';
+                            setPopupInfo({message: successMessage, type: 'success', visible: true});
+                        }
                     } catch (error) {
                         const errorMessage = 'Mã giảm giá không hợp lệ!';
                         setPopupInfo({message: errorMessage, type: 'error', visible: true});
