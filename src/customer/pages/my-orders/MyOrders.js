@@ -3,6 +3,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
+import formatCurrency from "../../../utils/formatCurrency";
 
 export const MyOrders = () => {
     const location = useLocation();
@@ -34,19 +35,19 @@ export const MyOrders = () => {
                             <thead>
                             <tr>
                                 <th className="sort align-middle pe-5" scope="col" data-sort="total-spent"
-                                    style={{width: "20%"}}>Mã Đơn
+                                >Mã Đơn
                                 </th>
-                                <th className="sort align-middle pe-5" scope="col" data-sort="email"
-                                    style={{width: "20%"}}>Tổng tiền
+                                <th className="sort align-middle pe-5" scope="col" data-sort="email">
+                                    Tổng tiền
                                 </th>
-                                <th className="sort align-middle pe-5" scope="col" data-sort="email"
-                                    style={{width: "20%"}}>Ngày đặt
+                                <th className="sort align-middle pe-5" scope="col" data-sort="email">
+                                    Ngày đặt
                                 </th>
-                                <th className="sort align-middle " scope="col" data-sort="total-orders"
-                                    style={{width: "25%"}}>Trạng thái
+                                <th className="sort align-middle " scope="col" data-sort="total-orders">
+                                    Trạng thái
                                 </th>
-                                <th className="sort align-middle " scope="col" data-sort="total-orders"
-                                    style={{width: "20%"}}>Chi tiết
+                                <th className="sort align-middle " scope="col" data-sort="total-orders">
+                                    Chi tiết
                                 </th>
                             </tr>
                             </thead>
@@ -58,7 +59,7 @@ export const MyOrders = () => {
                                             <p className="mb-0 text-1100 fw-bold">{order.orderCode}</p>
                                         </td>
                                         <td className="customer align-middle white-space-nowrap pe-5">
-                                            <p className="mb-0 ms-3 text-1100 fw-bold">{order.orderTotal}</p>
+                                            <p className="mb-0 ms-3 text-1100 fw-bold">{formatCurrency(order.orderTotal)}</p>
                                         </td>
                                         <td className="email align-middle white-space-nowrap pe-5">{order.orderDate}</td>
                                         <td className="email align-middle white-space-nowrap pe-5">

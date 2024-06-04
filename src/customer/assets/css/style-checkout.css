@@ -167,7 +167,7 @@
     float: right;
 }
 
-.checkout__order .checkout__order__subtotal, .checkout__order .checkout__order__shipping{
+.checkout__order .checkout__order__subtotal, .checkout__order .checkout__order__shipping {
     font-size: 18px;
     color: #1c1c1c;
     font-weight: 700;
@@ -177,7 +177,8 @@
     margin-bottom: 15px;
     padding-top: 15px;
 }
-.checkout__order .checkout__order__shipping{
+
+.checkout__order .checkout__order__shipping {
     border-top: none;
     padding-top: 0;
 }
@@ -238,6 +239,21 @@
 .checkout_block_list_item label {
     padding: 4px 0;
 }
-button:disabled{
+
+button:disabled {
     opacity: .65;
+}
+
+.checkout__order table tr td {
+    font-size: 16px;
+    color: #6f6f6f;
+    line-height: 40px;
+    white-space: nowrap;
+}
+
+.checkout__order table thead th {
+    font-size: 18px;
+    color: #1c1c1c;
+    font-weight: 700;
+    margin-bottom: 10px;
 }

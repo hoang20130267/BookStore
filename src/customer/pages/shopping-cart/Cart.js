@@ -95,6 +95,7 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
 export const ProductsInCart = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
+    const [subTotal, setSubTotal] = useState(0);
     const [total, setTotal] = useState(0);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [discountCode, setDiscountCode] = useState('');
@@ -113,9 +114,10 @@ export const ProductsInCart = () => {
             subtotalAmount += item.quantity * item.product.currentPrice;
         });
         if (discount > 0) {
-            subtotalAmount -= subtotalAmount * discount / 100;
+            const finalTotal = subtotalAmount - (subtotalAmount * discount / 100);
+            setTotal(finalTotal);
         }
-        setTotal(subtotalAmount);
+        setSubTotal(subtotalAmount);
     };
 
     useEffect(() => {
@@ -153,6 +155,7 @@ export const ProductsInCart = () => {
             try {
                 await axios.get(`http://localhost:8080/api/orders/promo/${discountCode}/user/${user.id}`);
                 const errorMessage = 'Bạn đã sử dụng mã giảm giá này rồi!';
+                setDiscountCode('')
                 setPopupInfo({message: errorMessage, type: 'error', visible: true});
             } catch (error) {
                 if (error.response.status === 404) {
@@ -281,7 +284,7 @@ export const ProductsInCart = () => {
                         <div className="shoping__checkout">
                             <h5>Tổng tiền giỏ hàng</h5>
                             <ul>
-                                <li>Tạm tính <span>{formatCurrency(total)}</span></li>
+                                <li>Tạm tính <span>{formatCurrency(subTotal)}</span></li>
                                 {discount > 0 ? (<li>Áp dụng mã giảm giá<span>{discount}%</span></li>) : null}
                                 <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
