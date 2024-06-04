@@ -5,18 +5,26 @@ import React, {useEffect, useState} from "react";
 import {MdOutlineDelete} from "react-icons/md";
 import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
+import APIService from "../../../service/APIService";
 
 export const Item = ({id, productId, name, image, price, quantity, updateCart}) => {
+    const [remainingQuantity, setRemainingQuantity] = useState(null);
+    const [notify, setNotify] = useState('');
     const handleIncrease = async () => {
-        try {
-            const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
-            console.log("Product increased successfully:", response.data);
-            updateCart();
-        } catch (error) {
-            console.error("Error increasing product:", error);
+        if (quantity < remainingQuantity) {
+            try {
+                const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
+                console.log("Product increased successfully:", response.data);
+                updateCart();
+            } catch (error) {
+                console.error("Error increasing product:", error);
+            }
+        } else {
+            setNotify(`*Số lượng yêu cầu cho ${quantity + 1} không có sẵn.`);
         }
     };
     const handleDecrease = async () => {
+        setNotify('');
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/decrease/${id}`);
             console.log("Product decreased successfully:", response.data);
@@ -33,16 +41,33 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
             console.error("Error deleting blog:", error);
         }
     };
+
+    const checkRemainingQuantity = async () => {
+        try {
+            const result = await new APIService().fetchData(`http://localhost:8080/api/inventories/inventory/${productId}`);
+            setRemainingQuantity(result.remainingQuantity);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        checkRemainingQuantity();
+    }, []);
+
     return (
         <tr id={id}>
-            <td className="shoping__cart__item" style={{display: "flex"}}>
+            <td className="shoping__cart__item">
                 <Link to={`/product-detail/${productId}`}><img src={image} alt=""
                                                                style={{
                                                                    width: "85px",
                                                                    height: "85px",
                                                                    objectFit: "cover"
                                                                }}/></Link>
-                <Link to={`/product-detail/${productId}`}><p>{name}</p></Link>
+                <Link to={`/product-detail/${productId}`} style={{maxWidth: '380px'}}>
+                    <p>{name}</p>
+                    <p style={{color: 'red'}}>{notify}</p>
+                </Link>
             </td>
             <td className="shoping__cart__price">
                 {formatCurrency(price)}
@@ -121,7 +146,7 @@ export const ProductsInCart = () => {
     }, []);
     const getDiscountCode = async (e) => {
         e.preventDefault();
-        if(discountCode === '') {
+        if (discountCode === '') {
             const errorMessage = 'Vui lòng nhập mã giảm giá!';
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
