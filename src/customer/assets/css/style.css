@@ -15,45 +15,6 @@ Tags: e-commerce, two-columns, left-sidebar, right-sidebar, custom-background, c
 * Copyright 2011-2019 The Bootstrap Authors
 * Copyright 2011-2019 Twitter, Inc.
 * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)*/
-.discount-star {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
-    color: white;
-    text-align: center;
-    font-weight: bold;
-    font-size: 12px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.discount-star span {
-    margin-top: 2px;
-    position: absolute;
-    z-index: 3;
-}
-
-.discount-star::before,
-.discount-star::after {
-    content: '';
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background-color: red;
-}
-
-.discount-star::before {
-    transform: rotate(23deg);
-}
-
-.discount-star::after {
-    transform: rotate(153deg);
-}
-
 
 .header__menu {
     padding: 24px 0;

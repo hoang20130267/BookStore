@@ -20,11 +20,12 @@ export const SingleProduct = (props) => {
     const product = props?.product;
     const comments = props.comments;
     const [quantity, setQuantity] = useState(1);
-    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
     const [isFavorite, setIsFavorite] = useState(false);
     const [favoriteId, setFavoriteId] = useState('');
     const [rating, setRating] = useState(0);
     const [commentQuantity, setCommentQuantity] = useState(0);
+    const [remainingQuantity, setRemainingQuantity] = useState(null);
 
     useEffect(() => {
         if (comments) {
@@ -36,26 +37,55 @@ export const SingleProduct = (props) => {
             setRating(rating);
             setCommentQuantity(comments.length);
         }
+        checkRemainingQuantity();
     }, [product])
     // console.log(props?.product)
 
     const handlePlus = () => {
-        setQuantity(prevQuantity => prevQuantity + 1);
+        if (remainingQuantity > 0) {
+            setQuantity((prevQuantity) => {
+                const newQuantity = prevQuantity + 1;
+                return newQuantity > remainingQuantity ? remainingQuantity : newQuantity;
+            });
+        }
     };
 
     const handleMinus = () => {
-        if (quantity > 1) {
-            setQuantity(prevQuantity => prevQuantity - 1);
+        setQuantity((prevQuantity) => {
+            const newQuantity = prevQuantity - 1;
+            return newQuantity < 1 ? 1 : newQuantity;
+        });
+    };
+
+    const handleBlur = () => {
+        if (quantity === '') {
+            setQuantity(1);
         }
     };
 
     const handleInputChange = (e) => {
         const input = e.target.value;
         const numberInput = parseInt(input, 10);
-        if (input === '' || !isNaN(numberInput)) {
-            setQuantity(input === '' ? '' : numberInput);
+
+        if (input === '') {
+            setQuantity('');
+        } else if (!isNaN(numberInput)) {
+            if (numberInput > remainingQuantity) {
+                setQuantity(remainingQuantity);
+            } else {
+                setQuantity(numberInput);
+            }
         }
     };
+
+    const checkRemainingQuantity = async () => {
+        try {
+            const result = await apiService.fetchData(`http://localhost:8080/api/inventories/inventory/${product.id}`);
+            setRemainingQuantity(result.remainingQuantity);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
@@ -63,13 +93,13 @@ export const SingleProduct = (props) => {
     const addToCart = async () => {
         if (!user) {
             const errorMessage = 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng!';
-            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
+            setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
-            const requestData = { product: { id: product.id }, quantity: quantity };
+            const requestData = {product: {id: product.id}, quantity: quantity};
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
                 const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
-                setPopupInfo({ message: successMessage, type: 'success', visible: true });
+                setPopupInfo({message: successMessage, type: 'success', visible: true});
             } catch (error) {
                 console.error('Error adding product to cart:', error);
             }
@@ -78,12 +108,12 @@ export const SingleProduct = (props) => {
     const addFavoriteProduct = async () => {
         if (!user) {
             const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
-            setPopupInfo({ message: errorMessage, type: 'error', visible: true });
+            setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             try {
                 const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
                 const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
-                setPopupInfo({ message: successMessage, type: 'success', visible: true });
+                setPopupInfo({message: successMessage, type: 'success', visible: true});
                 setIsFavorite(true);
 
             } catch (error) {
@@ -95,7 +125,7 @@ export const SingleProduct = (props) => {
         try {
             await apiService.deleteData(`http://localhost:8080/api/user/favorites/${favoriteId}`);
             const successMessage = 'Sản phẩm đã được xóa khỏi yêu thích!';
-            setPopupInfo({ message: successMessage, type: 'success', visible: true });
+            setPopupInfo({message: successMessage, type: 'success', visible: true});
             setIsFavorite(false);
 
         } catch (error) {
@@ -124,7 +154,7 @@ export const SingleProduct = (props) => {
         }
     }, [product.id, isFavorite])
     const hidePopup = () => {
-        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
 
     const handleAddToCartClick = async () => {
@@ -143,13 +173,14 @@ export const SingleProduct = (props) => {
 
     return (
         <>
-            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+            <div
+                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
                 <div className="popup__background"></div>
                 <div className="popup__content">
                     <h3 className="popup__content__title">
                         Thành công
                     </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                     <p>
                         <button className="button-popup button--success" data-for="js_success-popup"
                                 onClick={hidePopup}>Ẩn thông báo
@@ -158,13 +189,14 @@ export const SingleProduct = (props) => {
                 </div>
             </div>
 
-            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+            <div
+                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
                 <div className="popup__background"></div>
                 <div className="popup__content">
                     <h3 className="popup__content__title">
                         Thất bại
                     </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                     <p>
                         <button className="button-popup button--error" data-for="js_error-popup"
                                 onClick={hidePopup}>Ẩn thông báo
@@ -202,7 +234,7 @@ export const SingleProduct = (props) => {
                                         <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
-                                    ): (<span className="price d-flex justify-content-start align-items-center">
+                                    ) : (<span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
                                         <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
@@ -217,20 +249,28 @@ export const SingleProduct = (props) => {
                                     <div className="lgdBsd"><p className="label">Số
                                         Lượng</p>
                                         <div className="group-input">
-                                            <button onClick={handleMinus}><i className="fa-solid fa-minus"></i></button>
+                                            <button disabled={quantity === 1} onClick={handleMinus}><i
+                                                className="fa-solid fa-minus"></i></button>
                                             <input type="text" value={quantity}
                                                    className="input"
-                                                   onChange={handleInputChange}/>
+                                                   onChange={handleInputChange}
+                                                   onBlur={handleBlur}
+                                                   min={1}
+                                                   max={remainingQuantity}
+                                            />
                                             <button onClick={handlePlus}><i className="fa-solid fa-plus"></i></button>
+                                            {remainingQuantity !== 0 && (
+                                                <div style={{marginLeft: '15px', color: '#757575'}}>{remainingQuantity} sản phẩm có sẵn</div>)}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="btn-groups">
-                                    <button type="button" className="add_cart_btn" onClick={handleAddToCartClick}>
+                                    <button type="button" className="add_cart_btn" disabled={remainingQuantity === 0}
+                                            onClick={handleAddToCartClick}>
                                         <i className="fa-solid fa-cart-shopping"></i>
-                                        thêm vào giỏ hàng
+                                        {remainingQuantity === 0 ? 'hết hàng' : 'thêm vào giỏ hàng'}
                                     </button>
-                                    <button type="button" className="buy_now_btn">
+                                    <button type="button" disabled={remainingQuantity === 0} className="buy_now_btn">
                                         <i className="fa-solid fa-wallet"></i>
                                         mua ngay
                                     </button>
@@ -852,7 +892,7 @@ export const Detail = () => {
             setCategoryId(result.category?.id)
             window.scrollTo({
                 top: 0,
-                behavior: "smooth"
+                behavior: "auto"
             });
         } catch (error) {
             console.error('Error fetching product', error);

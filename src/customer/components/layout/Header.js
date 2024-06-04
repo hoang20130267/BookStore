@@ -33,7 +33,7 @@ export const SearchBar = ({setResults}) => {
     }
     return (
         <>
-            <div className="input-wrapper d-flex" style={{marginLeft: "224px"}}>
+            <div className="input-wrapper d-flex" style={{marginLeft: "185px"}}>
                 <FaSearch id="#search-icon"/>
                 <input type="text" className="searchInput" placeholder="Tìm kiếm..."
                        value={keyword} onChange={(e) => handleSearch(e.target.value)}/>

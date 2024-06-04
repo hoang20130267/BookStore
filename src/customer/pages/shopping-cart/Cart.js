@@ -5,19 +5,27 @@ import React, {useEffect, useState} from "react";
 import {MdOutlineDelete} from "react-icons/md";
 import axios from "axios";
 import formatCurrency from "../../../utils/formatCurrency";
+import APIService from "../../../service/APIService";
 
 export const Item = ({id, productId, name, image, price, quantity, updateCart}) => {
-    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
+    const [remainingQuantity, setRemainingQuantity] = useState(null);
+    const [notify, setNotify] = useState();
     const handleIncrease = async () => {
-        try {
-            const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
-            console.log("Product increased successfully:", response.data);
-            updateCart();
-        } catch (error) {
-            console.error("Error increasing product:", error);
+        if (quantity < remainingQuantity) {
+            try {
+                const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
+                console.log("Product increased successfully:", response.data);
+                updateCart();
+            } catch (error) {
+                console.error("Error increasing product:", error);
+            }
+        } else {
+            setNotify(`*Số lượng yêu cầu cho ${quantity + 1} không có sẵn.`);
         }
     };
     const handleDecrease = async () => {
+        setNotify('');
         try {
             const response = await axios.put(`http://localhost:8080/api/cart/decrease/${id}`);
             console.log("Product decreased successfully:", response.data);
@@ -30,15 +38,29 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
         try {
             await axios.delete(`http://localhost:8080/api/cart/remove/${id}`);
             const successMessage = 'Xóa sản phẩm ra khỏi giỏ hàng thành công!';
-            setPopupInfo({ message: successMessage, type: 'success', visible: true });
+            setPopupInfo({message: successMessage, type: 'success', visible: true});
             updateCart();
         } catch (error) {
             console.error("Error deleting blog:", error);
         }
     };
     const hidePopup = () => {
-        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
+
+    const checkRemainingQuantity = async () => {
+        try {
+            const result = await new APIService().fetchData(`http://localhost:8080/api/inventories/inventory/${productId}`);
+            setRemainingQuantity(result.remainingQuantity);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        checkRemainingQuantity();
+    }, []);
+
 
     useEffect(() => {
         const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
@@ -49,14 +71,17 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     }, []);
     return (
         <tr id={id}>
-            <td className="shoping__cart__item" style={{display: "flex"}}>
+            <td className="shoping__cart__item">
                 <Link to={`/product-detail/${productId}`}><img src={image} alt=""
                                                                style={{
                                                                    width: "85px",
                                                                    height: "85px",
                                                                    objectFit: "cover"
                                                                }}/></Link>
-                <Link to={`/product-detail/${productId}`}><p>{name}</p></Link>
+                <Link to={`/product-detail/${productId}`} style={{maxWidth: '380px'}}>
+                    <p>{name}</p>
+                    <p style={{color: 'red'}}>{notify}</p>
+                </Link>
             </td>
             <td className="shoping__cart__price">
                 {formatCurrency(price)}
@@ -79,13 +104,14 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                 />
             </td>
 
-            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+            <div
+                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
                 <div className="popup__background"></div>
                 <div className="popup__content">
                     <h3 className="popup__content__title">
                         Thành công
                     </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                     <p>
                         <button className="button-popup button--success" data-for="js_success-popup"
                                 onClick={hidePopup}>Ẩn thông báo
@@ -94,13 +120,14 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
                 </div>
             </div>
 
-            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+            <div
+                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
                 <div className="popup__background"></div>
                 <div className="popup__content">
                     <h3 className="popup__content__title">
                         Thất bại
                     </h3>
-                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                     <p>
                         <button className="button-popup button--error" data-for="js_error-popup"
                                 onClick={hidePopup}>Ẩn thông báo
@@ -190,7 +217,9 @@ export const ProductsInCart = () => {
                                     />
                                 ))}
                                 </tbody>) : <tr>
-                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ hàng.</td>
+                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ
+                                        hàng.
+                                    </td>
                                 </tr>}
                             </table>
                         </div>
@@ -224,7 +253,7 @@ export const ProductsInCart = () => {
                                 <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
                             {cart.length > 0 ? (
-                            <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>)
+                                    <Link to={"/checkout"} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH TOÁN</Link>)
                                 :
                                 (<Link to={"/product-list/1"} className="primary-btn">TIẾP TỤC MUA SẮM</Link>)
                             }
