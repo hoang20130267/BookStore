@@ -10,6 +10,7 @@ export const OrderDetail = () => {
     const {id} = useParams();
     const [order, setOrder] = useState({});
     const [orderDetails, setOrderDetails] = useState([]);
+    const [tempTotal, setTempTotal] = useState(0);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
@@ -22,8 +23,13 @@ export const OrderDetail = () => {
                 setOrder(result);
                 if (result.orderDetails) {
                     setOrderDetails(result.orderDetails);
+                    let subTotal = 0;
+                    result.orderDetails.forEach(item => {
+                        subTotal += item.quantity * item.totalMoney;
+                        setTempTotal(subTotal);
+                    })
                 }
-                if(result.promotion){
+                if (result.promotion) {
                     setPromotion(result.promotion.discount);
                 }
             } catch (error) {
@@ -32,7 +38,16 @@ export const OrderDetail = () => {
         }
         fetchData();
     }, [orderDetails]);
-    console.log(promotion)
+    const shortenContent = (content, maxLength) => {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(content, 'text/html');
+        const textContent = htmlDoc.body.textContent || "";
+        if (textContent.length <= maxLength) {
+            return textContent;
+        } else {
+            return textContent.substring(0, maxLength) + '...';
+        }
+    };
     return (
         <div>
             <Breadcrumb location={location}/>
@@ -47,54 +62,53 @@ export const OrderDetail = () => {
                                     <table className="table table-sm fs--1 mb-0">
                                         <thead>
                                         <tr>
-                                            <th className="sort align-middle pe-5" scope="col" data-sort="total-spent"
-                                                style={{width: "20%"}}>Mã SP
+                                            <th className="sort align-middle pe-5" scope="col" data-sort="total-spent">
+                                                Mã SP
                                             </th>
-                                            <th className="sort align-middle pe-5" scope="col" data-sort="email"
-                                                style={{width: "40%"}}>Tên Sản Phẩm
+                                            <th className="sort align-middle pe-5" scope="col" data-sort="email">
+                                                Tên Sản Phẩm
                                             </th>
-                                            <th className="sort align-middle pe-5" scope="col" data-sort="email"
-                                                style={{width: "20%"}}>Số Lượng
+                                            <th className="sort align-middle pe-5" scope="col" data-sort="email">
+                                                Số Lượng
                                             </th>
-                                            <th className="sort align-middle " scope="col" data-sort="total-orders"
-                                                style={{width: "20%", textAlign: "right"}}>Giá
-
+                                            <th className="sort align-middle text-center" scope="col" data-sort="total-orders">
+                                                Giá
                                             </th>
                                         </tr>
                                         </thead>
-                                        <input id="idTransport" value="" type="text"
-                                               style={{display: "none"}}/>
-                                        <tbody class="list" id="table-latest-review-body">
+                                        <tbody className="list" id="table-latest-review-body">
                                         {orderDetails.map(orderDetail => (<tr key={orderDetail.id}
-                                                                              class="hover-actions-trigger btn-reveal-trigger position-static">
-                                            <td class="fs--1 align-middle ps-0 py-3">{orderDetail.product?.detail?.productSku}</td>
-                                            <td class="customer align-middle white-space-nowrap pe-5">
-                                                {orderDetail.product?.title}
+                                                                              className="hover-actions-trigger btn-reveal-trigger position-static">
+                                            <td className="fs--1 align-middle ps-0 py-3">{orderDetail.product?.detail?.productSku}</td>
+                                            <td className="customer align-middle white-space-nowrap pe-5">
+                                                {shortenContent(orderDetail.product?.title, 30)}
                                             </td>
-                                            <td class="email align-middle white-space-nowrap pe-5"
+                                            <td className="email align-middle white-space-nowrap pe-5"
                                                 style={{textAlign: "center"}}>{orderDetail.quantity}
                                             </td>
-                                            <td class="email align-middle white-space-nowrap pe-5"
+                                            <td className="email align-middle white-space-nowrap pe-5"
                                                 style={{textAlign: "right"}}>
                                                 {formatCurrency(orderDetail.totalMoney)}
                                             </td>
                                         </tr>))}
                                         </tbody>
                                     </table>
-                                    {promotion ? <div>Áp dụng voucher: <span
-                                        style={{float: "right"}}>{promotion}%</span></div> : null}
-                                    {promotion> 0 ? <div>Giá được giảm: <span
-                                        style={{float: "right"}}>{formatCurrency(orderDetails[0].totalMoney * promotion / 100)}</span> </div> : null}
-                                    <div style={{borderTop: "1px solid #e1e1e1"}}>Phí vận chuyển: <span style={{float: "right"}}
-                                                               id="fee">{formatCurrency(order.shippingCost)}</span>
-                                    </div>
                                     <div>Tạm tính: <span
                                         style={{float: "right"}}>
-                                        {formatCurrency(order.orderTotal)}
+                                        {formatCurrency(tempTotal)}
                                     </span></div>
+                                    {promotion ? <div>Áp dụng voucher: <span
+                                        style={{float: "right"}}>{promotion}%</span></div> : null}
+                                    {promotion > 0 ? <div>Giá được giảm: <span
+                                        style={{float: "right"}}>{formatCurrency(orderDetails[0].totalMoney * promotion / 100)}</span>
+                                    </div> : null}
+                                    <div style={{borderTop: "1px solid #e1e1e1"}}>Phí vận chuyển: <span
+                                        style={{float: "right"}}
+                                        id="fee">{formatCurrency(order.shippingCost)}</span>
+                                    </div>
                                     <input value="" id="provisional" style={{display: "none"}}/>
                                     <div>Phương thức thanh toán: <span
-                                        style={{float: "right"}}>{order.paymentMethod?.name}</span></div>
+                                        style={{float: "right"}}>{order.paymentMethod}</span></div>
                                     <div>Địa chỉ giao hàng: <span
                                         style={{float: "right"}}>{order.shippingAddress?.wardCommune}, {order.shippingAddress?.countyDistrict}
                                         , {order.shippingAddress?.provinceCity}                                        </span>

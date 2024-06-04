@@ -77,8 +77,6 @@ const Product = (props) => {
                 console.log("new price of product " + productInfo.id + " is " + newPrice)
             } else {
                 console.log("Discount is 0");
-                const newPrice = productInfo.oldPrice;
-                await axios.put(`http://localhost:8080/api/products/set_discount/${productInfo.id}/price/${newPrice}`);
             }
         } catch (error) {
             console.error("Error setting price", error);
@@ -95,7 +93,7 @@ const Product = (props) => {
     }
 
     const hidePopup = () => {
-        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
 
     const handleAddToCartClick = async () => {

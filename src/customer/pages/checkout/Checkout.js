@@ -39,16 +39,15 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const [wards, setWards] = useState([]);
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const [placeOrderButtonEnabled, setPlaceOrderButtonEnabled] = useState(false);
-    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
     const apiService = new ApiService();
-    const { discount } = useParams();
+    const {discount} = useParams();
     const [discountPercent, setDiscountPercent] = useState(0);
     const [discountId, setDiscountId] = useState(0);
     const navigate = useNavigate();
-
 
     const fetchAddresses = async () => {
         try {
@@ -186,12 +185,13 @@ export const InputInfor = ({cartItems, subTotal}) => {
             status: {id: 1},
             shippingCost: shippingCost,
             note: note,
+            promotion: {id: discountId}
         }
         try {
-            const response = await apiServiceWithToken.sendData(`http://localhost:8080/api/orders/${discountId}`, request);
+            const response = await apiServiceWithToken.sendData(`http://localhost:8080/api/orders`, request);
             console.log("Order created successfully", response);
             const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
-            setPopupInfo({ message: successMessage, type: 'success', visible: true });
+            setPopupInfo({message: successMessage, type: 'success', visible: true});
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 alert(error.response.data);
@@ -200,12 +200,16 @@ export const InputInfor = ({cartItems, subTotal}) => {
     }
     useEffect(() => {
         const getDiscountCode = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
-                setDiscountPercent(response.data.discount);
-                setDiscountId(response.data.id)
-            } catch (error) {
-                console.error("Error fetching code:", error);
+            if (discount) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
+                    setDiscountPercent(response.data.discount);
+                    setDiscountId(response.data.id)
+                } catch (error) {
+                    console.error("Error fetching code:", error);
+                }
+            } else {
+                setDiscountId(0);
             }
         };
         getDiscountCode();
@@ -217,7 +221,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
     }
 
     const hidePopup = () => {
-        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
         navigate('/user/order');
     };
 
@@ -243,7 +247,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
         <>
             <form method="post">
                 <div className="row">
-                    <div className="col-lg-8 col-md-6">
+                    <div className="col-lg-7 col-md-6">
                         <div id="checkout_block" className="checkout_block">
                             <div className="checkout_block_title">Địa chỉ giao hàng</div>
                             <div className="checkout_block_content">
@@ -420,18 +424,26 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                    maxLength={150} placeholder="Ghi chú về đơn hàng của bạn."/>
                         </div>
                     </div>
-                    <div className="col-lg-4 col-md-6">
+                    <div className="col-lg-5 col-md-6">
                         <div className="checkout__order">
                             <h4>Hóa đơn của bạn</h4>
-                            <div className="checkout__order__products">Sản phẩm <span>Tổng tiền</span></div>
-                            <ul>
-                                {cartItems.map(item => (
-                                    <li key={item.id}>{shortenContent(item.product.title, 30)}
-                                        <span>{formatCurrency(item.product.currentPrice * item.quantity)}</span>
-                                    </li>))}
-                            </ul>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th className="title">Sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th style={{textAlign: 'right'}}>Tổng tiền</th>
+                                </tr>
+                                </thead>
+                                {cartItems.map(item => (<tr>
+                                    <td title={item.product.title}>{shortenContent(item.product.title, 23)}</td>
+                                    <td style={{textAlign: 'center'}}>x{item.quantity}</td>
+                                    <td style={{textAlign: 'right'}}>{formatCurrency(item.product.currentPrice * item.quantity)}</td>
+                                </tr>))}
+                            </table>
                             {discountPercent > 0 && (
-                                <div className="checkout__order__products">Mã giảm giá<span>- {discountPercent}%</span></div>
+                                <div className="checkout__order__products">Mã giảm giá<span>- {discountPercent}%</span>
+                                </div>
                             )}
                             <div className="checkout__order__subtotal">Tạm tính <span>{formatCurrency(subTotal)}</span>
                             </div>
@@ -452,13 +464,14 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                     className="site-btn">Mua hàng
                             </button>
 
-                            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                            <div
+                                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
                                 <div className="popup__background"></div>
                                 <div className="popup__content">
                                     <h3 className="popup__content__title">
                                         Thành công
                                     </h3>
-                                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                                     <p>
                                         <button className="button-popup button--success" data-for="js_success-popup"
                                                 onClick={hidePopup}>Ẩn thông báo
@@ -467,13 +480,14 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                 </div>
                             </div>
 
-                            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                            <div
+                                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
                                 <div className="popup__background"></div>
                                 <div className="popup__content">
                                     <h3 className="popup__content__title">
                                         Thất bại
                                     </h3>
-                                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                                     <p>
                                         <button className="button-popup button--error" data-for="js_error-popup"
                                                 onClick={hidePopup}>Ẩn thông báo
@@ -496,7 +510,7 @@ export const Checkout = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceToken = new APIService(token);
-    const { discount } = useParams();
+    const {discount} = useParams();
     const [discountPercent, setDiscountPercent] = useState(0);
     useEffect(() => {
         const getDiscountCode = async () => {
@@ -509,27 +523,27 @@ export const Checkout = () => {
         };
         getDiscountCode();
     }, []);
-        const fetchCart = async () => {
-            try {
-                if (user) {
-                    const result = await apiServiceToken.fetchData("http://localhost:8080/api/cart/items");
-                    setCart(result);
-                    let totalAmount = 0;
-                    result.forEach(item => {
-                        totalAmount += item.quantity * item.product.currentPrice;
-                    });
-                    if(discountPercent > 0) {
-                        totalAmount -= totalAmount * discountPercent / 100;
-                    }
-                    setSubTotal(totalAmount);
+    const fetchCart = async () => {
+        try {
+            if (user) {
+                const result = await apiServiceToken.fetchData("http://localhost:8080/api/cart/items");
+                setCart(result);
+                let totalAmount = 0;
+                result.forEach(item => {
+                    totalAmount += item.quantity * item.product.currentPrice;
+                });
+                if (discountPercent > 0) {
+                    totalAmount -= totalAmount * discountPercent / 100;
                 }
-            } catch (error) {
-
+                setSubTotal(totalAmount);
             }
+        } catch (error) {
+
         }
-        useEffect(() => {
-            fetchCart();
-        }, [user, cart, discountPercent]);
+    }
+    useEffect(() => {
+        fetchCart();
+    }, [user, cart, discountPercent]);
     return (
         <div>
             <Breadcrumb location={location}/>
