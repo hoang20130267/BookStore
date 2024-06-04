@@ -33,7 +33,7 @@ const Router = () => {
                 <Route path="/product-list/:categoryId?/:mainCategoryId?/:subCategoryId?" element={<ProductList/>}/>
                 <Route path="/product-detail/:id" element={<Detail/>}/>
                 <Route path="/blog-list/:id" element={<BlogList/>}/>
-                <Route path={`/blog-detail/:id`} element={<BlogDetail/>}/>
+                <Route path="/blog-detail/:id" element={<BlogDetail/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
                 <Route path="/checkout/:discount?" element={<Checkout/>}/>
@@ -46,6 +46,7 @@ const Router = () => {
                 <Route path="/user/order" element={<MyOrders/>}/>
                 <Route path="/user/order/:id" element={<OrderDetail/>}/>
                 <Route path="/user/wishlist" element={<Wishlist/>}/>
+                <Route path="*" element={<NotFound/>}/>
             </Routes>
             <Footer/>
         </div>

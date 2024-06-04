@@ -94,7 +94,7 @@ export const OrderDetail = () => {
                                     </span></div>
                                     <input value="" id="provisional" style={{display: "none"}}/>
                                     <div>Phương thức thanh toán: <span
-                                        style={{float: "right"}}>{order.paymentMethod}</span></div>
+                                        style={{float: "right"}}>{order.paymentMethod?.name}</span></div>
                                     <div>Địa chỉ giao hàng: <span
                                         style={{float: "right"}}>{order.shippingAddress?.wardCommune}, {order.shippingAddress?.countyDistrict}
                                         , {order.shippingAddress?.provinceCity}                                        </span>

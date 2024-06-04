@@ -31,6 +31,10 @@ export const TopSeller = () => {
                 const result = await apiService.fetchData(`http://localhost:8080/api/products/all`);
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
             } catch (error) {
                 console.error('Error fetching products', error);
             }

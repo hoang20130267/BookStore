@@ -193,7 +193,9 @@ export const InputInfor = ({cartItems, subTotal}) => {
             const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
             setPopupInfo({ message: successMessage, type: 'success', visible: true });
         } catch (error) {
-            console.error("Error creating order");
+            if (error.response && error.response.status === 400) {
+                alert(error.response.data);
+            }
         }
     }
     useEffect(() => {

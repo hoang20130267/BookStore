@@ -3,7 +3,6 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
-import AddressItem from "../user-address/sub-components/AddressItem";
 
 export const MyOrders = () => {
     const location = useLocation();
