@@ -36,7 +36,7 @@ const Router = () => {
                 <Route path="/blog-detail/:id" element={<BlogDetail/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
-                <Route path="/checkout" element={<Checkout/>}/>
+                <Route path="/checkout/:discount?" element={<Checkout/>}/>
                 <Route path="/not-found" element={<NotFound/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/user/account" element={<MyAccount/>}/>
