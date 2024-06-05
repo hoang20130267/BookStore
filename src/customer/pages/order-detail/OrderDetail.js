@@ -24,7 +24,7 @@ export const OrderDetail = () => {
                     setOrderDetails(result.orderDetails);
                     let subTotal = 0;
                     result.orderDetails.forEach(item => {
-                        subTotal += item.quantity * item.totalMoney;
+                        subTotal += item.totalMoney;
                         setTempTotal(subTotal);
                     })
                 }

@@ -4,6 +4,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
 import {isEmpty} from "react-admin";
+import axios from "axios";
 
 const UpdateAddress = () => {
     const location = useLocation();
@@ -55,11 +56,15 @@ const UpdateAddress = () => {
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
-                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province`);
-                console.log(response.results)
-                setProvinces(response.results)
-                const provinceToSelect = provinces.find(province => province.province_name === provinceCity);
-                const provinceValue = provinceToSelect ? provinceToSelect.province_id : '';
+                const response = await axios.get(`${process.env.REACT_APP_GHN_ADDRESS}/province`, {
+                    headers: {
+                        token: `${process.env.REACT_APP_GHN_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                setProvinces(response.data.data);
+                const provinceToSelect = provinces.find(province => province.ProvinceName === provinceCity);
+                const provinceValue = provinceToSelect ? provinceToSelect.ProvinceID : '';
                 setSelectedProvince(provinceValue);
             } catch (error) {
                 console.error('Error fetching province', error);
@@ -71,10 +76,15 @@ const UpdateAddress = () => {
     const fetchDistrict = async (selectedProvince) => {
         if (selectedProvince) {
             try {
-                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province/district/${selectedProvince}`);
-                setDistricts(response.results)
-                const districtToSelect = districts.find(district => district.district_name === countyDistrict);
-                const districtValue = districtToSelect ? districtToSelect.district_id : '';
+                const response = await axios.get(`${process.env.REACT_APP_GHN_ADDRESS}/district?province_id=${selectedProvince}`, {
+                    headers: {
+                        token: `${process.env.REACT_APP_GHN_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+                setDistricts(response.data.data)
+                const districtToSelect = districts.find(district => district.DistrictName === countyDistrict);
+                const districtValue = districtToSelect ? districtToSelect.DistrictID : '';
                 setSelectedDistrict(districtValue);
             } catch (error) {
                 console.error('Error fetching province', error);
@@ -88,10 +98,15 @@ const UpdateAddress = () => {
     const fetchWard = async (selectedDistrict) => {
         if (selectedDistrict) {
             try {
-                const response = await apiService.fetchData(`https://vapi.vnappmob.com/api/province/ward/${selectedDistrict}`);
-                setWards(response.results)
-                const wardToSelect = wards.find(ward => ward.ward_name === wardCommune);
-                const wardValue = wardToSelect ? wardToSelect.ward_id : '';
+                const response = await axios.get(`${process.env.REACT_APP_GHN_ADDRESS}/ward?district_id=${selectedDistrict}`, {
+                    headers: {
+                        token: `${process.env.REACT_APP_GHN_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+                setWards(response.data.data)
+                const wardToSelect = wards.find(ward => ward.WardName === wardCommune);
+                const wardValue = wardToSelect ? wardToSelect.WardCode : '';
                 setSelectedWard(wardValue);
             } catch (error) {
                 console.error('Error fetching province', error);
@@ -103,15 +118,15 @@ const UpdateAddress = () => {
     }, [selectedDistrict, wards.length > 0])
 
     const handleProvinceChange = async (e) => {
-        const selectedValue = e.target.value;
+        const selectedValue = parseInt(e.target.value);
         if (selectedValue !== '') {
             await fetchDistrict(selectedValue);
-            const selectedProvince = provinces.find(province => province.province_id === selectedValue);
+            const selectedProvince = provinces.find(province => province.ProvinceID === selectedValue);
 
             if (selectedProvince) {
                 setSelectedDistrict('');
                 setSelectedWard('');
-                setProvinceCity(selectedProvince.province_name);
+                setProvinceCity(selectedProvince.ProvinceName);
             } else {
                 setProvinceCity('');
             }
@@ -119,14 +134,14 @@ const UpdateAddress = () => {
     }
 
     const handleDistrictChange = async (e) => {
-        const selectedValue = e.target.value;
+        const selectedValue = parseInt(e.target.value);
         if (selectedValue !== '') {
             await fetchWard(selectedValue);
-            const selectedDistrict = districts.find(district => district.district_id === selectedValue);
+            const selectedDistrict = districts.find(district => district.DistrictID === selectedValue);
 
             if (selectedDistrict) {
                 setSelectedWard('');
-                setCountyDistrict(selectedDistrict.district_name);
+                setCountyDistrict(selectedDistrict.DistrictName);
             } else {
                 setCountyDistrict('');
             }
@@ -136,10 +151,10 @@ const UpdateAddress = () => {
     const handleWardChange = (e) => {
         const selectedValue = e.target.value;
         if (selectedValue !== '') {
-            const selectedWard = wards.find(ward => ward.ward_id === selectedValue);
+            const selectedWard = wards.find(ward => ward.WardCode === selectedValue);
 
             if (selectedWard) {
-                setWardCommune(selectedWard.ward_name);
+                setWardCommune(selectedWard.WardCode);
             } else {
                 setWardCommune('');
             }
@@ -222,10 +237,10 @@ const UpdateAddress = () => {
                                                 onChange={handleProvinceChange}>
                                             <option value="">Tỉnh/Thành phố</option>
                                             {provinces.map(province => (
-                                                <option key={province.province_id}
-                                                        value={province.province_id}
-                                                        selected={selectedProvince === province.province_id}>
-                                                    {province.province_name}
+                                                <option key={province.ProvinceID}
+                                                        value={province.ProvinceID}
+                                                        selected={selectedProvince === province.ProvinceID}>
+                                                    {province.ProvinceName}
                                                 </option>
                                             ))}
                                         </select>
@@ -234,9 +249,9 @@ const UpdateAddress = () => {
                                         <select id="district" className="pdw" onChange={handleDistrictChange}>
                                             <option value="">Quận/Huyện</option>
                                             {districts.map(district => (
-                                                <option key={district.district_id} value={district.district_id}
-                                                        selected={selectedDistrict === district.district_id}>
-                                                    {district.district_name}
+                                                <option key={district.DistrictID} value={district.DistrictID}
+                                                        selected={selectedDistrict === district.DistrictID}>
+                                                    {district.DistrictName}
                                                 </option>))}
                                         </select>
                                         <br/>
@@ -244,9 +259,9 @@ const UpdateAddress = () => {
                                         <select id="ward" className="pdw" onChange={handleWardChange}>
                                             <option value="">Phường/Xã</option>
                                             {wards.map(ward => (
-                                                <option key={ward.ward_id} value={ward.ward_id}
-                                                        selected={selectedWard === ward.ward_id}>
-                                                    {ward.ward_name}
+                                                <option key={ward.WardCode} value={ward.WardCode}
+                                                        selected={selectedWard === ward.WardCode}>
+                                                    {ward.WardName}
                                                 </option>))}
                                         </select>
                                         <br/>
