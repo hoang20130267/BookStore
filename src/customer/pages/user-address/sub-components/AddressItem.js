@@ -77,8 +77,7 @@ const AddressItem = ({address, updateAddresses}) => {
                             <div role="row" className="d-flex align-items-center">{address.hnumSname}
                             </div>
                             <div role="row"
-                                 className="d-flex align-items-center">{address.wardCommune}, {address.countyDistrict},
-                                {address.provinceCity}
+                                 className="d-flex align-items-center">{address.wardCommune}, {address.countyDistrict}, {address.provinceCity}
                             </div>
                         </div>
                     </div>

@@ -29,7 +29,7 @@ const ProductList = () => {
     const apiService = new APIService();
 
     const [promotion, setPromotion] = useState([]);
-    // console.log(process.env.REACT_APP_ENDPOINT_API)
+    console.log(process.env.REACT_APP_ENDPOINT_API);
 
     const handleSortChange = (e) => {
         const newSort = e.target.value;
