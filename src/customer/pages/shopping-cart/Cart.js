@@ -117,6 +117,8 @@ export const ProductsInCart = () => {
         if (discount > 0) {
             const finalTotal = subtotalAmount - (subtotalAmount * discount / 100);
             setTotal(finalTotal);
+        } else {
+            setTotal(subtotalAmount);
         }
         setSubTotal(subtotalAmount);
     };
