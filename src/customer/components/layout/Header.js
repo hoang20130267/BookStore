@@ -1,11 +1,12 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import {FaSearch} from "react-icons/fa";
 import "../../assets/css/searchbar.css";
 import formatCurrency from "../../../utils/formatCurrency";
+import axios from "axios";
 
 const apiService = new APIService();
 
@@ -71,6 +72,32 @@ export const Header = () => {
     const [results, setResults] = useState([]);
     const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
+    const navigate = useNavigate();
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
+
+    function checkFunction() {
+        const checkToken = async () => {
+            if (user) {
+                try {
+                    await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
+                    console.log("Token is valid");
+                } catch (error) {
+                    if (error.response.status === 400) {
+                        localStorage.removeItem('currentUser');
+                        const errorMessage = 'Hết phiên đăng nhập!';
+                        setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                        navigate("/sign-in");
+                    }
+                }
+            }
+        }
+        checkToken();
+    }
+
+    setInterval(checkFunction, 60000);
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
+    };
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -115,6 +142,21 @@ export const Header = () => {
     };
     return (
         <header id="site-header" className="site-header site-header__v12 pb-1">
+            <div
+                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Lỗi
+                    </h3>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
             <div className="masthead">
                 <div className="bg-punch-light">
                     <div className="container">
@@ -180,7 +222,8 @@ export const Header = () => {
                                         <span className="text-secondary-gray-1090 font-size-1">
                                             Giỏ hàng </span>
                                         <div><span className="cart-contents-total">
-                                                <span className="woocommerce-Price-amount amount">{formatCurrency(total)}</span>
+                                                <span
+                                                    className="woocommerce-Price-amount amount">{formatCurrency(total)}</span>
                                             </span>
                                         </div>
                                     </div>

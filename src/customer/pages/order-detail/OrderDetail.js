@@ -3,7 +3,6 @@ import {useLocation, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
-import axios from "axios";
 
 export const OrderDetail = () => {
     const location = useLocation();
@@ -48,6 +47,7 @@ export const OrderDetail = () => {
             return textContent.substring(0, maxLength) + '...';
         }
     };
+
     return (
         <div>
             <Breadcrumb location={location}/>
@@ -119,13 +119,20 @@ export const OrderDetail = () => {
                                         id="tongtien"></span>
                                         {formatCurrency(order.orderTotal)}
                                     </div>
-                                    <div class="site-btn" style={{
+                                    {order.status?.name === "Đã hủy" ? <div className="site-btn" style={{
+                                        backgroundColor: "red",
+                                        borderRadius: "5px",
+                                        float: "right"
+                                    }}>
+                                        {order.status?.name}
+                                    </div>: <div class="site-btn" style={{
                                         backgroundColor: "yellowgreen",
                                         borderRadius: "5px",
                                         float: "right"
                                     }}>
                                         {order.status?.name}
-                                    </div>
+                                    </div>}
+
                                 </div>
                             </div>
 
