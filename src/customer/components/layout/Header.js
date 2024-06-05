@@ -64,7 +64,7 @@ export const SearchResults = ({results}) => {
 
 export const Header = () => {
     const user = useSelector(state => state.auth.login.currentUser);
-    const token = user ? user.token : null;
+    const [token, setToken] = useState(null);
     const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
@@ -78,6 +78,7 @@ export const Header = () => {
     function checkFunction() {
         const checkToken = async () => {
             if (user) {
+                setToken(user.token)
                 try {
                     await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
                     console.log("Token is valid");
@@ -85,6 +86,7 @@ export const Header = () => {
                     if (error.response.status === 400) {
                         localStorage.removeItem('currentUser');
                         const errorMessage = 'Hết phiên đăng nhập!';
+                        setToken(null);
                         setPopupInfo({message: errorMessage, type: 'error', visible: true});
                         navigate("/sign-in");
                     }
