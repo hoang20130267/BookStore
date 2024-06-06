@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
@@ -7,6 +7,7 @@ import {FaSearch} from "react-icons/fa";
 import "../../assets/css/searchbar.css";
 import formatCurrency from "../../../utils/formatCurrency";
 import axios from "axios";
+import {logOut} from "../../../store/apiRequest";
 
 const apiService = new APIService();
 
@@ -63,7 +64,7 @@ export const SearchResults = ({results}) => {
 }
 
 export const Header = () => {
-    const user = useSelector(state => state.auth.login.currentUser);
+    const user = JSON.parse(localStorage.getItem('currentUser'));
     const [token, setToken] = useState(null);
     const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -73,6 +74,7 @@ export const Header = () => {
     const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
 
     function checkFunction() {
@@ -84,6 +86,7 @@ export const Header = () => {
                     console.log("Token is valid");
                 } catch (error) {
                     if (error.response.status === 400) {
+                        logOut(dispatch, user.id, navigate, token);
                         localStorage.removeItem('currentUser');
                         const errorMessage = 'Hết phiên đăng nhập!';
                         setToken(null);
@@ -96,7 +99,7 @@ export const Header = () => {
         checkToken();
     }
 
-    setInterval(checkFunction, 60000);
+    setInterval(checkFunction, 300000);
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
@@ -105,10 +108,15 @@ export const Header = () => {
         const fetchCart = async () => {
             try {
                 if (user) {
-                    const result = await apiServiceToken.fetchData("http://localhost:8080/api/cart/items");
-                    setCart(result);
+                    setToken(user.token);
+                    const result = await axios.get("http://localhost:8080/api/cart/items", {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    setCart(result.data);
                     let totalAmount = 0;
-                    result.forEach(item => {
+                    result.data.forEach(item => {
                         totalAmount += item.quantity * item.product.currentPrice;
                     });
                     setTotal(totalAmount);

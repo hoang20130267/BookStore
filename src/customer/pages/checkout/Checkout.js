@@ -24,7 +24,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const [ticked, setTicked] = useState(false);
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
-    const [shippingCost, setShippingCost] = useState(32000);
+    const [shippingCost, setShippingCost] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('cashondelivery');
     const [note, setNote] = useState('');
     const [confirm, setConfirm] = useState(false);
@@ -46,7 +46,6 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
-    const apiService = new ApiService();
     const {discount} = useParams();
     const [discountPercent, setDiscountPercent] = useState(0);
     const [discountId, setDiscountId] = useState(0);
@@ -169,6 +168,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
             if (selectedWard) {
                 setSelectedWard(selectedWard.WardCode);
                 setWardCommune(selectedWard.WardName);
+                CalculateFee(selectedWard.DistrictID, selectedWard.WardCode)
             } else {
                 setWardCommune('');
             }
@@ -182,6 +182,8 @@ export const InputInfor = ({cartItems, subTotal}) => {
             countyDistrict: countyDistrict,
             wardCommune: wardCommune,
             hnumSname: hnumSname,
+            districtId: selectedDistrict,
+            wardCode: selectedWard
         }
         try {
             const response = await apiServiceWithToken.sendData("http://localhost:8080/api/user/addresses", request)
@@ -196,7 +198,6 @@ export const InputInfor = ({cartItems, subTotal}) => {
         await addAddress();
         await fetchAddresses();
     }
-
     const createOrder = async () => {
         const request = {
             shippingAddress: {id: selectedAddress},
@@ -264,6 +265,46 @@ export const InputInfor = ({cartItems, subTotal}) => {
             return textContent.substring(0, maxLength) + '...';
         }
     };
+    const CalculateFee = async (to_district_id, to_ward_code) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_GHN_SHIP}`, {
+                service_type_id: 2,
+                from_district_id: 1542,
+                to_district_id: parseInt(to_district_id),
+                to_ward_code: to_ward_code,
+                weight: 200,
+                length: 1,
+                width: 19,
+                height: 10,
+                service_id: null,
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    token: process.env.REACT_APP_GHN_TOKEN
+                }
+            });
+            setShippingCost(response.data.data.total);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const handleAddressChange = async (e) => {
+        const selectedId = e.target.value;
+        try {
+            const response = await axios.get(`http://localhost:8080/api/user/addresses/${selectedId}`);
+            const address = response.data;
+            setSelectedAddress(address.id);
+            setSelectedDistrict(address.districtId);
+            setSelectedWard(address.wardCode);
+        } catch (error) {
+            console.error("Error fetching code:", error);
+        }
+    }
+    useEffect(() => {
+        if (selectedDistrict && selectedWard) {
+            CalculateFee(selectedDistrict, selectedWard);
+        }
+    }, [selectedDistrict, selectedWard]);
     return (
         <>
             <form method="post">
@@ -281,7 +322,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                                         type="radio"
                                                         name="address"
                                                         value={address.id}
-                                                        onChange={(e) => setSelectedAddress(e.target.value)}
+                                                        onChange={handleAddressChange}
                                                         defaultChecked={selectedAddress === address.id}
                                                     />
                                                     <span className="radio-fake"></span><span
@@ -405,9 +446,9 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                                 <input
                                                     type="radio"
                                                     name="shipping_cost_normal"
-                                                    value="32000"
-                                                    onChange={(e) => setShippingCost(e.target.value)}
-                                                    defaultChecked={shippingCost === 32000}
+                                                    value={shippingCost}
+                                                    // onChange={(e) => setShippingCost(e.target.value)}
+                                                    defaultChecked={true}
                                                 />
                                                 <span className="radio-fake"></span><strong className="label">Giao hàng
                                                 tiêu
@@ -534,6 +575,7 @@ export const Checkout = () => {
     const apiServiceToken = new APIService(token);
     const {discount} = useParams();
     const [discountPercent, setDiscountPercent] = useState(0);
+
     useEffect(() => {
         const getDiscountCode = async () => {
             try {
@@ -566,6 +608,7 @@ export const Checkout = () => {
     useEffect(() => {
         fetchCart();
     }, [user, cart, discountPercent]);
+
     return (
         <div>
             <Breadcrumb location={location}/>

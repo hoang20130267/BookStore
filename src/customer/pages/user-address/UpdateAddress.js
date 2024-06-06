@@ -168,6 +168,8 @@ const UpdateAddress = () => {
             countyDistrict: countyDistrict,
             wardCommune: wardCommune,
             hnumSname: hnumSname,
+            districtId: selectedDistrict,
+            wardCode: selectedWard
         }
         try {
             const response = apiServiceWithToken.updateData(`http://localhost:8080/api/user/addresses/${id}`, request)
