@@ -7822,7 +7822,6 @@ a.badge-red-1:focus, a.badge-red-1.focus {
 .progress {
     display: flex;
     height: 1rem;
-    overflow: hidden;
     font-size: .75rem;
     background-color: #fce5e5;
     border-radius: 8px

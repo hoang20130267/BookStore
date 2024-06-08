@@ -1,8 +1,10 @@
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {useLocation, useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {Link, useLocation, useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
+import axios from "axios";
+import Product from "../shop-product/sub-components/Product";
 
 export const OrderDetail = () => {
     const location = useLocation();
@@ -14,6 +16,12 @@ export const OrderDetail = () => {
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const [promotion, setPromotion] = useState(0);
+    const [progress, setProgress] = useState(1);
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
+
+    const updateProgress = (value) => {
+        setProgress(value);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,10 +55,74 @@ export const OrderDetail = () => {
             return textContent.substring(0, maxLength) + '...';
         }
     };
+    useEffect(() => {
+        if (order.status?.id === 1) {
+            updateProgress(1);
+        } else if (order.status?.id === 2) {
+            updateProgress(2);
+        } else if (order.status?.id === 3) {
+            updateProgress(3);
+        } else if (order.status?.id === 4) {
+            updateProgress(4);
+        } else if (order.status?.id === 5) {
+            updateProgress(5);
+        } else if (order.status?.id === 6) {
+            updateProgress(0);
+        }
+    }, [order]);
+
+    const handleOpenAskingPopup = (e) => {
+        e.preventDefault();
+        setPopupInfo({message: 'Bạn có chắc chắn muốn hủy đơn hàng này không?', type: 'question', visible: true});
+    }
+    const showPopupReview = (e) => {
+        e.preventDefault();
+        setPopupInfo({message: 'Hãy để lại đánh giá cho sản phẩm bạn đã mua', type: 'review', visible: true});
+    }
+
+    const handleCancelOrder = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.put(`http://localhost:8080/api/orders/cancel/${order.id}`);
+            const successMessage = 'Hủy đơn hàng thành công!';
+            setPopupInfo({message: successMessage, type: 'success', visible: true});
+        } catch (error) {
+            if(error.response.status === 400) {
+                setPopupInfo({message: error.response.data, type: 'error', visible: true});
+            } else {
+                setPopupInfo({message: 'Hủy đơn hàng thất bại!', type: 'error', visible: true});
+            }
+        }
+    }
+    const hidePopup = (e) => {
+        e.preventDefault();
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
+    };
+
+    useEffect(() => {
+        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
+        buttons.forEach(button => button.addEventListener('click', handleOpenAskingPopup));
+        return () => {
+            buttons.forEach(button => button.removeEventListener('click', handleOpenAskingPopup));
+        };
+    }, []);
 
     return (
         <div>
             <Breadcrumb location={location}/>
+            {progress === 0 ? <></> :
+                <div id="progress-ship" style={{margin: "50px 150px 100px 150px"}}>
+                    <div id="progress-bar" style={{width: `${(progress - 1) * 25}%`}}></div>
+                    <ul id="progress-text">
+                        {['Đang chờ xử lý', 'Đã xác nhận', 'Đang chuẩn bị hàng', 'Đang vận chuyển', 'Đã giao hàng'].map((step, index) => (
+                            <li key={index}
+                                className={`step ${index < progress - 1 ? 'active' : index === progress - 1 ? 'progress-step' : ''}`}>
+                                <p className="ship-text">{step}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            }
             <div className="container rounded bg-white mt-5 mb-5">
                 <form method="post" encType="multipart/form-data" className="infor_user">
                     <div className="row">
@@ -71,7 +143,8 @@ export const OrderDetail = () => {
                                             <th className="sort align-middle pe-5" scope="col" data-sort="email">
                                                 Số Lượng
                                             </th>
-                                            <th className="sort align-middle text-center" scope="col" data-sort="total-orders">
+                                            <th className="sort align-middle text-center" scope="col"
+                                                data-sort="total-orders">
                                                 Giá
                                             </th>
                                         </tr>
@@ -119,19 +192,140 @@ export const OrderDetail = () => {
                                         id="tongtien"></span>
                                         {formatCurrency(order.orderTotal)}
                                     </div>
-                                    {order.status?.name === "Đã hủy" ? <div className="site-btn" style={{
+                                    {order.status?.id === 6 ? <div className="site-btn" style={{
                                         backgroundColor: "red",
                                         borderRadius: "5px",
                                         float: "right"
                                     }}>
                                         {order.status?.name}
-                                    </div>: <div class="site-btn" style={{
+                                    </div> : order.status?.id === 5 ?
+                                        <>
+                                        <button className="site-btn" style={{
+                                            backgroundColor: "green",
+                                            borderRadius: "5px",
+                                            float: "right"
+                                        }} disabled={true}>
+                                            Đã giao hàng
+                                        </button>
+                                        <button className="site-btn" style={{
+                                            backgroundColor: "orange",
+                                            borderRadius: "5px",
+                                            float: "right"
+                                        }} onClick={showPopupReview}>
+                                            Đánh giá sản phẩm
+                                        </button>
+                                        </>
+                                        :
+                                        <button class="site-btn" style={{
                                         backgroundColor: "yellowgreen",
                                         borderRadius: "5px",
                                         float: "right"
-                                    }}>
-                                        {order.status?.name}
-                                    </div>}
+                                    }} onClick={handleOpenAskingPopup}>
+                                        Hủy đơn hàng
+                                    </button>}
+
+                                    <div
+                                        className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                                        <div className="popup__background"></div>
+                                        <div className="popup__content">
+                                            <h3 className="popup__content__title">
+                                                Thành công
+                                            </h3>
+                                            <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                                            <p>
+                                                <button className="button-popup button--success"
+                                                        data-for="js_success-popup"
+                                                        onClick={hidePopup}>Ẩn thông báo
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className={`popup popup--icon -question js_question-popup ${popupInfo.visible && popupInfo.type === 'question' ? 'popup--visible' : ''}`}>
+                                        <div className="popup__background"></div>
+                                        <div className="popup__content">
+                                            <h3 className="popup__content__title">
+                                                Xác nhận
+                                            </h3>
+                                            <p>{popupInfo.message}</p>
+                                            <p>
+                                                <div style={{display:"flex", marginTop: "10px"}}>
+                                                <button className="button-popup button--error"
+                                                        data-for="js_success-popup" style={{marginRight: "20px"}}
+                                                        onClick={hidePopup}>Hủy
+                                                </button>
+                                                <button className="button-popup button--warning"
+                                                        data-for="js_success-popup"
+                                                        onClick={handleCancelOrder}>Xác nhận
+                                                </button>
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                                        <div className="popup__background"></div>
+                                        <div className="popup__content">
+                                            <h3 className="popup__content__title">
+                                                Thất bại
+                                            </h3>
+                                            <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                                            <p>
+                                                <button className="button-popup button--error" data-for="js_error-popup"
+                                                        onClick={hidePopup}>Ẩn thông báo
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className={`popup ${popupInfo.visible && popupInfo.type === 'review' ? 'popup--visible' : ''}`}>
+                                        <div className="popup__background"></div>
+                                        <div className="popup__content">
+                                            <h3 className="popup__content__title">
+                                                <strong>Đánh giá sản phẩm</strong>
+                                            </h3>
+                                            <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                                            <p>
+                                                <table className="order-table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Mã SP
+                                                        </th>
+                                                        <th>
+                                                            Tên Sản Phẩm
+                                                        </th>
+                                                        <th>
+                                                            Giá
+                                                        </th>
+                                                        <th>
+                                                            Đánh giá
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {orderDetails.map(orderDetail => (<tr key={orderDetail.id}>
+                                                        <td style={{paddingTop:"18px"}}>{orderDetail.product?.detail?.productSku}</td>
+                                                        <td style={{paddingTop:"18px"}}>
+                                                            {shortenContent(orderDetail.product?.title, 30)}
+                                                        </td>
+                                                        <td style={{paddingTop:"18px"}}>
+                                                            {formatCurrency(orderDetail.product?.currentPrice)}
+                                                        </td>
+                                                        <td>
+                                                            <Link to={`/product-detail/${orderDetail.product?.detail.id}`}>
+                                                                <button className="button-product button-link" style={{textAlign:"center"}}><strong>Đánh giá</strong></button>
+                                                            </Link>
+                                                        </td>
+                                                    </tr>))}
+                                                    </tbody>
+                                                </table>
+                                                <button className="button-popup button--error" data-for="js_error-popup"
+                                                        onClick={hidePopup}>Ẩn thông báo
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
