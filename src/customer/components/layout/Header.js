@@ -77,29 +77,29 @@ export const Header = () => {
     const dispatch = useDispatch();
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
 
-    function checkFunction() {
-        const checkToken = async () => {
-            if (user) {
-                setToken(user.token)
-                try {
-                    await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
-                    console.log("Token is valid");
-                } catch (error) {
-                    if (error.response.status === 400) {
-                        logOut(dispatch, user.id, navigate, token);
-                        localStorage.removeItem('currentUser');
-                        const errorMessage = 'Hết phiên đăng nhập!';
-                        setToken(null);
-                        setPopupInfo({message: errorMessage, type: 'error', visible: true});
-                        navigate("/sign-in");
-                    }
-                }
-            }
-        }
-        checkToken();
-    }
-
-    setInterval(checkFunction, 300000);
+    // function checkFunction() {
+    //     const checkToken = async () => {
+    //         if (user) {
+    //             setToken(user.token)
+    //             try {
+    //                 await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
+    //                 console.log("Token is valid");
+    //             } catch (error) {
+    //                 if (error.status === 400) {
+    //                     logOut(dispatch, user.id, navigate, token);
+    //                     localStorage.removeItem('currentUser');
+    //                     const errorMessage = 'Hết phiên đăng nhập!';
+    //                     setToken(null);
+    //                     setPopupInfo({message: errorMessage, type: 'error', visible: true});
+    //                     navigate("/sign-in");
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     checkToken();
+    // }
+    //
+    // setInterval(checkFunction, 60000);
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
