@@ -14,7 +14,7 @@ export const MyOrders = () => {
 
     const fetchData = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/orders`);
+            const result = await apiService.fetchData(`http://localhost:8080/api/orders/user`);
             setOrders(result);
         } catch (error) {
             console.error('Error fetching data:', error)
@@ -63,8 +63,7 @@ export const MyOrders = () => {
                                         </td>
                                         <td className="email align-middle white-space-nowrap pe-5">{order.orderDate}</td>
                                         <td className="email align-middle white-space-nowrap pe-5">
-                                            <p style={{color: "#cccccc"}}>{order.status?.name}</p>
-
+                                            <p className="mb-0" style={{color: "#cccccc"}}>{order.status?.name}</p>
                                         </td>
                                         <td className="email align-middle white-space-nowrap pe-5">
                                             <Link className="fw-semi-bold text-1100"

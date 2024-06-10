@@ -46,10 +46,12 @@ const Product = (props) => {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
-                setPopupInfo({message: successMessage, type: 'success', visible: true});
+                console.log(responseData)
+                setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
-                console.error('Error adding product to cart:', error);
+                if (error.response) {
+                    setPopupInfo({message: error.response.data, type: 'error', visible: true});
+                }
             }
         }
     };
@@ -95,19 +97,6 @@ const Product = (props) => {
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
-
-    const handleAddToCartClick = async () => {
-        await addToCart();
-        await addFavoriteProduct();
-    };
-
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', handleAddToCartClick));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', handleAddToCartClick));
-        };
-    }, []);
 
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">

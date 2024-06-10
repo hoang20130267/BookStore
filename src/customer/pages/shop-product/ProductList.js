@@ -171,7 +171,7 @@ const ProductList = () => {
                                             Tất cả sản phẩm
                                         </div>
                                         <div className="shop-control-bar__right d-md-flex align-items-center">
-                                            <p className="woocommerce-result-count mr-3">
+                                            <p className="woocommerce-result-count mr-3 mb-0">
                                                 Sắp xếp theo: </p>
                                             <form className="woocommerce-ordering mb-4 m-md-0" method="get">
                                                 <select name="orderby"
