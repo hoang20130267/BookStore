@@ -15,7 +15,18 @@ const Product = (props) => {
     const [commentQuantity, setCommentQuantity] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [remainingQuantity, setRemainingQuantity] = useState(null);
+    const [isFavorite, setIsFavortie] = useState(false);
 
+    const fetchFavorite = async () => {
+        try {
+            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
+            const isFavoriteProduct = favoriteProduct ? true : false;
+            setIsFavortie(isFavoriteProduct)
+        } catch (error) {
+            console.error("Error fetching favorite products")
+        }
+    }
     useEffect(() => {
         if (productInfo) {
             const comments = productInfo?.comments;
@@ -33,6 +44,7 @@ const Product = (props) => {
                     setDiscount(promotion.discount)
                 });
             }
+            fetchFavorite();
             setPrice();
             checkRemainingQuantity();
         }
@@ -165,11 +177,17 @@ const Product = (props) => {
                                 </div>
                                 <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                     <div className="yith-wcwl-add-button">
-                                        <Link to="" onClick={addFavoriteProduct}
-                                              className="add_to_wishlist single_add_to_wishlist"
-                                              title="Thêm vào yêu thích">
-                                            <i className="fa-regular fa-heart"></i>
-                                        </Link>
+                                        {!isFavorite ? (<Link to="" onClick={addFavoriteProduct}
+                                                              className="add_to_wishlist single_add_to_wishlist"
+                                                              title="Thêm vào yêu thích">
+                                                <i className="fa-regular fa-heart"></i>
+                                            </Link>) :
+                                            (<Link to=""
+                                                   style={{backgroundColor: '#f75454'}}
+                                                   className="add_to_wishlist single_add_to_wishlist"
+                                                   title="Đã thêm vào yêu thích">
+                                                <i className="fa-regular fa-heart" style={{color: 'white'}}></i>
+                                            </Link>)}
                                     </div>
                                 </div>
                             </div>)}

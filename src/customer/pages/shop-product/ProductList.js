@@ -67,9 +67,14 @@ const ProductList = () => {
 
     const handlePriceFilterChange = (priceRange, event) => {
         event.preventDefault();
-        setSelectedPriceRange(priceRange);
-        setLatestFilter({currentPrice: priceRange});
-        const updatedFilter = {currentPrice: priceRange};
+
+        const isSelected = selectedPriceRange === priceRange;
+
+        const newPriceRange = isSelected ? null : priceRange;
+        setSelectedPriceRange(newPriceRange);
+
+        const updatedFilter = isSelected ? {} : {currentPrice: priceRange};
+        setLatestFilter(updatedFilter);
         updateURL({filter: updatedFilter});
     };
 
@@ -153,13 +158,14 @@ const ProductList = () => {
                                 <div className="container p-0">
                                     <div>
                                         <div className="wp-block-bwgb-products-carousel__inner"
-                                             style={{fontSize: "18px", fontWeight: 500, marginBottom:"10px"}}>
+                                             style={{fontSize: "18px", fontWeight: 500, marginBottom: "10px"}}>
                                             Sản phẩm giảm giá tốt
                                         </div>
                                         {promotion.length > 0 ?
                                             (
                                                 <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
-                                                    {promotion.slice(0, 4).map(promotion => (<Product key={promotion.id} info={promotion}/>))}
+                                                    {promotion.slice(0, 4).map(promotion => (
+                                                        <Product key={promotion.id} info={promotion}/>))}
                                                 </ul>)
                                             :
                                             <></>}
@@ -228,4 +234,4 @@ const ProductList = () => {
         </>
     );
 }
-    export default ProductList;
+export default ProductList;

@@ -15,6 +15,10 @@ const MyAccount = () => {
     const [day, setDay] = useState('0');
     const [month, setMonth] = useState('0');
     const [year, setYear] = useState('0');
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+    const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
     const location = useLocation();
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
@@ -25,6 +29,7 @@ const MyAccount = () => {
     const [uploading, setUploading] = useState(false);
     const [updateSideBar, setUpdateSideBar] = useState(false);
     const [isSaveEnabled, setIsSaveEnabled] = useState(false);
+
 
     useEffect(() => {
         let dayCheck;
@@ -41,9 +46,10 @@ const MyAccount = () => {
             yearCheck = fetchedYear;
         }
         const hasChanges = (fullName !== information?.userInfo?.fullName && fullName !== '') || (phoneNumber !== information?.userInfo?.phoneNumber && phoneNumber !== '') || gender !== information?.userInfo?.gender
-            || selectedFile !== null || (day !== dayCheck && day !== '0' && month !== '0' && year !== '0') || (month !== monthCheck && month !== '0' && day !== '0' && year !== '0') || (year !== yearCheck && year !== '0' && day !== '0' && month !== '0');
+            || selectedFile !== null || (day !== dayCheck && day !== '0' && month !== '0' && year !== '0') || (month !== monthCheck && month !== '0' && day !== '0' && year !== '0') || (year !== yearCheck && year !== '0' && day !== '0' && month !== '0') ||
+            (isChecked && (currentPassword !== '' || newPassword !== '' || newPasswordConfirm !== ''));
         setIsSaveEnabled(hasChanges);
-    }, [fullName, phoneNumber, gender, day, month, year, selectedFile]);
+    }, [fullName, phoneNumber, gender, day, month, year, selectedFile, isChecked, currentPassword, newPassword, newPasswordConfirm]);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -97,26 +103,18 @@ const MyAccount = () => {
 
     const updateInformation = async (requestData) => {
         try {
-            const responseData = await apiService.updateData(`http://localhost:8080/api/user/info/${information.userInfo.id}`, requestData)
-            alert('Thông tin người dùng đã được cập nhật.');
+            const responseData = await apiService.updateData(`http://localhost:8080/api/user/info`, requestData)
+            setIsSaveEnabled(false);
+            setPopupInfo({message: responseData, type: 'success', visible: true});
             fetchInformation();
             setUpdateSideBar(true);
-            console.log("User information updated successfully:", responseData);
         } catch (error) {
-            console.error("Error updating information:", error);
+            if (error.response) {
+                setPopupInfo({message: error.response.data, type: 'error', visible: true});
+            }
         }
     }
 
-    // const createInformation = async (requestData) => {
-    //     try {
-    //         const responseData = await apiService.sendData("http://localhost:8080/api/user/info", requestData)
-    //         fetchInformation();
-    //         console.log("User information created successfully:", responseData);
-    //     } catch (error) {
-    //         console.error("Error creating information:", error);
-    //     }
-    // }
-    
     const handleSaveAvatar = async () => {
         if (selectedFile) {
             setUploading(true);
@@ -155,17 +153,38 @@ const MyAccount = () => {
         } else {
             formattedDate = '';
         }
+        if (isChecked) {
+            if (!currentPassword || !newPassword || !newPasswordConfirm) {
+                alert('Vui lòng điền tất cả các trường trong đổi mật khẩu');
+                return;
+            }
+            if (newPassword !== newPasswordConfirm) {
+                alert('Mật khẩu không trùng khớp.');
+                return;
+            }
+            // if (currentPassword.length < 8 || newPassword.length < 8) {
+            //     alert('Mật khẩu phải có ít nhất 8 ký tự.');
+            //     return;
+            // }
+        }
         const requestData = {
             fullName: !isEmpty(fullName) ? fullName : null,
             phoneNumber: !isEmpty(phoneNumber) ? phoneNumber : null,
             gender: !isEmpty(gender) ? gender : null,
             dateOfBirth: !isEmpty(formattedDate) ? formattedDate : null,
-            avatar: !isEmpty(uploadedAvatarUrl) ? uploadedAvatarUrl : null,
+            avatar: !isEmpty(uploadedAvatarUrl) ? uploadedAvatarUrl : avatar,
+            ...(isChecked && {
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+                newPasswordConfirm: newPasswordConfirm,
+            }),
         };
         console.log(requestData);
         await updateInformation(requestData);
     }
-
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
+    };
     return (
         <>
             <Breadcrumb location={location}/>
@@ -274,19 +293,28 @@ const MyAccount = () => {
                                             tại</label><input
                                             type="password" id="current-password" className="form-control"
                                             name="current-password"
-                                            placeholder="Nhập mật khẩu hiện tại"/>
+                                            placeholder="Nhập mật khẩu hiện tại"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                        />
                                         </div>
                                         <br/>
                                         <div className="col-md-12"><label className="labels">Mật khẩu mới</label><input
                                             type="password" id="new-password" className="form-control"
                                             name="new-password"
-                                            placeholder="Nhập mật khẩu mới"/>
+                                            placeholder="Nhập mật khẩu mới"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                        />
                                         </div>
                                         <br/>
                                         <div className="col-md-12"><label className="labels">Nhập lại mật khẩu
                                             mới</label><input
                                             type="password" id="new-password-confirm" className="form-control"
-                                            name="new-password-confirm" placeholder="Nhập lại mật khẩu mới"/>
+                                            name="new-password-confirm" placeholder="Nhập lại mật khẩu mới"
+                                            value={newPasswordConfirm}
+                                            onChange={(e) => setNewPasswordConfirm(e.target.value)}
+                                        />
                                         </div>
 
                                         <p style={{
@@ -325,6 +353,37 @@ const MyAccount = () => {
                         </div>
                     </div>
                 </form>
+            </div>
+            <div
+                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div
+                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
             </div>
         </>
     );

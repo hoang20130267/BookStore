@@ -55,10 +55,10 @@ export const InputInfor = ({cartItems, subTotal}) => {
         try {
             const result = await apiServiceWithToken.fetchData(`http://localhost:8080/api/user/addresses`);
             setAddresses(result);
-            const defaultAddress = result.find(address => address.default === true);
-            if (defaultAddress) {
-                setSelectedAddress(defaultAddress.id);
-            }
+            // const defaultAddress = result.find(address => address.default === true);
+            // if (defaultAddress) {
+            //     setSelectedAddress(defaultAddress.id);
+            // }
         } catch (error) {
 
         }
@@ -78,11 +78,11 @@ export const InputInfor = ({cartItems, subTotal}) => {
 
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
-            !isEmpty(countyDistrict) && !isEmpty(wardCommune));
+            !isEmpty(countyDistrict) && !isEmpty(wardCommune) && !isEmpty(hnumSname));
     };
     useEffect(() => {
         checkSaveButton();
-    }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune])
+    }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune, hnumSname])
 
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -323,7 +323,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                                         name="address"
                                                         value={address.id}
                                                         onChange={handleAddressChange}
-                                                        defaultChecked={selectedAddress === address.id}
+                                                        // defaultChecked={selectedAddress === address.id}
                                                     />
                                                     <span className="radio-fake"></span><span
                                                     className="label">{address.fullName}&nbsp;&nbsp;|&nbsp;&nbsp;{address.hnumSname}, {address.wardCommune}, {address.countyDistrict}, {address.provinceCity}&nbsp;&nbsp;|&nbsp;&nbsp;{address.phoneNumber}</span></label>
