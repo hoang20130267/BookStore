@@ -53,7 +53,7 @@ const AddressItem = ({address, updateAddresses}) => {
                                                 </span>
                         <div className="separate"></div>
                         <div role="row"
-                             className="phone-number d-flex align-items-center">(+84) {address.phoneNumber}
+                             className="phone-number d-flex align-items-center">{address.phoneNumber}
                         </div>
                     </div>
                     <div className="d-flex justify-content-end" style={{flexBasis: "40px"}}>

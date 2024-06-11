@@ -65,7 +65,7 @@ export const SearchResults = ({results}) => {
 
 export const Header = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(user?.token);
     const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
@@ -77,23 +77,23 @@ export const Header = () => {
     const dispatch = useDispatch();
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
 
-    const checkToken = async () => {
-        if (user) {
-            setToken(user.token)
-            try {
-                await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
-                console.log("Token is valid");
-            } catch (error) {
-                logOut(dispatch, user.id, navigate, user.token);
-                localStorage.removeItem('currentUser');
-                const errorMessage = 'Hết phiên đăng nhập!';
-                setToken(null);
-                setPopupInfo({message: errorMessage, type: 'error', visible: true});
-                navigate("/sign-in");
-            }
-        }
-    }
-    setInterval(checkToken, 60000)
+    // const checkToken = async () => {
+    //     if (user) {
+    //         setToken(user.token)
+    //         try {
+    //             await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
+    //             console.log("Token is valid");
+    //         } catch (error) {
+    //             logOut(dispatch, user.id, navigate, user.token);
+    //             localStorage.removeItem('currentUser');
+    //             const errorMessage = 'Hết phiên đăng nhập!';
+    //             setToken(null);
+    //             setPopupInfo({message: errorMessage, type: 'error', visible: true});
+    //             navigate("/sign-in");
+    //         }
+    //     }
+    // }
+    // setInterval(checkToken, 60000)
 
 
     const hidePopup = () => {
@@ -104,7 +104,7 @@ export const Header = () => {
         const fetchCart = async () => {
             try {
                 if (user) {
-                    setToken(user.token);
+                    // setToken(user.token);
                     const result = await axios.get("http://localhost:8080/api/cart/items", {
                         headers: {
                             'Authorization': `Bearer ${token}`

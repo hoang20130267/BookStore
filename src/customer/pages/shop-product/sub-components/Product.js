@@ -15,7 +15,18 @@ const Product = (props) => {
     const [commentQuantity, setCommentQuantity] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [remainingQuantity, setRemainingQuantity] = useState(null);
+    const [isFavorite, setIsFavortie] = useState(false);
 
+    const fetchFavorite = async () => {
+        try {
+            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
+            const isFavoriteProduct = favoriteProduct ? true : false;
+            setIsFavortie(isFavoriteProduct)
+        } catch (error) {
+            console.error("Error fetching favorite products")
+        }
+    }
     useEffect(() => {
         if (productInfo) {
             const comments = productInfo?.comments;
@@ -33,6 +44,7 @@ const Product = (props) => {
                     setDiscount(promotion.discount)
                 });
             }
+            fetchFavorite();
             setPrice();
             checkRemainingQuantity();
         }
@@ -46,10 +58,12 @@ const Product = (props) => {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
-                setPopupInfo({message: successMessage, type: 'success', visible: true});
+                console.log(responseData)
+                setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
-                console.error('Error adding product to cart:', error);
+                if (error.response) {
+                    setPopupInfo({message: error.response.data, type: 'error', visible: true});
+                }
             }
         }
     };
@@ -95,19 +109,6 @@ const Product = (props) => {
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
-
-    const handleAddToCartClick = async () => {
-        await addToCart();
-        await addFavoriteProduct();
-    };
-
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', handleAddToCartClick));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', handleAddToCartClick));
-        };
-    }, []);
 
     return (
         <li className="add-to-wishlist-after_add_to_cart product type-product post-108 status-publish first instock product_cat-cookbooks product_cat-cooking-education-reference product_cat-c has-post-thumbnail taxable shipping-taxable purchasable product-type-simple col">
@@ -176,11 +177,17 @@ const Product = (props) => {
                                 </div>
                                 <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                     <div className="yith-wcwl-add-button">
-                                        <Link to="" onClick={addFavoriteProduct}
-                                              className="add_to_wishlist single_add_to_wishlist"
-                                              title="Thêm vào yêu thích">
-                                            <i className="fa-regular fa-heart"></i>
-                                        </Link>
+                                        {!isFavorite ? (<Link to="" onClick={addFavoriteProduct}
+                                                              className="add_to_wishlist single_add_to_wishlist"
+                                                              title="Thêm vào yêu thích">
+                                                <i className="fa-regular fa-heart"></i>
+                                            </Link>) :
+                                            (<Link to=""
+                                                   style={{backgroundColor: '#f75454'}}
+                                                   className="add_to_wishlist single_add_to_wishlist"
+                                                   title="Đã thêm vào yêu thích">
+                                                <i className="fa-regular fa-heart" style={{color: 'white'}}></i>
+                                            </Link>)}
                                     </div>
                                 </div>
                             </div>)}

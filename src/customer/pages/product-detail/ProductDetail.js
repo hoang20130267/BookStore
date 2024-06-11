@@ -18,6 +18,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 
 export const SingleProduct = (props) => {
     const product = props?.product;
+    console.log(product.id);
     const comments = props.comments;
     const [quantity, setQuantity] = useState(1);
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
@@ -37,9 +38,10 @@ export const SingleProduct = (props) => {
             setRating(rating);
             setCommentQuantity(comments.length);
         }
-        checkRemainingQuantity();
+        if (product.id) {
+            checkRemainingQuantity();
+        }
     }, [product])
-    // console.log(props?.product)
 
     const handlePlus = () => {
         if (remainingQuantity > 0) {
@@ -98,10 +100,11 @@ export const SingleProduct = (props) => {
             const requestData = {product: {id: product.id}, quantity: quantity};
             try {
                 const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                const successMessage = responseData.message || 'Sản phẩm đã được thêm vào giỏ hàng!';
-                setPopupInfo({message: successMessage, type: 'success', visible: true});
+                setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
-                console.error('Error adding product to cart:', error);
+                if (error.response) {
+                    setPopupInfo({message: error.response.data, type: 'error', visible: true});
+                }
             }
         }
     };
@@ -153,23 +156,10 @@ export const SingleProduct = (props) => {
             fetchProducts();
         }
     }, [product.id, isFavorite])
+
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
-
-    const handleAddToCartClick = async () => {
-        await addToCart();
-        await addFavoriteProduct();
-        await deleteFavoriteProduct();
-    };
-
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', handleAddToCartClick));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', handleAddToCartClick));
-        };
-    }, []);
 
     return (
         <>
@@ -219,7 +209,7 @@ export const SingleProduct = (props) => {
                                     className="rating-author_info font-size-2 mb-4 d-flex flex-wrap align-items-center">
                                     <div className="d-flex align-items-center">
                                         <Rating name="size-small" value={rating} readOnly size="small"/>
-                                        <Link to="#"><p className="ml-2"
+                                        <Link to="#"><p className="ml-2 mb-0"
                                                         style={{color: "#CDCFD0"}}>({commentQuantity} Đánh giá)</p>
                                         </Link>
                                     </div>
@@ -240,11 +230,6 @@ export const SingleProduct = (props) => {
                                     </p>
                                 </span>)}
                                 </div>
-                                {/*<div className="woocommerce-product-details__short-description">*/}
-                                {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor*/}
-                                {/*        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut*/}
-                                {/*        Excepteur sint occaecat.</p>*/}
-                                {/*</div>*/}
                                 <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                                     <div className="lgdBsd"><p className="label">Số
                                         Lượng</p>
@@ -260,13 +245,16 @@ export const SingleProduct = (props) => {
                                             />
                                             <button onClick={handlePlus}><i className="fa-solid fa-plus"></i></button>
                                             {remainingQuantity !== 0 && (
-                                                <div style={{marginLeft: '15px', color: '#757575'}}>{remainingQuantity} sản phẩm có sẵn</div>)}
+                                                <div style={{
+                                                    marginLeft: '15px',
+                                                    color: '#757575'
+                                                }}>{remainingQuantity} sản phẩm có sẵn</div>)}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="btn-groups">
                                     <button type="button" className="add_cart_btn" disabled={remainingQuantity === 0}
-                                            onClick={handleAddToCartClick}>
+                                            onClick={addToCart}>
                                         <i className="fa-solid fa-cart-shopping"></i>
                                         {remainingQuantity === 0 ? 'hết hàng' : 'thêm vào giỏ hàng'}
                                     </button>
