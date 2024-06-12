@@ -28,7 +28,7 @@ export const TopSeller = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/all`);
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/all`);
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
                 window.scrollTo({
@@ -53,7 +53,7 @@ export const TopSeller = () => {
                                        className="h-primary d-block bwgb-products-carousel__block-action-text"><span>Xem tất cả</span><i
                     className="fa-solid fa-caret-right ml-1"></i></Link></header>
             </div>
-            <div className="wp-block-bwgb-products-carousel__content container">
+            <div className="products wp-block-bwgb-products-carousel__content container">
                 <Carousel responsive={responsive}>
                     {topSellBooks.map(product => (
                         <div key={product.id} className="card mb-0 mx-2 no-gutters"><Product info={product}/></div>))}

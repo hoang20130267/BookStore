@@ -11,7 +11,7 @@ const AddressItem = ({address, updateAddresses}) => {
 
     const deleteAddress = async () => {
         try {
-            const response = await apiService.deleteData(`http://localhost:8080/api/user/addresses/${address.id}`)
+            const response = await apiService.deleteData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses/${address.id}`)
             console.log("Address deleted successfully:", response.data);
             updateAddresses();
         } catch (error) {
@@ -21,7 +21,7 @@ const AddressItem = ({address, updateAddresses}) => {
 
     const setDefaultAddress = async () => {
         try {
-            const response = await apiService.updateData(`http://localhost:8080/api/user/addresses/default/${address.id}`)
+            const response = await apiService.updateData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses/default/${address.id}`)
             console.log("Address set default successfully:", response.data);
             updateAddresses();
         } catch (error) {

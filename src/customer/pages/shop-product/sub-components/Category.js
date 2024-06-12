@@ -8,7 +8,7 @@ const Category = () => {
 
     const handleToggle = (e) => {
         e.preventDefault();
-        setIsShown(!isShown)
+        setIsShown(!isShown);
     }
 
     return (
@@ -42,30 +42,45 @@ const Category = () => {
     );
 }
 const CategoryItem = ({category, subMainCategories, subCategories}) => {
-    const location = useLocation();
     const toPath = `/product-list/${category.id}`;
 
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedMainCategory, setSelectedMainCategory] = useState(null);
+    const [tempSelectedMain, setTempSelectedMain] = useState(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
     const [expandedSubCategories, setExpandedSubCategories] = useState(false);
 
-    const handleCategoryClick = (categoryId) => {
-        setSelectedCategory(categoryId);
-        setSelectedSubCategory(null);
-        setSelectedMainCategory(null);
+    const handleCategoryClick = (categoryId, event) => {
+        if (selectedCategory === categoryId) {
+            event.preventDefault();
+        } else {
+            setSelectedCategory(categoryId);
+            setSelectedSubCategory(null);
+            setSelectedMainCategory(null);
+            setTempSelectedMain(null);
+        }
     };
-    const handleMainCategoryClick = (mainCateId) => {
-        setSelectedMainCategory(mainCateId);
-        setSelectedCategory(null);
-        setSelectedSubCategory(null);
-        setExpandedSubCategories(true);
+    const handleMainCategoryClick = (mainCateId, event) => {
+        if (selectedMainCategory === mainCateId) {
+            event.preventDefault();
+        } else {
+            setSelectedMainCategory(mainCateId);
+            setTempSelectedMain(mainCateId);
+            setSelectedCategory(null);
+            setSelectedSubCategory(null);
+            setExpandedSubCategories(true);
+        }
     };
 
-    const handleSubCategoryClick = (subCateId) => {
-        setSelectedSubCategory(subCateId)
-        setSelectedCategory(null);
-        setExpandedSubCategories(true)
+    const handleSubCategoryClick = (subCateId, event) => {
+        if (selectedSubCategory === subCateId) {
+            event.preventDefault();
+        } else {
+            setSelectedSubCategory(subCateId);
+            setSelectedCategory(null);
+            setSelectedMainCategory(null);
+            setExpandedSubCategories(true);
+        }
     };
 
     return (
@@ -74,7 +89,8 @@ const CategoryItem = ({category, subMainCategories, subCategories}) => {
                 <Link to={toPath}
                     // className={`${selectedCategory === category.id || location.pathname === toPath ? 'active' : ''}`}
                       className={`${selectedCategory === category.id ? 'active' : ''}`}
-                      onClick={() => handleCategoryClick(category.id)}>
+                      style={{cursor: selectedCategory === category.id ? 'auto' : 'pointer'}}
+                      onClick={(event) => handleCategoryClick(category.id, event)}>
                     {category.name}
                 </Link>
                 <ul className={`children ml-3 d-block`}>
@@ -82,20 +98,22 @@ const CategoryItem = ({category, subMainCategories, subCategories}) => {
                         const toPathMain = `/product-list/${category.id}/${mainCate.id}`;
                         return (<li key={mainCate.id}
                                     className={`cat-item cat-item-${mainCate.id}`}
-                                    style={{display: selectedMainCategory === null || selectedMainCategory === mainCate.id ? 'block' : 'none'}}>
+                                    style={{display: tempSelectedMain === null || tempSelectedMain === mainCate.id ? 'block' : 'none',}}>
                             <Link to={toPathMain}
+                                  style={{cursor: selectedMainCategory === mainCate.id ? 'auto' : 'pointer'}}
                                   className={`${selectedMainCategory === mainCate.id && selectedSubCategory === null ? 'active' : ''}`}
-                                  onClick={() => handleMainCategoryClick(mainCate.id)}>
+                                  onClick={(event) => handleMainCategoryClick(mainCate.id, event)}>
                                 {mainCate.name}
                             </Link>
-                            {expandedSubCategories && selectedMainCategory === mainCate.id && (
+                            {expandedSubCategories && tempSelectedMain === mainCate.id && (
                                 <ul key={mainCate.id} className={`children ml-3 d-block`}>
                                     {subCategories.map(child => {
                                         const toPathChild = `/product-list/${category.id}/${mainCate.id}/${child.id}`;
                                         return (<li key={child.id} className={`cat-item cat-item-${child.id}`}>
                                             <Link to={toPathChild}
+                                                  style={{cursor: selectedSubCategory === child.id ? 'auto' : 'pointer'}}
                                                   className={`${selectedSubCategory === child.id ? 'active' : ''}`}
-                                                  onClick={() => handleSubCategoryClick(child.id)}>
+                                                  onClick={(event) => handleSubCategoryClick(child.id, event)}>
                                                 {child.name}
                                             </Link>
                                         </li>)
@@ -119,14 +137,14 @@ const CategoriesList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const parentResult = await apiService.fetchData(`http://localhost:8080/api/categories/${categoryId}`);
+                const parentResult = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/${categoryId}`);
                 setParentCategory(parentResult);
                 if (parentResult) {
-                    const subMainResult = await apiService.fetchData(`http://localhost:8080/api/categories/${parentResult.id}/subcategories`);
+                    const subMainResult = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/${parentResult.id}/subcategories`);
                     setSubMainCategories(subMainResult);
                 }
                 if (mainCategoryId) {
-                    const subResult = await apiService.fetchData(`http://localhost:8080/api/categories/${mainCategoryId}/subcategories`);
+                    const subResult = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/${mainCategoryId}/subcategories`);
                     setSubCategories(subResult);
                 }
             } catch (error) {

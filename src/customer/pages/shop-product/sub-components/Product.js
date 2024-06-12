@@ -19,7 +19,7 @@ const Product = (props) => {
 
     const fetchFavorite = async () => {
         try {
-            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
             const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
             const isFavoriteProduct = favoriteProduct ? true : false;
             setIsFavortie(isFavoriteProduct)
@@ -57,7 +57,7 @@ const Product = (props) => {
         } else {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
-                const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
+                const responseData = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/cart/add`, requestData);
                 console.log(responseData)
                 setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
@@ -74,7 +74,7 @@ const Product = (props) => {
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             try {
-                const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
+                const result = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites/${productInfo.id}`);
                 const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
                 setPopupInfo({message: successMessage, type: 'success', visible: true});
             } catch (error) {
@@ -86,7 +86,7 @@ const Product = (props) => {
         try {
             if (discount !== 0) {
                 const newPrice = productInfo.oldPrice - (productInfo.oldPrice * discount / 100);
-                await axios.put(`http://localhost:8080/api/products/set_discount/${productInfo.id}/price/${newPrice}`);
+                await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/products/set_discount/${productInfo.id}/price/${newPrice}`);
                 console.log("Set price successfully");
                 console.log("new price of product " + productInfo.id + " is " + newPrice)
             } else {
@@ -99,7 +99,7 @@ const Product = (props) => {
 
     const checkRemainingQuantity = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/inventories/inventory/${productInfo.id}`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/inventories/inventory/${productInfo.id}`);
             setRemainingQuantity(result.remainingQuantity);
         } catch (error) {
             console.error(error);
@@ -126,7 +126,7 @@ const Product = (props) => {
                             </div>
                         ) : <> </>}
                         <div className="woocommerce-loop-product__header">
-                            <Link to={`/product-detail/${productInfo.id}`}
+                            <Link to={`/product-detail/${productInfo.id}`} state={{productName: productInfo.title}}
                                   className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
                                 src={productInfo.image}
                                 className="img-fluid d-block mx-auto attachment-shop_catalog size-shop_catalog wp-post-image img-fluid"
@@ -134,7 +134,7 @@ const Product = (props) => {
                         </div>
                         <div className="woocommerce-loop-product__body product__body pt-3 bg-white">
                             <h2 className="woocommerce-loop-product__title product__title h6 text-lh-md mb-1 crop-text-2 h-dark  text-height-2">
-                                <Link to={`/product-detail/${productInfo.id}`}
+                                <Link to={`/product-detail/${productInfo.id}`} state={{productName: productInfo.title}}
                                       className="woocommerce-LoopProduct-link woocommerce-loop-product__link"
                                       title={productInfo.title}>
                                     {productInfo.title}</Link>

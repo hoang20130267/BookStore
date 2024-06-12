@@ -13,7 +13,7 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     const handleIncrease = async () => {
         if (quantity < remainingQuantity) {
             try {
-                const response = await axios.put(`http://localhost:8080/api/cart/increase/${id}`);
+                const response = await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/cart/increase/${id}`);
                 console.log("Product increased successfully:", response.data);
                 updateCart();
             } catch (error) {
@@ -26,7 +26,7 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     const handleDecrease = async () => {
         setNotify('');
         try {
-            const response = await axios.put(`http://localhost:8080/api/cart/decrease/${id}`);
+            const response = await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/cart/decrease/${id}`);
             console.log("Product decreased successfully:", response.data);
             updateCart();
         } catch (error) {
@@ -35,7 +35,7 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
     };
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/cart/remove/${id}`);
+            await axios.delete(`${process.env.REACT_APP_ENDPOINT_API}/cart/remove/${id}`);
             updateCart();
         } catch (error) {
             console.error("Error deleting blog:", error);
@@ -44,7 +44,7 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
 
     const checkRemainingQuantity = async () => {
         try {
-            const result = await new APIService().fetchData(`http://localhost:8080/api/inventories/inventory/${productId}`);
+            const result = await new APIService().fetchData(`${process.env.REACT_APP_ENDPOINT_API}/inventories/inventory/${productId}`);
             setRemainingQuantity(result.remainingQuantity);
         } catch (error) {
             console.error(error);
@@ -128,7 +128,7 @@ export const ProductsInCart = () => {
     }, [cart, discount]);
     const updateCart = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/cart/items", {
+            const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -156,7 +156,7 @@ export const ProductsInCart = () => {
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             try {
-                await axios.get(`http://localhost:8080/api/orders/promo/${discountCode}/user/${user.id}`);
+                await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/orders/promo/${discountCode}/user/${user.id}`);
                 const errorMessage = 'Bạn đã sử dụng mã giảm giá này rồi!';
                 setDiscountCode('')
                 setPopupInfo({message: errorMessage, type: 'error', visible: true});
@@ -166,7 +166,7 @@ export const ProductsInCart = () => {
                     setPopupInfo({message: errorMessage, type: 'error', visible: true});
                 } else {
                     try {
-                        const response = await axios.get(`http://localhost:8080/api/promotion/code/${discountCode}`);
+                        const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
                         if (isAddDiscount === true) {
                             const errorMessage = 'Bạn đã sử dụng 1 mã giảm giá trước đó rồi!';
                             setPopupInfo({message: errorMessage, type: 'error', visible: true});
@@ -187,7 +187,7 @@ export const ProductsInCart = () => {
     useEffect(() => {
         const fetchCarts = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/api/cart/items", {
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -311,10 +311,9 @@ export const ProductsInCart = () => {
     )
 }
 export const Cart = () => {
-    const location = useLocation()
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <ProductsInCart/>
         </div>
     )

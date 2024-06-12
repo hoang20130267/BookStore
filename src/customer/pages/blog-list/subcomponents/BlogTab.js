@@ -48,7 +48,7 @@ const BlogTab = () => {
         navigate(`?${searchParams.toString()}`);
     };
     const getBlogsByCategory = (categoryId, page = 0, perPage = 3, sort = 'id', filter = '{}', order = 'ASC') => {
-        const endpoint = `http://localhost:8080/api/blog/cate/${categoryId}`;
+        const endpoint = `${process.env.REACT_APP_ENDPOINT_API}/blog/cate/${categoryId}`;
 
         console.log(endpoint);
         const params = {page, perPage, sort, filter, order};

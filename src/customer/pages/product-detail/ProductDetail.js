@@ -82,7 +82,7 @@ export const SingleProduct = (props) => {
 
     const checkRemainingQuantity = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/inventories/inventory/${product.id}`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/inventories/inventory/${product.id}`);
             setRemainingQuantity(result.remainingQuantity);
         } catch (error) {
             console.error(error);
@@ -99,7 +99,7 @@ export const SingleProduct = (props) => {
         } else {
             const requestData = {product: {id: product.id}, quantity: quantity};
             try {
-                const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
+                const responseData = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/cart/add`, requestData);
                 setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
                 if (error.response) {
@@ -114,7 +114,7 @@ export const SingleProduct = (props) => {
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             try {
-                const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${product.id}`);
+                const result = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites/${product.id}`);
                 const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
                 setPopupInfo({message: successMessage, type: 'success', visible: true});
                 setIsFavorite(true);
@@ -126,7 +126,7 @@ export const SingleProduct = (props) => {
     }
     const deleteFavoriteProduct = async () => {
         try {
-            await apiService.deleteData(`http://localhost:8080/api/user/favorites/${favoriteId}`);
+            await apiService.deleteData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites/${favoriteId}`);
             const successMessage = 'Sản phẩm đã được xóa khỏi yêu thích!';
             setPopupInfo({message: successMessage, type: 'success', visible: true});
             setIsFavorite(false);
@@ -138,7 +138,7 @@ export const SingleProduct = (props) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
                 const favoriteProduct = result.find(favorite => favorite.product?.id === product.id);
                 const isFavoriteProduct = favoriteProduct ? true : false;
                 const favoriteProductId = favoriteProduct ? favoriteProduct.id : null;
@@ -218,10 +218,10 @@ export const SingleProduct = (props) => {
                                     {product.currentPrice !== product.oldPrice ? (
                                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price">{formatCurrency(product.currentPrice)}</span>
+                                        <span className="price" style={{fontWeight: 600}}>{formatCurrency(product.currentPrice)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price">{formatCurrency(product.oldPrice)}</span>
+                                        <span className="price" style={{fontSize: '1.1rem'}}>{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
                                     ) : (<span className="price d-flex justify-content-start align-items-center">
@@ -355,7 +355,7 @@ export const Comment = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
+                const data = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/product/${id}`);
                 setCommentCount(data.length);
                 setComments(data);
             } catch (error) {
@@ -391,8 +391,8 @@ export const Comment = () => {
     useEffect(() => {
         const isBoughtYet = async () => {
             try {
-                const order = await apiService.fetchData(`http://localhost:8080/api/orders/product/${id}/user/${idUser}`);
-                const comment = await apiService.fetchData(`http://localhost:8080/api/comment/auth/${idUser}/product/${id}`);
+                const order = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/product/${id}/user/${idUser}`);
+                const comment = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/auth/${idUser}/product/${id}`);
                 if (order.length > comment.length) {
                     setIsBought(true);
                 } else {
@@ -408,7 +408,7 @@ export const Comment = () => {
 
     const updateListComment = async () => {
         try {
-            const data = await apiService.fetchData(`http://localhost:8080/api/comment/product/${id}`);
+            const data = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/product/${id}`);
             setComments(data);
         } catch (error) {
             console.error("Error update comment:", error);
@@ -417,7 +417,7 @@ export const Comment = () => {
     const handleAddComment = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8080/api/comment/add/${id}`, {
+            const response = await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/comment/add/${id}`, {
                 rate: value,
                 detail: content
             }, {
@@ -615,7 +615,7 @@ export const CommentItem = ({id, username, rating, content, createdAt, token, up
     const [newContent, setNewContent] = useState('');
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/comment/delete/${id}`);
+            await axios.delete(`${process.env.REACT_APP_ENDPOINT_API}/comment/delete/${id}`);
             alert("Xóa binh luận thành công!");
             updateListComment();
         } catch (error) {
@@ -628,7 +628,7 @@ export const CommentItem = ({id, username, rating, content, createdAt, token, up
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8080/api/comment/update/${id}`, {
+            const response = await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/comment/update/${id}`, {
                 rate: value,
                 detail: newContent
             }, {
@@ -716,7 +716,7 @@ export const SideBar = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/latest`)
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/latest`)
                 setLatestProducts(result);
             } catch (error) {
                 console.error('Error fetching latest products', error);
@@ -843,7 +843,7 @@ export const RelatedProducts = ({categoryId}) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/products/category/${categoryId}`);
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/category/${categoryId}`);
                 const relatedProducts = result.filter(product => product.id.toString() !== id.toString());
                 setRelatedProducts(relatedProducts);
             } catch (error) {
@@ -868,6 +868,8 @@ export const RelatedProducts = ({categoryId}) => {
 }
 export const Detail = () => {
     const location = useLocation();
+    const { productName } = location.state || {};
+    console.log(productName);
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
@@ -875,7 +877,7 @@ export const Detail = () => {
 
     const fetchData = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/${id}`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/${id}`);
             setProduct(result)
             setCategoryId(result.category?.id)
             window.scrollTo({
@@ -891,7 +893,7 @@ export const Detail = () => {
     }, [id])
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="container">
                 <div className="row">
                     <div id="primary" className="content-area order-1">

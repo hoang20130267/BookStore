@@ -12,7 +12,7 @@ export const ProductsInWishlist = () => {
 
     const fetchProducts = async () => {
         try {
-            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
             setFavoriteProducts(result);
         } catch (error) {
             console.error("Error fetching favorite products")
@@ -24,7 +24,7 @@ export const ProductsInWishlist = () => {
 
     const deleteFavoriteProduct = async (id) => {
         try {
-            await apiService.deleteData(`http://localhost:8080/api/user/favorites/${id}`);
+            await apiService.deleteData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites/${id}`);
             console.log("Favorite product deleted successfully");
             fetchProducts();
         } catch (error) {
@@ -85,10 +85,9 @@ export const ProductsInWishlist = () => {
     )
 }
 export const Wishlist = () => {
-    const location = useLocation();
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <ProductsInWishlist/>
         </div>
     )

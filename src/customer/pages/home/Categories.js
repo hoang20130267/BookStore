@@ -15,13 +15,13 @@ export const Categories = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const resultCate1 = await apiService.fetchData(`http://localhost:8080/api/categories/2/subcategories`);
+                const resultCate1 = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/2/subcategories`);
                 setFirstCategories(resultCate1.slice(0, 6));
                 setFirst(resultCate1[0]);
-                const resultCate2 = await apiService.fetchData(`http://localhost:8080/api/categories/14/subcategories`);
+                const resultCate2 = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/14/subcategories`);
                 setSecondCategories(resultCate2.slice(0, 6));
                 setSecond(resultCate2[0])
-                const resultCate3 = await apiService.fetchData(`http://localhost:8080/api/categories/21/subcategories`);
+                const resultCate3 = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/21/subcategories`);
                 setThirdCategories(resultCate3.slice(0, 6))
                 setThird(resultCate3[0])
             } catch (error) {
@@ -57,7 +57,7 @@ export const Categories = () => {
                                     </ul>
                                     <div
                                         className="d-flex d-md-block justify-content-end position-md-absolute bottom-0 right-md-30 product-category__icon">
-                                        <i className="fa-solid fa-utensils text-tangerine__1 font-size-17"></i>
+                                        <i className="fa-solid fa-book text-tangerine__1 font-size-17"></i>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@ export const Categories = () => {
                                     </ul>
                                     <div
                                         className="d-flex d-md-block justify-content-end position-md-absolute bottom-0 right-md-30 product-category__icon">
-                                        <i className="fa-regular fa-heart bwgb-products-category__icon-2 text-chili__1 font-size-17"></i>
+                                        <i className="fa-solid fa-pencil bwgb-products-category__icon-2 text-chili__1 font-size-17"></i>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@ export const Categories = () => {
                                     </ul>
                                     <div
                                         className="d-flex d-md-block justify-content-end position-md-absolute bottom-0 right-md-30 product-category__icon">
-                                        <i className="fa-solid fa-stethoscope bwgb-products-category__icon-3 text-carolina__1 font-size-17"></i>
+                                        <i className="fa-solid fa-book-atlas bwgb-products-category__icon-3 text-carolina__1 font-size-17"></i>
                                     </div>
                                 </div>
                             </div>

@@ -76,7 +76,7 @@ export const TopBook = () => {
 
     const fetchGoodBook = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/6`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/6`);
             console.log("Result from fetchGoodBook:", result);
             setGoodBook(result)
             const match = /<p[^>]*>(.*?)<\/p>/i.exec(result.detail?.description);
@@ -90,7 +90,7 @@ export const TopBook = () => {
     }
     const fetchTopReviewProducts = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/products/top_review`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/top_review`);
             console.log("Result from fetchTopReviewProducts:", result);
             const limitProducts = result.slice(0, 2);
             setTopReviewBooks(limitProducts);
