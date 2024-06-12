@@ -1,7 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import UserMenu from "../general/UserMenu";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import {FaSearch} from "react-icons/fa";
 import "../../assets/css/searchbar.css";
@@ -77,23 +77,27 @@ export const Header = () => {
     const dispatch = useDispatch();
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
 
-    // const checkToken = async () => {
-    //     if (user) {
-    //         setToken(user.token)
-    //         try {
-    //             await axios.post(`http://localhost:8080/api/auth/checkToken/${token}`);
-    //             console.log("Token is valid");
-    //         } catch (error) {
-    //             logOut(dispatch, user.id, navigate, user.token);
-    //             localStorage.removeItem('currentUser');
-    //             const errorMessage = 'Hết phiên đăng nhập!';
-    //             setToken(null);
-    //             setPopupInfo({message: errorMessage, type: 'error', visible: true});
-    //             navigate("/sign-in");
-    //         }
-    //     }
-    // }
-    // setInterval(checkToken, 60000)
+    const checkToken = useCallback(async () => {
+        if (user) {
+            setToken(user.token);
+            try {
+                await axios.post(`http://localhost:8080/api/auth/checkToken/${user.token}`);
+                console.log("Token is valid");
+            } catch (error) {
+                const errorMessage = 'Hết phiên đăng nhập!';
+                setPopupInfo({ message: errorMessage, type: 'error', visible: true });
+                logOut(dispatch, user.id, navigate, user.token);
+                localStorage.removeItem('currentUser');
+                setToken(null);
+                navigate("/sign-in");
+            }
+        }
+    }, [user, dispatch, navigate]);
+
+    useEffect(() => {
+        const interval = setInterval(checkToken, 60000);
+        return () => clearInterval(interval);
+    }, [checkToken]);
 
 
     const hidePopup = () => {
@@ -104,7 +108,7 @@ export const Header = () => {
         const fetchCart = async () => {
             try {
                 if (user) {
-                    // setToken(user.token);
+                    setToken(user.token);
                     const result = await axios.get("http://localhost:8080/api/cart/items", {
                         headers: {
                             'Authorization': `Bearer ${token}`

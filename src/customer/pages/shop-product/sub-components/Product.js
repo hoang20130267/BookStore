@@ -87,10 +87,6 @@ const Product = (props) => {
             if (discount !== 0) {
                 const newPrice = productInfo.oldPrice - (productInfo.oldPrice * discount / 100);
                 await axios.put(`http://localhost:8080/api/products/set_discount/${productInfo.id}/price/${newPrice}`);
-                console.log("Set price successfully");
-                console.log("new price of product " + productInfo.id + " is " + newPrice)
-            } else {
-                console.log("Discount is 0");
             }
         } catch (error) {
             console.error("Error setting price", error);

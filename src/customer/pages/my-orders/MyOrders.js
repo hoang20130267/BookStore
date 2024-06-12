@@ -14,8 +14,8 @@ export const MyOrders = () => {
 
     const fetchData = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/orders/user`);
-            setOrders(result);
+            const result = await apiService.fetchData(`http://localhost:8080/api/orders`);
+            setOrders(result.content);
         } catch (error) {
             console.error('Error fetching data:', error)
         }

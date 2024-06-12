@@ -10,7 +10,6 @@ export const Categories = () => {
     const [second, setSecond] = useState({});
     const [thirdCategories, setThirdCategories] = useState([]);
     const [third, setThird] = useState({});
-    console.log(first)
 
     useEffect(() => {
         const fetchData = async () => {
