@@ -31,11 +31,11 @@ const UpdateAddress = () => {
 
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
-            !isEmpty(countyDistrict) && !isEmpty(wardCommune));
+            !isEmpty(countyDistrict) && !isEmpty(wardCommune) && !isEmpty(hnumSname));
     };
     useEffect(() => {
         checkSaveButton();
-    }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune])
+    }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune, hnumSname])
     useEffect(() => {
         const fetchAddress = async () => {
             try {

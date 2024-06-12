@@ -65,7 +65,7 @@ export const SearchResults = ({results}) => {
 
 export const Header = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(user?.token);
     const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
