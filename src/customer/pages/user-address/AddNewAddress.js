@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
@@ -25,7 +25,6 @@ const AddNewAddress = () => {
     const [wards, setWards] = useState([]);
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const navigate = useNavigate();
-    console.log(provinceCity, countyDistrict, wardCommune)
 
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&

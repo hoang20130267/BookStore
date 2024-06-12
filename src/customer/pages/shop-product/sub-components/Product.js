@@ -58,7 +58,6 @@ const Product = (props) => {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
                 const responseData = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/cart/add`, requestData);
-                console.log(responseData)
                 setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
                 if (error.response) {
@@ -87,10 +86,6 @@ const Product = (props) => {
             if (discount !== 0) {
                 const newPrice = productInfo.oldPrice - (productInfo.oldPrice * discount / 100);
                 await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/products/set_discount/${productInfo.id}/price/${newPrice}`);
-                console.log("Set price successfully");
-                console.log("new price of product " + productInfo.id + " is " + newPrice)
-            } else {
-                console.log("Discount is 0");
             }
         } catch (error) {
             console.error("Error setting price", error);
@@ -126,7 +121,7 @@ const Product = (props) => {
                             </div>
                         ) : <> </>}
                         <div className="woocommerce-loop-product__header">
-                            <Link to={`/product-detail/${productInfo.id}`} state={{productName: productInfo.title}}
+                            <Link to={`/product-detail/${productInfo.id}`}
                                   className="woocommerce-LoopProduct-link woocommerce-loop-product__link"><img
                                 src={productInfo.image}
                                 className="img-fluid d-block mx-auto attachment-shop_catalog size-shop_catalog wp-post-image img-fluid"
@@ -134,7 +129,7 @@ const Product = (props) => {
                         </div>
                         <div className="woocommerce-loop-product__body product__body pt-3 bg-white">
                             <h2 className="woocommerce-loop-product__title product__title h6 text-lh-md mb-1 crop-text-2 h-dark  text-height-2">
-                                <Link to={`/product-detail/${productInfo.id}`} state={{productName: productInfo.title}}
+                                <Link to={`/product-detail/${productInfo.id}`}
                                       className="woocommerce-LoopProduct-link woocommerce-loop-product__link"
                                       title={productInfo.title}>
                                     {productInfo.title}</Link>

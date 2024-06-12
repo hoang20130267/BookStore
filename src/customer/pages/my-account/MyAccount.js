@@ -178,7 +178,6 @@ const MyAccount = () => {
                 newPasswordConfirm: newPasswordConfirm,
             }),
         };
-        console.log(requestData);
         await updateInformation(requestData);
     }
     const hidePopup = () => {

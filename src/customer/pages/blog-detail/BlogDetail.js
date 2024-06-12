@@ -77,7 +77,6 @@ export const BlogDetail = () => {
             try {
                 const response = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/blog/${id}`);
                 setBlog(response);
-                console.log("blog : "+response + "response : "+response.data)
             } catch (error) {
                 console.error("Error fetching blog:", error);
             }

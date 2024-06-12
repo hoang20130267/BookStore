@@ -138,7 +138,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/products/promotion`);
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/products/promotion?filter=%7B%22product%22%3A%7D`);
                 setPromotion(response.data);
             } catch (error) {
                 console.error("Error fetching cates:", error);

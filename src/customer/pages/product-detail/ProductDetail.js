@@ -18,7 +18,6 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 
 export const SingleProduct = (props) => {
     const product = props?.product;
-    console.log(product.id);
     const comments = props.comments;
     const [quantity, setQuantity] = useState(1);
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
@@ -869,7 +868,6 @@ export const RelatedProducts = ({categoryId}) => {
 export const Detail = () => {
     const location = useLocation();
     const { productName } = location.state || {};
-    console.log(productName);
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});

@@ -15,7 +15,7 @@ export const SearchBar = ({setResults}) => {
     const [keyword, setKeyword] = useState("");
     const [hasResults, setHasResults] = useState(true);
     const fetchSearchProduct = (value) => {
-        fetch("http://localhost:8080/api/products/all")
+        fetch(`${process.env.REACT_APP_ENDPOINT_API}/products/all`)
             .then((response) => response.json())
             .then(json => {
                 const result = json.filter(product =>
@@ -65,7 +65,7 @@ export const SearchResults = ({results}) => {
 
 export const Header = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(user?.token);
     const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
@@ -78,33 +78,25 @@ export const Header = () => {
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
 
     const checkToken = useCallback(async () => {
-        if (user && token) {
+        if (user) {
+            setToken(user.token);
             try {
                 await axios.post(`${process.env.REACT_APP_ENDPOINT_API}/auth/checkToken/${token}`);
                 console.log("Token is valid");
             } catch (error) {
-                logOut(dispatch, user.id, navigate, token);
-                localStorage.removeItem('currentUser');
                 const errorMessage = 'Hết phiên đăng nhập!';
-                setToken(null);
                 setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                logOut(dispatch, user.id, navigate, user.token);
+                localStorage.removeItem('currentUser');
+                setToken(null);
                 navigate("/sign-in");
             }
         }
-    }, [user, token, dispatch, navigate]);
+    }, [user, dispatch, navigate]);
 
     useEffect(() => {
-        if (user) {
-            setToken(user.token);
-        }
-    }, [user]);
-
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            checkToken();
-        }, 60000);
-
-        return () => clearInterval(intervalId);
+        const interval = setInterval(checkToken, 60000);
+        return () => clearInterval(interval);
     }, [checkToken]);
 
 
@@ -115,7 +107,8 @@ export const Header = () => {
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                if (user && token) {
+                if (user) {
+                    setToken(user.token);
                     const result = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -131,9 +124,9 @@ export const Header = () => {
             } catch (error) {
                 console.error("Failed to fetch cart items", error);
             }
-        };
+        }
         fetchCart();
-    }, [user, token]);
+    }, [user, cart])
 
     useEffect(() => {
         const fetchData = async () => {
