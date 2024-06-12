@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Breadcrumb from "../../components/general/Breadcrumb";
 
 export const Map = () => {
     return (
@@ -23,7 +24,7 @@ export const InforContact = () => {
             if(user.email === email) {
                 try {
                     console.log(fullName)
-                    await axios.post(`http://localhost:8080/api/contact/send`, {
+                    await axios.post(`${process.env.REACT_APP_ENDPOINT_API}/contact/send`, {
                             fullName: fullName,
                             email: email,
                             title: title,
@@ -125,7 +126,7 @@ export const InforContact = () => {
                                          id="bwgb-a71c3e4">
                                         <h2 className="font-size-4 font-weight-medium wp-block-heading">Mạng xã hội</h2>
                                         <ul className="wp-block-bwgb-social-icon bwgb-social-icon list-unstyled mb-0 d-flex">
-                                            <li className="btn pl-0"><a className="icon link-black-100"><i
+                                            <li className="btn"><a className="icon link-black-100"><i
                                                 className="fab fa-instagram"></i></a></li>
                                             <li className="btn"><a className="icon link-black-100"><i
                                                 className="fab fa-facebook-f"></i></a></li>
@@ -236,6 +237,7 @@ export const InforContact = () => {
 export const Contact = () => {
     return (
         <main id="main" className="site-main" role="main">
+            <Breadcrumb/>
             <div id="post-207" className=" article__page post-207 page type-page status-publish hentry">
                 <div className="page__header py-3 py-lg-7 ">
                     <h6 className="font-weight-medium font-size-7 text-center my-1">Liên hệ với chúng tôi</h6>

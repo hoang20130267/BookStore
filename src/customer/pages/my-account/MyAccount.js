@@ -19,7 +19,6 @@ const MyAccount = () => {
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
-    const location = useLocation();
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
@@ -65,7 +64,7 @@ const MyAccount = () => {
         }
     };
     const fetchInformation = async () => {
-        const result = await apiService.fetchData("http://localhost:8080/api/user/info");
+        const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/info`);
         setInformation(result);
         setFullName(result.userInfo?.fullName);
         setPhoneNumber(result.userInfo?.phoneNumber);
@@ -103,7 +102,7 @@ const MyAccount = () => {
 
     const updateInformation = async (requestData) => {
         try {
-            const responseData = await apiService.updateData(`http://localhost:8080/api/user/info`, requestData)
+            const responseData = await apiService.updateData(`${process.env.REACT_APP_ENDPOINT_API}/user/info`, requestData)
             setIsSaveEnabled(false);
             setPopupInfo({message: responseData, type: 'success', visible: true});
             fetchInformation();
@@ -179,7 +178,6 @@ const MyAccount = () => {
                 newPasswordConfirm: newPasswordConfirm,
             }),
         };
-        console.log(requestData);
         await updateInformation(requestData);
     }
     const hidePopup = () => {
@@ -187,7 +185,7 @@ const MyAccount = () => {
     };
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="container d-flex mt-5 mb-5 px-0">
                 <LeftSideBar update={updateSideBar}/>
                 <form style={{width: '100%'}} onSubmit={handleButtonSave} className="infor_user">

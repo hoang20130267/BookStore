@@ -5,7 +5,6 @@ import {useDispatch} from "react-redux";
 import {changeForgotPass, sendEmail} from "../../../store/apiRequest";
 
 const ForgotPassword = () => {
-    const location = useLocation();
     const [email, setEmail] = React.useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,7 +25,7 @@ const ForgotPassword = () => {
         try {
             const response = await sendEmail({
                 email: email,
-                type:1
+                type: 1
             });
             if (response.status === 200) {
                 setChangePage(true);
@@ -71,7 +70,7 @@ const ForgotPassword = () => {
     };
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             {!changePage && <>
                 <div className="content">
                     <div className="container">
@@ -94,10 +93,11 @@ const ForgotPassword = () => {
                                                         {errorMessage}
                                                     </div>
                                                 )}
-                                                <button className="button_login d-flex justify-content-center" type={"submit"}
+                                                <button className="button_login d-flex justify-content-center"
+                                                        type={"submit"}
                                                         style={{
                                                             paddingBottom: "13px", border: "none", fontSize: "18px"
-                                                            , fontWeight: "bold"
+                                                            , fontWeight: "bold", maxWidth: '100%'
                                                         }}
                                                         onSubmit={handleSendEmail}
                                                         onPress={handleChangeAction}> Gửi mã OTP
@@ -129,7 +129,7 @@ const ForgotPassword = () => {
                                                     <p>OTP</p>
                                                     <input type="text" className="form-control" id="OTP"
                                                            onChange={e => setOtp(e.target.value)}/>
-                                                    <p>New Pass</p>
+                                                    <p>Mật khẩu mới</p>
                                                     <input type="text" className="form-control" id="newPass"
                                                            onChange={e => setNewPass(e.target.value)}/>
 
@@ -139,11 +139,11 @@ const ForgotPassword = () => {
                                                         {errorMessage}
                                                     </div>
                                                 )}
-                                                <button className="button_login" type={"submit"}
+                                                <button className="button_login justify-content-center d-flex" type={"submit"}
                                                         style={{
                                                             paddingBottom: "13px", border: "none"
-                                                            , marginLeft: "120px", fontSize: "18px"
-                                                            , fontWeight: "bold"
+                                                            , fontSize: "18px"
+                                                            , fontWeight: "bold", maxWidth: '100%'
                                                         }}>Đặt lại mật khẩu
                                                 </button>
                                                 <Link to={"/sign-in"} className="d-block text-center my-4 text-muted"
@@ -158,7 +158,6 @@ const ForgotPassword = () => {
                 </div>
             </>
             }
-            )
         </>
     );
 }

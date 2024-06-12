@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
@@ -7,7 +7,6 @@ import {isEmpty} from "react-admin";
 import axios from "axios";
 
 const AddNewAddress = () => {
-    const location = useLocation();
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceWithToken = new APIService(token);
@@ -26,7 +25,6 @@ const AddNewAddress = () => {
     const [wards, setWards] = useState([]);
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
     const navigate = useNavigate();
-    console.log(provinceCity, countyDistrict, wardCommune)
 
     const checkSaveButton = () => {
         setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
@@ -138,7 +136,7 @@ const AddNewAddress = () => {
             wardCode: selectedWard
         }
         try {
-            const response = await apiServiceWithToken.sendData("http://localhost:8080/api/user/addresses", request)
+            const response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`, request)
             console.log("Address created successfully", response)
         } catch (error) {
             console.error("Error creating address");
@@ -151,7 +149,7 @@ const AddNewAddress = () => {
     }
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="container d-flex mt-5 mb-5 px-0">
                 <LeftSideBar/>
                 <div className="col-md-9">

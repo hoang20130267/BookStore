@@ -53,12 +53,14 @@ export const InputInfor = ({cartItems, subTotal}) => {
 
     const fetchAddresses = async () => {
         try {
-            const result = await apiServiceWithToken.fetchData(`http://localhost:8080/api/user/addresses`);
+            const result = await apiServiceWithToken.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`);
             setAddresses(result);
-            // const defaultAddress = result.find(address => address.default === true);
-            // if (defaultAddress) {
-            //     setSelectedAddress(defaultAddress.id);
-            // }
+            const defaultAddress = result.find(address => address.default === true);
+            if (defaultAddress) {
+                setSelectedAddress(defaultAddress.id);
+                setSelectedWard(defaultAddress.wardCode);
+                setSelectedDistrict(defaultAddress.districtId);
+            }
         } catch (error) {
 
         }
@@ -186,7 +188,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
             wardCode: selectedWard
         }
         try {
-            const response = await apiServiceWithToken.sendData("http://localhost:8080/api/user/addresses", request)
+            const response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`, request)
             console.log("Address created successfully", response)
             setTicked(false);
         } catch (error) {
@@ -210,7 +212,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
             promotion: {id: discountId}
         }
         try {
-            const response = await apiServiceWithToken.sendData(`http://localhost:8080/api/orders`, request);
+            const response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
             console.log("Order created successfully", response);
             const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
             setPopupInfo({message: successMessage, type: 'success', visible: true});
@@ -224,7 +226,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
         const getDiscountCode = async () => {
             if (discount) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
+                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discount}`);
                     setDiscountPercent(response.data.discount);
                     setDiscountId(response.data.id)
                 } catch (error) {
@@ -291,7 +293,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const handleAddressChange = async (e) => {
         const selectedId = e.target.value;
         try {
-            const response = await axios.get(`http://localhost:8080/api/user/addresses/${selectedId}`);
+            const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses/${selectedId}`);
             const address = response.data;
             setSelectedAddress(address.id);
             setSelectedDistrict(address.districtId);
@@ -323,7 +325,7 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                                         name="address"
                                                         value={address.id}
                                                         onChange={handleAddressChange}
-                                                        // defaultChecked={selectedAddress === address.id}
+                                                        defaultChecked={selectedAddress === address.id}
                                                     />
                                                     <span className="radio-fake"></span><span
                                                     className="label">{address.fullName}&nbsp;&nbsp;|&nbsp;&nbsp;{address.hnumSname}, {address.wardCommune}, {address.countyDistrict}, {address.provinceCity}&nbsp;&nbsp;|&nbsp;&nbsp;{address.phoneNumber}</span></label>
@@ -579,7 +581,7 @@ export const Checkout = () => {
     useEffect(() => {
         const getDiscountCode = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/promotion/code/${discount}`);
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discount}`);
                 setDiscountPercent(response.data.discount);
             } catch (error) {
                 console.error("Error fetching code:", error);
@@ -590,7 +592,7 @@ export const Checkout = () => {
     const fetchCart = async () => {
         try {
             if (user) {
-                const result = await apiServiceToken.fetchData("http://localhost:8080/api/cart/items");
+                const result = await apiServiceToken.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`);
                 setCart(result);
                 let totalAmount = 0;
                 result.forEach(item => {
@@ -611,7 +613,7 @@ export const Checkout = () => {
 
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <section className="checkout spad">
                 <div className="container">
                     <Coupon/>

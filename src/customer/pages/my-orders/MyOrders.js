@@ -6,7 +6,6 @@ import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
 
 export const MyOrders = () => {
-    const location = useLocation();
     const [orders, setOrders] = useState([]);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
@@ -14,8 +13,8 @@ export const MyOrders = () => {
 
     const fetchData = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/orders`);
-            setOrders(result.content);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/user`);
+            setOrders(result);
         } catch (error) {
             console.error('Error fetching data:', error)
         }
@@ -25,7 +24,7 @@ export const MyOrders = () => {
     }, []);
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="container d-flex mb-5 mt-5 px-0">
                 <LeftSideBar/>
                 {/*<form method="post" encType="multipart/form-data" className="infor_user">*/}

@@ -9,7 +9,6 @@ import {loginSuccess} from "../../../store/authSlice";
 const SignIn = () => {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -32,7 +31,7 @@ const SignIn = () => {
     }
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="content">
                 <div className="container">
                     <div className="row justify-content-center">
@@ -70,7 +69,7 @@ const SignIn = () => {
                                             <button className="button_login justify-content-center d-flex" type={"submit"}
                                                     style={{
                                                         paddingBottom: "13px", border: "none", fontSize: "18px"
-                                                        , fontWeight: "bold"
+                                                        , fontWeight: "bold", maxWidth: '100%'
                                                     }}> Đăng nhập
                                             </button>
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>

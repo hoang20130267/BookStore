@@ -1,7 +1,8 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
-const Breadcrumb = (props) => {
+const Breadcrumb = () => {
+    const location = useLocation();
     const pathNameMap = {
         '/sign-in': 'Đăng nhập',
         '/sign-up': 'Đăng ký',
@@ -17,39 +18,47 @@ const Breadcrumb = (props) => {
         '/contact': 'Liên hệ',
         '/cart': 'Giỏ hàng',
         '/checkout': 'Thanh toán',
-        '/product-list': 'Tất cả sản phẩm',
+        '/product-list': 'Danh sách sản phẩm',
         '/product-detail': 'Chi tiết sản phẩm',
     }
-    const getPathName = (path) => {
-        return pathNameMap[path] || '';
-    }
+    const getPathName = (path) => pathNameMap[path] || '';
+
+    const pathNames = location.pathname.split('/').filter(path => path !== '');
+
     let currentLink = '';
-    const pathNames = props.location.pathname.split('/').filter(path => path != '');
+
+    // Lọc và tạo một mảng mới chỉ chứa các mục có tên trong pathNameMap
+    const filteredPathNames = pathNames.reduce((acc, path, index) => {
+        currentLink += `/${path}`;
+        const name = getPathName(currentLink);
+        if (name) {
+            acc.push({path, name, fullLink: currentLink});
+        }
+        return acc;
+    }, []);
     return (
         <div className="page-header border-bottom">
             <div className="container">
                 <div className="d-md-flex justify-content-between align-items-center py-4">
                     <nav className="woocommerce-breadcrumb font-size-2">
                         <Link className="h-primary" to="/">Trang chủ</Link>
-                        {pathNames.map((path, index) => {
-                            currentLink += `/${path}`;
-                            return (
-                                < React.Fragment key={index}>
-                                    {index !== pathNames.length - 1 ? (
-                                        getPathName(currentLink) !== '' && (
-                                            <>
-                                                <span className="breadcrumb-separator mx-2">
+                        <span className="breadcrumb-separator mx-2">
                                                 <i className="fas fa-angle-right"></i>
-                                                </span>
-                                                <Link className="h-primary"
-                                                      to={currentLink}>{getPathName(currentLink)}</Link>
-                                            </>)
+                                            </span>
+                        {filteredPathNames.map((item, index) => {
+                            const isLastItem = index === filteredPathNames.length - 1;
+                            return (
+                                <React.Fragment key={index}>
+                                    {!isLastItem ? (
+                                        <>
+                                            <Link className="h-primary" to={currentLink}>{item.name}</Link>
+                                            <span className="breadcrumb-separator mx-2">
+                                                <i className="fas fa-angle-right"></i>
+                                            </span>
+                                        </>
                                     ) : (
                                         <>
-                                                <span className="breadcrumb-separator mx-2">
-                                                <i className="fas fa-angle-right"></i>
-                                                </span>
-                                            <span>{getPathName(currentLink)}</span>
+                                            <span>{item.name}</span>
                                         </>
                                     )}
                                 </React.Fragment>

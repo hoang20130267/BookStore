@@ -7,7 +7,6 @@ import axios from "axios";
 import Product from "../shop-product/sub-components/Product";
 
 export const OrderDetail = () => {
-    const location = useLocation();
     const {id} = useParams();
     const [order, setOrder] = useState({});
     const [orderDetails, setOrderDetails] = useState([]);
@@ -26,7 +25,7 @@ export const OrderDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/orders/${id}`);
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/${id}`);
                 setOrder(result);
                 if (result.orderDetails) {
                     setOrderDetails(result.orderDetails);
@@ -83,7 +82,7 @@ export const OrderDetail = () => {
     const handleCancelOrder = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8080/api/orders/cancel/${order.id}`);
+            await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/orders/cancel/${order.id}`);
             const successMessage = 'Hủy đơn hàng thành công!';
             setPopupInfo({message: successMessage, type: 'success', visible: true});
         } catch (error) {
@@ -109,7 +108,7 @@ export const OrderDetail = () => {
 
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             {progress === 0 ? <></> :
                 <div id="progress-ship" style={{margin: "50px 150px 100px 150px"}}>
                     <div id="progress-bar" style={{width: `${(progress - 1) * 25}%`}}></div>
@@ -173,7 +172,7 @@ export const OrderDetail = () => {
                                     {promotion ? <div>Áp dụng voucher: <span
                                         style={{float: "right"}}>{promotion}%</span></div> : null}
                                     {promotion > 0 ? <div>Giá được giảm: <span
-                                        style={{float: "right"}}>{formatCurrency(orderDetails[0].totalMoney * promotion / 100)}</span>
+                                        style={{float: "right"}}>{formatCurrency(tempTotal * promotion / 100)}</span>
                                     </div> : null}
                                     <div style={{borderTop: "1px solid #e1e1e1"}}>Phí vận chuyển: <span
                                         style={{float: "right"}}

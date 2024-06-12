@@ -70,15 +70,13 @@ export const Author = ({creator, email}) => {
     )
 }
 export const BlogDetail = () => {
-    const location = useLocation();
     const {id} = useParams();
     const [blog, setBlog] = useState([]);
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await apiService.fetchData(`http://localhost:8080/api/blog/${id}`);
+                const response = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/blog/${id}`);
                 setBlog(response);
-                console.log("blog : "+response + "response : "+response.data)
             } catch (error) {
                 console.error("Error fetching blog:", error);
             }
@@ -87,7 +85,7 @@ export const BlogDetail = () => {
     }, [id]);
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="bookworm-single-post my-5 mb-lg-6 pb-xl-1">
                 <div className="container">
                     <div className="container__inner">
