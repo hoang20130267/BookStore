@@ -50,7 +50,8 @@ const Product = (props) => {
         }
     }, [productInfo, discount])
 
-    const addToCart = async () => {
+    const addToCart = async (event) => {
+        event.preventDefault();
         if (!user) {
             const errorMessage = 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng!';
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
@@ -67,7 +68,8 @@ const Product = (props) => {
         }
     };
 
-    const addFavoriteProduct = async () => {
+    const addFavoriteProduct = async (event) => {
+        event.preventDefault();
         if (!user) {
             const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
@@ -164,7 +166,7 @@ const Product = (props) => {
                             (<div
                                 className="woocommerce-loop-product__hover product__hover d-flex align-items-center justify-content-between mt-2">
                                 <div className="cart-fragment">
-                                    <Link to="" data-quantity="1" onClick={addToCart}
+                                    <Link to="" data-quantity="1" onClick={(event) => addToCart(event)}
                                           className="button product_type_simple add_to_cart_button ajax_add_to_cart text-uppercase text-dark h-dark font-weight-medium mr-auto"
                                           title="Thêm vào giỏ hàng">
                                         <i className="fa-solid fa-cart-shopping"></i>
@@ -172,7 +174,7 @@ const Product = (props) => {
                                 </div>
                                 <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                     <div className="yith-wcwl-add-button">
-                                        {!isFavorite ? (<Link to="" onClick={addFavoriteProduct}
+                                        {!isFavorite ? (<Link to="" onClick={(event) => addFavoriteProduct(event)}
                                                               className="add_to_wishlist single_add_to_wishlist"
                                                               title="Thêm vào yêu thích">
                                                 <i className="fa-regular fa-heart"></i>

@@ -1,5 +1,5 @@
 import "../../assets/css/style-cart.css"
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import React, {useEffect, useState} from "react";
 import {MdOutlineDelete} from "react-icons/md";
