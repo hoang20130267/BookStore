@@ -15,7 +15,7 @@ export const SearchBar = ({setResults}) => {
     const [keyword, setKeyword] = useState("");
     const [hasResults, setHasResults] = useState(true);
     const fetchSearchProduct = (value) => {
-        fetch("http://localhost:8080/api/products/all")
+        fetch(`${process.env.REACT_APP_ENDPOINT_API}/products/all`)
             .then((response) => response.json())
             .then(json => {
                 const result = json.filter(product =>
@@ -81,11 +81,11 @@ export const Header = () => {
         if (user) {
             setToken(user.token);
             try {
-                await axios.post(`http://localhost:8080/api/auth/checkToken/${user.token}`);
+                await axios.post(`${process.env.REACT_APP_ENDPOINT_API}/auth/checkToken/${token}`);
                 console.log("Token is valid");
             } catch (error) {
                 const errorMessage = 'Hết phiên đăng nhập!';
-                setPopupInfo({ message: errorMessage, type: 'error', visible: true });
+                setPopupInfo({message: errorMessage, type: 'error', visible: true});
                 logOut(dispatch, user.id, navigate, user.token);
                 localStorage.removeItem('currentUser');
                 setToken(null);
@@ -109,7 +109,7 @@ export const Header = () => {
             try {
                 if (user) {
                     setToken(user.token);
-                    const result = await axios.get("http://localhost:8080/api/cart/items", {
+                    const result = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -122,7 +122,7 @@ export const Header = () => {
                     setTotal(totalAmount);
                 }
             } catch (error) {
-
+                console.error("Failed to fetch cart items", error);
             }
         }
         fetchCart();
@@ -131,7 +131,7 @@ export const Header = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/categories/all`)
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/all`)
                 const parent = result.find(cat => cat.parentCategory === null);
                 setParentCategory(parent)
                 const mainCategories = result.filter(cat => cat.parentCategory && cat.parentCategory.id === parent.id);

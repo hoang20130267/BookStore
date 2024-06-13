@@ -10,7 +10,7 @@ const LeftSideBar = (props) => {
 
     useEffect(() => {
         const fetchInformation = async () => {
-            const result = await new APIService(token).fetchData("http://localhost:8080/api/user/info");
+            const result = await new APIService(token).fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/info`);
             setInformation(result);
         }
         fetchInformation();

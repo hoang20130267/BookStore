@@ -29,12 +29,10 @@ const ProductList = () => {
     const apiService = new APIService();
 
     const [promotion, setPromotion] = useState([]);
-    console.log(process.env.REACT_APP_ENDPOINT_API);
 
     const handleSortChange = (e) => {
         const newSort = e.target.value;
         let newOrder = 'ASC';
-        setSort(newSort);
         if (newSort === 'atoz') {
             newOrder = 'ASC';
         } else if (newSort === 'ztoa') {
@@ -46,6 +44,8 @@ const ProductList = () => {
         } else if (newSort === 'latest') {
             newOrder = 'DESC';
         }
+        setSort(newSort);
+        setOrder(newOrder);
         updateURL({sort: newSort, order: newOrder})
     }
 
@@ -102,7 +102,7 @@ const ProductList = () => {
     };
 
     const getProductsByCategory = (categoryId, page = 0, perPage = 24, sort = 'id', filter = '{}', order = 'ASC') => {
-        const endpoint = `http://localhost:8080/api/products/category/${categoryId}`;
+        const endpoint = `${process.env.REACT_APP_ENDPOINT_API}/products/category/${categoryId}`;
         const params = {page, perPage, sort, filter, order};
         return apiService.fetchData(endpoint, params);
     };
@@ -138,7 +138,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/products/promotion?filter=%7B%22product%22%3A%7D`);
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/products/promotion?filter=%7B%22product%22%3A%7D`);
                 setPromotion(response.data);
             } catch (error) {
                 console.error("Error fetching cates:", error);
@@ -149,7 +149,7 @@ const ProductList = () => {
 
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="site-content space-bottom-3 mt-8">
                 <div className="container">
                     <div className="row">

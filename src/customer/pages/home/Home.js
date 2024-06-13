@@ -20,11 +20,11 @@ export const Home = () => {
                             <Advertise/>
                             <Categories/>
                             <Features/>
+                            <ScrollToTop/>
                         </div>
                     </div>
                 </div>
             </div>
-            <ScrollToTop/>
         </main>
     )
 }

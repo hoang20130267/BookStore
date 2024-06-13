@@ -7,7 +7,6 @@ import axios from "axios";
 import Product from "../shop-product/sub-components/Product";
 
 export const OrderDetail = () => {
-    const location = useLocation();
     const {id} = useParams();
     const [order, setOrder] = useState({});
     const [orderDetails, setOrderDetails] = useState([]);
@@ -26,7 +25,7 @@ export const OrderDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await apiService.fetchData(`http://localhost:8080/api/orders/${id}`);
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/${id}`);
                 setOrder(result);
                 if (result.orderDetails) {
                     setOrderDetails(result.orderDetails);
@@ -83,11 +82,11 @@ export const OrderDetail = () => {
     const handleCancelOrder = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8080/api/orders/cancel/${order.id}`);
+            await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/orders/cancel/${order.id}`);
             const successMessage = 'Hủy đơn hàng thành công!';
             setPopupInfo({message: successMessage, type: 'success', visible: true});
         } catch (error) {
-            if(error.response.status === 400) {
+            if (error.response.status === 400) {
                 setPopupInfo({message: error.response.data, type: 'error', visible: true});
             } else {
                 setPopupInfo({message: 'Hủy đơn hàng thất bại!', type: 'error', visible: true});
@@ -109,7 +108,7 @@ export const OrderDetail = () => {
 
     return (
         <div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             {progress === 0 ? <></> :
                 <div id="progress-ship" style={{margin: "50px 150px 100px 150px"}}>
                     <div id="progress-bar" style={{width: `${(progress - 1) * 25}%`}}></div>
@@ -130,7 +129,8 @@ export const OrderDetail = () => {
                             <div className="col-lg-12 col-md-6">
                                 <div className="checkout__order">
                                     <h4 style={{textAlign: "center"}}>Chi tiết hóa đơn</h4>
-
+                                    <h6 style={{textAlign: 'right', marginBottom: '20px'}}>Mã đơn
+                                        hàng: {order.orderCode}</h6>
                                     <table className="table table-sm fs--1 mb-0">
                                         <thead>
                                         <tr>
@@ -153,7 +153,8 @@ export const OrderDetail = () => {
                                         {orderDetails.map(orderDetail => (<tr key={orderDetail.id}
                                                                               className="hover-actions-trigger btn-reveal-trigger position-static">
                                             <td className="fs--1 align-middle ps-0 py-3">{orderDetail.product?.detail?.productSku}</td>
-                                            <td className="customer align-middle white-space-nowrap pe-5">
+                                            <td className="customer align-middle white-space-nowrap pe-5"
+                                                title={orderDetail.product?.title}>
                                                 {shortenContent(orderDetail.product?.title, 30)}
                                             </td>
                                             <td className="email align-middle white-space-nowrap pe-5"
@@ -173,11 +174,11 @@ export const OrderDetail = () => {
                                     {promotion ? <div>Áp dụng voucher: <span
                                         style={{float: "right"}}>{promotion}%</span></div> : null}
                                     {promotion > 0 ? <div>Giá được giảm: <span
-                                        style={{float: "right"}}>{formatCurrency(orderDetails[0].totalMoney * promotion / 100)}</span>
+                                        style={{float: "right"}}>{formatCurrency(tempTotal * promotion / 100)}</span>
                                     </div> : null}
                                     <div style={{borderTop: "1px solid #e1e1e1"}}>Phí vận chuyển: <span
                                         style={{float: "right"}}
-                                        id="fee">{formatCurrency(order.shippingCost)}</span>
+                                        id="fee">{order.shippingCost === 0 ? 'Miễn phí vận chuyển' : formatCurrency(order.shippingCost)}</span>
                                     </div>
                                     <input value="" id="provisional" style={{display: "none"}}/>
                                     <div>Phương thức thanh toán: <span
@@ -200,29 +201,29 @@ export const OrderDetail = () => {
                                         {order.status?.name}
                                     </div> : order.status?.id === 5 ?
                                         <>
-                                        <button className="site-btn" style={{
-                                            backgroundColor: "green",
-                                            borderRadius: "5px",
-                                            float: "right"
-                                        }} disabled={true}>
-                                            Đã giao hàng
-                                        </button>
-                                        <button className="site-btn" style={{
-                                            backgroundColor: "orange",
-                                            borderRadius: "5px",
-                                            float: "right"
-                                        }} onClick={showPopupReview}>
-                                            Đánh giá sản phẩm
-                                        </button>
+                                            <button className="site-btn" style={{
+                                                backgroundColor: "green",
+                                                borderRadius: "5px",
+                                                float: "right"
+                                            }} disabled={true}>
+                                                Đã giao hàng
+                                            </button>
+                                            <button className="site-btn" style={{
+                                                backgroundColor: "orange",
+                                                borderRadius: "5px",
+                                                float: "right"
+                                            }} onClick={showPopupReview}>
+                                                Đánh giá sản phẩm
+                                            </button>
                                         </>
                                         :
                                         <button class="site-btn" style={{
-                                        backgroundColor: "yellowgreen",
-                                        borderRadius: "5px",
-                                        float: "right"
-                                    }} onClick={handleOpenAskingPopup}>
-                                        Hủy đơn hàng
-                                    </button>}
+                                            backgroundColor: "yellowgreen",
+                                            borderRadius: "5px",
+                                            float: "right"
+                                        }} onClick={handleOpenAskingPopup}>
+                                            Hủy đơn hàng
+                                        </button>}
 
                                     <div
                                         className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
@@ -241,7 +242,8 @@ export const OrderDetail = () => {
                                         </div>
                                     </div>
 
-                                    <div className={`popup popup--icon -question js_question-popup ${popupInfo.visible && popupInfo.type === 'question' ? 'popup--visible' : ''}`}>
+                                    <div
+                                        className={`popup popup--icon -question js_question-popup ${popupInfo.visible && popupInfo.type === 'question' ? 'popup--visible' : ''}`}>
                                         <div className="popup__background"></div>
                                         <div className="popup__content">
                                             <h3 className="popup__content__title">
@@ -249,15 +251,15 @@ export const OrderDetail = () => {
                                             </h3>
                                             <p>{popupInfo.message}</p>
                                             <p>
-                                                <div style={{display:"flex", marginTop: "10px"}}>
-                                                <button className="button-popup button--error"
-                                                        data-for="js_success-popup" style={{marginRight: "20px"}}
-                                                        onClick={hidePopup}>Hủy
-                                                </button>
-                                                <button className="button-popup button--warning"
-                                                        data-for="js_success-popup"
-                                                        onClick={handleCancelOrder}>Xác nhận
-                                                </button>
+                                                <div style={{display: "flex", marginTop: "10px"}}>
+                                                    <button className="button-popup button--error"
+                                                            data-for="js_success-popup" style={{marginRight: "20px"}}
+                                                            onClick={hidePopup}>Hủy
+                                                    </button>
+                                                    <button className="button-popup button--warning"
+                                                            data-for="js_success-popup"
+                                                            onClick={handleCancelOrder}>Xác nhận
+                                                    </button>
                                                 </div>
                                             </p>
                                         </div>
@@ -305,16 +307,19 @@ export const OrderDetail = () => {
                                                     </thead>
                                                     <tbody>
                                                     {orderDetails.map(orderDetail => (<tr key={orderDetail.id}>
-                                                        <td style={{paddingTop:"18px"}}>{orderDetail.product?.detail?.productSku}</td>
-                                                        <td style={{paddingTop:"18px"}}>
+                                                        <td style={{paddingTop: "18px"}}>{orderDetail.product?.detail?.productSku}</td>
+                                                        <td style={{paddingTop: "18px"}}>
                                                             {shortenContent(orderDetail.product?.title, 30)}
                                                         </td>
-                                                        <td style={{paddingTop:"18px"}}>
+                                                        <td style={{paddingTop: "18px"}}>
                                                             {formatCurrency(orderDetail.product?.currentPrice)}
                                                         </td>
                                                         <td>
-                                                            <Link to={`/product-detail/${orderDetail.product?.detail.id}`}>
-                                                                <button className="button-product button-link" style={{textAlign:"center"}}><strong>Đánh giá</strong></button>
+                                                            <Link
+                                                                to={`/product-detail/${orderDetail.product?.detail.id}`}>
+                                                                <button className="button-product button-link"
+                                                                        style={{textAlign: "center"}}><strong>Đánh
+                                                                    giá</strong></button>
                                                             </Link>
                                                         </td>
                                                     </tr>))}

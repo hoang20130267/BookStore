@@ -6,7 +6,6 @@ import {useDispatch} from "react-redux";
 import {registerSuccess} from "../../../store/authSlice";
 
 const SignUp = () => {
-    const location = useLocation();
     const [email, setEmail] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -124,7 +123,7 @@ const SignUp = () => {
                     </p>
                 </div>
             </div>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="content">
                 <div className="container">
                     <div className="row justify-content-center">
@@ -168,7 +167,7 @@ const SignUp = () => {
                                             <button className="button_login d-flex justify-content-center" type={"submit"}
                                                     style={{
                                                         paddingBottom: "13px", border: "none", fontSize: "18px"
-                                                        , fontWeight: "bold"
+                                                        , fontWeight: "bold", maxWidth: '100%'
                                                     }} onPress={handleChangeAction}> Đăng ký
                                             </button>
                                             <span

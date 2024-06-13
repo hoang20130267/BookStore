@@ -10,7 +10,7 @@ const FeaturedProduct = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await new APIService().fetchData(`http://localhost:8080/api/products/feature`);
+                const result = await new APIService().fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/feature`);
                 setProducts(result);
             } catch (error) {
 
@@ -22,7 +22,7 @@ const FeaturedProduct = () => {
 
     const handleToggle = (e) => {
         e.preventDefault();
-        setIsShown(!isShown)
+        setIsShown(!isShown);
     }
     return (
         <div id="woocommerce_products-3" className="widget border p-4d875 woocommerce widget_products">

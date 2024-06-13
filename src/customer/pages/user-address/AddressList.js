@@ -15,9 +15,8 @@ const AddressList = () => {
     const [addresses, setAddresses] = useState([]);
     const fetchAddress = async () => {
         try {
-            const response = await apiService.fetchData(`http://localhost:8080/api/user/addresses`);
+            const response = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`);
             setAddresses(response)
-            console.log(response)
         } catch (error) {
             console.error('Error fetching addresses', error);
         }
@@ -28,7 +27,7 @@ const AddressList = () => {
 
     return (
         <>
-            <Breadcrumb location={location}/>
+            <Breadcrumb/>
             <div className="container d-flex mt-5 mb-5 px-0">
                 <LeftSideBar/>
                 <div className="col-md-9 border" style={{borderRadius: "10px"}}>

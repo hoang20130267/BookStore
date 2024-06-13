@@ -5,7 +5,7 @@ import {
 } from "./authSlice";
 
 export const loginUser = async (username, password) => {
-    const url = "http://localhost:8080/api/auth/signin";
+    const url = `${process.env.REACT_APP_ENDPOINT_API}/auth/signin`;
     const requestBody = {
         username: username,
         password: password
@@ -18,7 +18,7 @@ export const loginUser = async (username, password) => {
     }
 }
 export const registerUser = async (username,password,email,otp) => {
-    const url= "http://localhost:8080/api/auth/signup";
+    const url= `${process.env.REACT_APP_ENDPOINT_API}/auth/signup`;
     const newUser = {
         username: username,
         password: password,
@@ -35,7 +35,7 @@ export const registerUser = async (username,password,email,otp) => {
 export const logOut = async (dispatch, id, navigate, token) => {
     dispatch(logoutStart());
     try {
-        await axios.post("http://localhost:8080/api/auth/logout", id, {
+        await axios.post(`${process.env.REACT_APP_ENDPOINT_API}/auth/logout`, id, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -50,7 +50,7 @@ export const logOut = async (dispatch, id, navigate, token) => {
 }
 export const listCart = async (token) => {
     try {
-        const response = await axios.get("http://localhost:8080/api/cart/items", {
+        const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -63,7 +63,7 @@ export const listCart = async (token) => {
     }
 }
 export const sendEmail = async (props:any) => {
-    const url = "http://localhost:8080/api/auth/send-email";
+    const url = `${process.env.REACT_APP_ENDPOINT_API}/auth/send-email`;
     try {
         return await axios.post(url, {
             email: props.email,
@@ -75,7 +75,7 @@ export const sendEmail = async (props:any) => {
     }
 }
 export const changeForgotPass = async (props:any) => {
-    const url = "http://localhost:8080/api/auth/reset-password";
+    const url = `${process.env.REACT_APP_ENDPOINT_API}/auth/reset-password`;
     try {
         return await axios.post(url, {
             email: props.email,

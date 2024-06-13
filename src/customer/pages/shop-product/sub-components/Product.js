@@ -19,7 +19,7 @@ const Product = (props) => {
 
     const fetchFavorite = async () => {
         try {
-            const result = await apiService.fetchData("http://localhost:8080/api/user/favorites");
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
             const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
             const isFavoriteProduct = favoriteProduct ? true : false;
             setIsFavortie(isFavoriteProduct)
@@ -50,15 +50,15 @@ const Product = (props) => {
         }
     }, [productInfo, discount])
 
-    const addToCart = async () => {
+    const addToCart = async (event) => {
+        event.preventDefault();
         if (!user) {
             const errorMessage = 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng!';
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             const requestData = {product: {id: productInfo.id}, quantity: 1};
             try {
-                const responseData = await apiService.sendData(`http://localhost:8080/api/cart/add`, requestData);
-                console.log(responseData)
+                const responseData = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/cart/add`, requestData);
                 setPopupInfo({message: responseData, type: 'success', visible: true});
             } catch (error) {
                 if (error.response) {
@@ -68,13 +68,14 @@ const Product = (props) => {
         }
     };
 
-    const addFavoriteProduct = async () => {
+    const addFavoriteProduct = async (event) => {
+        event.preventDefault();
         if (!user) {
             const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
         } else {
             try {
-                const result = await apiService.sendData(`http://localhost:8080/api/user/favorites/${productInfo.id}`);
+                const result = await apiService.sendData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites/${productInfo.id}`);
                 const successMessage = result.message || 'Sản phẩm đã được thêm vào yêu thích!';
                 setPopupInfo({message: successMessage, type: 'success', visible: true});
             } catch (error) {
@@ -86,7 +87,7 @@ const Product = (props) => {
         try {
             if (discount !== 0) {
                 const newPrice = productInfo.oldPrice - (productInfo.oldPrice * discount / 100);
-                await axios.put(`http://localhost:8080/api/products/set_discount/${productInfo.id}/price/${newPrice}`);
+                await axios.put(`${process.env.REACT_APP_ENDPOINT_API}/products/set_discount/${productInfo.id}/price/${newPrice}`);
             }
         } catch (error) {
             console.error("Error setting price", error);
@@ -95,7 +96,7 @@ const Product = (props) => {
 
     const checkRemainingQuantity = async () => {
         try {
-            const result = await apiService.fetchData(`http://localhost:8080/api/inventories/inventory/${productInfo.id}`);
+            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/inventories/inventory/${productInfo.id}`);
             setRemainingQuantity(result.remainingQuantity);
         } catch (error) {
             console.error(error);
@@ -165,7 +166,7 @@ const Product = (props) => {
                             (<div
                                 className="woocommerce-loop-product__hover product__hover d-flex align-items-center justify-content-between mt-2">
                                 <div className="cart-fragment">
-                                    <Link to="" data-quantity="1" onClick={addToCart}
+                                    <Link to="" data-quantity="1" onClick={(event) => addToCart(event)}
                                           className="button product_type_simple add_to_cart_button ajax_add_to_cart text-uppercase text-dark h-dark font-weight-medium mr-auto"
                                           title="Thêm vào giỏ hàng">
                                         <i className="fa-solid fa-cart-shopping"></i>
@@ -173,7 +174,7 @@ const Product = (props) => {
                                 </div>
                                 <div className="yith-wcwl-add-to-wishlist wishlist-fragment on-first-load">
                                     <div className="yith-wcwl-add-button">
-                                        {!isFavorite ? (<Link to="" onClick={addFavoriteProduct}
+                                        {!isFavorite ? (<Link to="" onClick={(event) => addFavoriteProduct(event)}
                                                               className="add_to_wishlist single_add_to_wishlist"
                                                               title="Thêm vào yêu thích">
                                                 <i className="fa-regular fa-heart"></i>

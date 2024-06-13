@@ -9,7 +9,7 @@ const BlogTabMenu = () => {
     useEffect(() => {
         const fetchCates = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/blogCate/all`);
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/blogCate/all`);
                 setCate(response.data);
             } catch (error) {
                 console.error("Error fetching cates:", error);
