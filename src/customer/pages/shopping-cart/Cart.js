@@ -92,6 +92,36 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
         </tr>
     )
 }
+const PromotionCodeList = ({onSelectCode}) => {
+    const [promotionCodes, setPromotionCodes] = useState([]);
+
+    const fetchPromotionCodes = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/all-by-code`);
+            setPromotionCodes(response.data);
+        } catch (error) {
+            console.error("Error fetching promotion codes:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPromotionCodes();
+    }, []);
+
+    return (
+        <ul className="promotion-code-list">
+            <li onClick={() => onSelectCode('')}>
+                Không chọn mã
+            </li>
+            {promotionCodes.map((code) => (
+                <li key={code.id} onClick={() => onSelectCode(code.code)}>
+                    <span className="code-text">{code.code}</span>
+                    <span className="discount-text">-{code.discount}%</span>
+                </li>
+            ))}
+        </ul>
+    );
+};
 export const ProductsInCart = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
@@ -101,7 +131,7 @@ export const ProductsInCart = () => {
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
-    const [isAddDiscount, setIsAddDiscount] = useState(false);
+    const [showPromotionList, setShowPromotionList] = useState(false);
     useEffect(() => {
         if (!user) {
             navigate("/sign-in");
@@ -141,47 +171,49 @@ export const ProductsInCart = () => {
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({...prevInfo, visible: false}));
     };
-
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', getDiscountCode));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', getDiscountCode));
-        };
-    }, []);
-    const getDiscountCode = async (e) => {
-        e.preventDefault();
-        if (discountCode === '') {
-            const errorMessage = 'Vui lòng nhập mã giảm giá!';
+    const applyDiscountCode = async (code) => {
+        setDiscountCode(code);
+        setShowPromotionList(false);
+        try {
+            await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/orders/promo/${code}/user/${user.id}`);
+            const errorMessage = 'Bạn đã sử dụng mã giảm giá này rồi!';
+            setDiscountCode('')
             setPopupInfo({message: errorMessage, type: 'error', visible: true});
-        } else {
-            try {
-                await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/orders/promo/${discountCode}/user/${user.id}`);
-                const errorMessage = 'Bạn đã sử dụng mã giảm giá này rồi!';
-                setDiscountCode('')
+        } catch (error) {
+            if (error.response.status === 404) {
+                const errorMessage = 'Mã giảm giá không hợp lệ!';
                 setPopupInfo({message: errorMessage, type: 'error', visible: true});
-            } catch (error) {
-                if (error.response.status === 404) {
-                    const errorMessage = 'Mã giảm giá không hợp lệ!';
-                    setPopupInfo({message: errorMessage, type: 'error', visible: true});
-                } else {
+            } else {
+                try {
+                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${code}`);
                     try {
-                        const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
-                        if (isAddDiscount === true) {
-                            const errorMessage = 'Bạn đã sử dụng 1 mã giảm giá trước đó rồi!';
+                        const response2 = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/checkDate/${code}`);
+                        if (response2.data === "expired") {
+                            const errorMessage = 'Mã giảm giá đã hết hạn!';
                             setPopupInfo({message: errorMessage, type: 'error', visible: true});
                         } else {
-                            setDiscount(response.data.discount)
-                            setIsAddDiscount(true);
+                            setDiscount(response.data.discount);
                             const successMessage = 'Áp dụng mã giảm giá thành công!';
                             setPopupInfo({message: successMessage, type: 'success', visible: true});
                         }
                     } catch (error) {
-                        const errorMessage = 'Mã giảm giá không hợp lệ!';
-                        setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                        console.error("Error checking date:", error);
                     }
+                } catch (error) {
+                    const errorMessage = 'Mã giảm giá không hợp lệ!';
+                    setPopupInfo({message: errorMessage, type: 'error', visible: true});
                 }
             }
+        }
+    };
+
+    const handlePromotionCodeSelect = (code) => {
+        if (code === '') {
+            setDiscountCode(null);
+            setDiscount(0)
+            setShowPromotionList(false);
+        } else {
+            applyDiscountCode(code);
         }
     };
     useEffect(() => {
@@ -281,11 +313,17 @@ export const ProductsInCart = () => {
                         <div className="shoping__continue">
                             <div className="shoping__discount">
                                 <h5>Mã giảm giá</h5>
-                                <form onSubmit={getDiscountCode}>
-                                    <input type="text" placeholder="Nhập mã giảm giá"
-                                           onChange={e => setDiscountCode(e.target.value)}/>
-                                    <button type="submit" className="site-btn">APPLY</button>
-                                </form>
+                                <button onClick={() => setShowPromotionList(!showPromotionList)}
+                                        className="promo-button">Chọn mã giảm giá
+                                </button>
+                                {showPromotionList && (
+                                    <PromotionCodeList onSelectCode={handlePromotionCodeSelect}/>
+                                )}
+                                {discount !== 0 && (
+                                    <div className="selected-code">
+                                        Mã giảm giá đã chọn: {discountCode}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
