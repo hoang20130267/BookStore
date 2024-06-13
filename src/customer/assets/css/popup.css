@@ -324,7 +324,7 @@
 #progress-text .step.active .ship-text {
     color: #4584ff;
     padding-top: 30px;
-    width: 100px !important;
+    width: 120px !important;
     word-break: normal !important;
 }
 
@@ -345,17 +345,17 @@
 #progress-text .step.progress-step .ship-text {
     color: #43d854;
     /*padding-top: 30px;*/
-    width: 70px !important;
+    width: 120px !important;
     word-break: normal !important;
 }
 
 #progress-text .step .ship-text {
-    margin-top: 30px;
-    font-size: 0.7rem;
+    margin-top: 45px;
+    font-size: 0.75rem;
     font-weight: bold;
     color: inherit;
     padding-top: 30px;
-    width: 100px !important;
+    width: 120px !important;
     word-break: normal !important;
 }
 

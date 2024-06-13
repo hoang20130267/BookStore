@@ -1,3 +1,77 @@
+/* Popup Styles */
+.promo-button{
+    background-color: #43d854;
+    color: #efefef;
+    font-weight: bold;
+    width: 300px;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.promotion-code-list {
+    width: 300px;
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.promotion-code-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.promotion-code-list li:last-child {
+    border-bottom: none;
+}
+
+.promotion-code-list li:hover {
+    background-color: #eee;
+}
+.code-text {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.discount-text {
+    flex: 0;
+    text-align: right;
+    color: green;
+    white-space: nowrap;
+}
+.selected-code{
+    width: 300px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #333;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/*end*/
+
 .value-button {
     display: inline-block;
     border: 1px solid #ddd;
