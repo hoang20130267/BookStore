@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
 import "../../assets/css/style-comment.css"
-import {Link, useLocation, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
@@ -26,6 +26,7 @@ export const SingleProduct = (props) => {
     const [rating, setRating] = useState(0);
     const [commentQuantity, setCommentQuantity] = useState(0);
     const [remainingQuantity, setRemainingQuantity] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (comments) {
@@ -107,6 +108,11 @@ export const SingleProduct = (props) => {
             }
         }
     };
+    const handleBuyNow = () => {
+        navigate('/checkout', {
+            state: {product: product, quantity: quantity, subTotal: product.currentPrice * quantity, type: 'buy-now'}
+        });
+    }
     const addFavoriteProduct = async () => {
         if (!user) {
             const errorMessage = 'Bạn phải đăng nhập trước khi thêm vào yêu thích!';
@@ -143,10 +149,6 @@ export const SingleProduct = (props) => {
                 const favoriteProductId = favoriteProduct ? favoriteProduct.id : null;
                 setFavoriteId(favoriteProductId);
                 setIsFavorite(isFavoriteProduct)
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
             } catch (error) {
                 console.error("Error fetching favorite products")
             }
@@ -217,10 +219,10 @@ export const SingleProduct = (props) => {
                                     {product.currentPrice !== product.oldPrice ? (
                                         <span className="price d-flex justify-content-start align-items-center">
                                     <p className="current-price mr-2">
-                                        <span className="price" style={{fontWeight: 600}}>{formatCurrency(product.currentPrice)}</span>
+                                        <span className="price">{formatCurrency(product.currentPrice)}</span>
                                     </p>
                                     <p className="old-price">
-                                        <span className="price" style={{fontSize: '1.1rem'}}>{formatCurrency(product.oldPrice)}</span>
+                                        <span className="price">{formatCurrency(product.oldPrice)}</span>
                                     </p>
                                 </span>
                                     ) : (<span className="price d-flex justify-content-start align-items-center">
@@ -257,7 +259,8 @@ export const SingleProduct = (props) => {
                                         <i className="fa-solid fa-cart-shopping"></i>
                                         {remainingQuantity === 0 ? 'hết hàng' : 'thêm vào giỏ hàng'}
                                     </button>
-                                    <button type="button" disabled={remainingQuantity === 0} className="buy_now_btn">
+                                    <button type="button" disabled={remainingQuantity === 0} className="buy_now_btn"
+                                            onClick={handleBuyNow}>
                                         <i className="fa-solid fa-wallet"></i>
                                         mua ngay
                                     </button>
@@ -770,7 +773,7 @@ export const SideBar = () => {
                                     </div>
                                     <div className="media-body">
                                         <h4 className="feature__title h6 mb-1 text-dark">Giao Hàng Miễn Phí</h4>
-                                        <p className="feature__subtitle m-0 text-dark">Đơn Hàng Trên 500.000đ</p>
+                                        <p className="feature__subtitle m-0 text-dark">Đơn Hàng Trên 800.000đ</p>
                                     </div>
                                 </div>
                             </li>
@@ -866,8 +869,6 @@ export const RelatedProducts = ({categoryId}) => {
     )
 }
 export const Detail = () => {
-    const location = useLocation();
-    const { productName } = location.state || {};
     const apiService = new APIService();
     const {id} = useParams();
     const [product, setProduct] = useState({});
@@ -878,16 +879,16 @@ export const Detail = () => {
             const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/${id}`);
             setProduct(result)
             setCategoryId(result.category?.id)
-            window.scrollTo({
-                top: 0,
-                behavior: "auto"
-            });
         } catch (error) {
             console.error('Error fetching product', error);
         }
     }
     useEffect(() => {
         fetchData();
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }, [id])
     return (
         <div>

@@ -28,13 +28,9 @@ export const TopSeller = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/all`);
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/top_selling?limit=15`);
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
             } catch (error) {
                 console.error('Error fetching products', error);
             }
@@ -48,8 +44,8 @@ export const TopSeller = () => {
             <div className="wp-block-bwgb-products-carousel__inner container">
                 <header
                     className="mb-5 justify-content-between align-items-center bwgb-products-carousel__block-header d-md-flex ">
-                    <h2 className="bwgb-products-carousel__block-title font-size-7 mb-3 mb-md-0">Top sách bán chạy
-                        nhất</h2><Link to={`/product-list/1`}
+                    <h2 className="bwgb-products-carousel__block-title font-size-7 mb-3 mb-md-0">Top sản phẩm bán
+                        chạy</h2><Link to={`/product-list/1`}
                                        className="h-primary d-block bwgb-products-carousel__block-action-text"><span>Xem tất cả</span><i
                     className="fa-solid fa-caret-right ml-1"></i></Link></header>
             </div>

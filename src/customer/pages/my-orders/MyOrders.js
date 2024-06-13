@@ -22,6 +22,24 @@ export const MyOrders = () => {
     useEffect(() => {
         fetchData();
     }, []);
+    const getStatusColorClass = (status) => {
+        switch (status) {
+            case 'pending':
+                return 'text-tangerine';
+            case 'confirmed':
+                return 'text-secondary';
+            case 'preparing':
+                return 'text-primary-indigo';
+            case 'shipping':
+                return 'text-info';
+            case 'delivered':
+                return 'text-success';
+            case 'cancelled':
+                return 'text-danger';
+            default:
+                return '';
+        }
+    };
     return (
         <div>
             <Breadcrumb/>
@@ -62,7 +80,7 @@ export const MyOrders = () => {
                                         </td>
                                         <td className="email align-middle white-space-nowrap pe-5">{order.orderDate}</td>
                                         <td className="email align-middle white-space-nowrap pe-5">
-                                            <p className="mb-0" style={{color: "#cccccc"}}>{order.status?.name}</p>
+                                            <p className={`mb-0 ${getStatusColorClass(order.status?.slug)}`}>{order.status?.name}</p>
                                         </td>
                                         <td className="email align-middle white-space-nowrap pe-5">
                                             <Link className="fw-semi-bold text-1100"

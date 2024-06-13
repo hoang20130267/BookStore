@@ -12,15 +12,14 @@ export const Coupon = () => {
     return (
         <div className="row">
             <div className="col-lg-12">
-                <h6><span className="icon_tag_alt"></span> Bạn có mã giảm giá ? <a
-                    href="src/customer/pages/checkout/Checkout#">Nhấn vào đây</a> để nhận mã
-                    giảm giá
+                <h6><span className="icon_tag_alt"></span> Miễn phí vận chuyển cho đơn hàng có giá trị trên 800.000đ
                 </h6>
             </div>
         </div>
     )
 }
-export const InputInfor = ({cartItems, subTotal}) => {
+export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
+    console.log(totalCheck)
     const [ticked, setTicked] = useState(false);
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
@@ -49,8 +48,10 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const {discount} = useParams();
     const [discountPercent, setDiscountPercent] = useState(0);
     const [discountId, setDiscountId] = useState(0);
+    const [type, setType] = useState(buyNow ? buyNow.type : null);
     const navigate = useNavigate();
-
+    const [shippingCostFree, setShippingCostFree] = useState(false);
+    console.log(shippingCost)
     const fetchAddresses = async () => {
         try {
             const result = await apiServiceWithToken.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`);
@@ -70,8 +71,16 @@ export const InputInfor = ({cartItems, subTotal}) => {
         fetchAddresses();
     }, []);
 
+    useEffect(() => {
+        if (type === 'buy-now') {
+            setShippingCostFree(buyNow.subTotal > 800000);
+        } else {
+            setShippingCostFree(totalCheck > 800000);
+        }
+    }, [totalCheck, buyNow.subTotal]);
+
     const checkPlaceOrderButton = () => {
-        setPlaceOrderButtonEnabled(confirm && cartItems.length > 0 && !isEmpty(selectedAddress));
+        setPlaceOrderButtonEnabled(confirm && (cartItems.length > 0 || buyNow.type !== '') && !isEmpty(selectedAddress));
     }
 
     useEffect(() => {
@@ -203,16 +212,28 @@ export const InputInfor = ({cartItems, subTotal}) => {
     const createOrder = async () => {
         const request = {
             shippingAddress: {id: selectedAddress},
-            orderTotal: subTotal + shippingCost,
-            totalQuantity: cartItems.length,
+            orderTotal: type === 'buy-now'
+                ? shippingCostFree
+                    ? buyNow.subTotal
+                    : buyNow.subTotal + shippingCost
+                : shippingCostFree
+                    ? subTotal
+                    : subTotal + shippingCost,
+            totalQuantity: type === 'buy-now' ? buyNow.quantity : cartItems.length,
             paymentMethod: paymentMethod,
             status: {id: 1},
-            shippingCost: shippingCost,
+            shippingCost: shippingCostFree ? 0 : shippingCost,
             note: note,
-            promotion: {id: discountId}
+            promotion: {id: discountId},
+            orderDetails: type === 'buy-now' ? [{product: buyNow.product, quantity: buyNow.quantity}] : null
         }
         try {
-            const response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
+            let response;
+            if (type === 'buy-now') {
+                response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders/buy-now`, request);
+            } else {
+                response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
+            }
             console.log("Order created successfully", response);
             const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
             setPopupInfo({message: successMessage, type: 'success', visible: true});
@@ -455,7 +476,11 @@ export const InputInfor = ({cartItems, subTotal}) => {
                                                 <span className="radio-fake"></span><strong className="label">Giao hàng
                                                 tiêu
                                                 chuẩn:&nbsp;&nbsp;
-                                                <span>{formatCurrency(shippingCost)}</span></strong></label>
+                                                <span
+                                                    style={{textDecoration: shippingCostFree ? 'line-through' : ''}}>{formatCurrency(shippingCost)}</span>
+                                                {shippingCostFree && (
+                                                    <span style={{marginLeft: '10px'}}>{formatCurrency(0)}</span>)}
+                                            </strong></label>
                                         </li>
                                     </ul>
                                 </div>
@@ -490,77 +515,128 @@ export const InputInfor = ({cartItems, subTotal}) => {
                         </div>
                     </div>
                     <div className="col-lg-5 col-md-6">
-                        <div className="checkout__order">
-                            <h4>Hóa đơn của bạn</h4>
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th className="title">Sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th style={{textAlign: 'right'}}>Tổng tiền</th>
-                                </tr>
-                                </thead>
-                                {cartItems.map(item => (<tr>
-                                    <td title={item.product.title}>{shortenContent(item.product.title, 23)}</td>
-                                    <td style={{textAlign: 'center'}}>x{item.quantity}</td>
-                                    <td style={{textAlign: 'right'}}>{formatCurrency(item.product.currentPrice * item.quantity)}</td>
-                                </tr>))}
-                            </table>
-                            {discountPercent > 0 && (
-                                <div className="checkout__order__products">Mã giảm giá<span>- {discountPercent}%</span>
+                        {type === 'buy-now' ? (
+                                <div className="checkout__order">
+                                    <h4>Hóa đơn của bạn</h4>
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th className="title">Sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th style={{textAlign: 'right'}}>Tổng tiền</th>
+                                        </tr>
+                                        </thead>
+                                        <tr>
+                                            <td title={buyNow.product.title}>{shortenContent(buyNow.product.title, 23)}</td>
+                                            <td style={{textAlign: 'center'}}>x{buyNow.quantity}</td>
+                                            <td style={{textAlign: 'right'}}>{formatCurrency(buyNow.subTotal)}</td>
+                                        </tr>
+                                    </table>
+                                    <div className="checkout__order__subtotal">Tạm
+                                        tính <span>{formatCurrency(buyNow.subTotal)}</span>
+                                    </div>
+                                    {discountPercent > 0 && (
+                                        <div className="checkout__order__products">Mã giảm
+                                            giá<span>- {discountPercent}%</span>
+                                        </div>
+                                    )}
+                                    <div className="checkout__order__shipping">Phí vận
+                                        chuyển <span>{shippingCostFree ? 'Miễn phí vận chuyển' : formatCurrency(shippingCost)}</span>
+                                    </div>
+                                    <div className="checkout__order__total">Tổng
+                                        tiền <span>{shippingCostFree ? formatCurrency(buyNow.subTotal) : formatCurrency(buyNow.subTotal + shippingCost)}</span>
+                                    </div>
+                                    <div className="checkout__input__checkbox">
+                                        <label htmlFor="acc-or">
+                                            <p>Xác nhận thông tin<span>*</span></p>
+                                            <input type="checkbox" id="acc-or" required={true}
+                                                   onChange={() => setConfirm(!confirm)}/>
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <p>Tôi xác nhận thông tin đơn hàng và những thông tin tôi đã nhập là chính xác.</p>
+                                    <button disabled={!placeOrderButtonEnabled} onClick={handleButtonPlaceOrder}
+                                            type="submit"
+                                            className="site-btn">Mua hàng
+                                    </button>
+                                </div>
+                            )
+                            : (
+                                <div className="checkout__order">
+                                    <h4>Hóa đơn của bạn</h4>
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th className="title">Sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th style={{textAlign: 'right'}}>Tổng tiền</th>
+                                        </tr>
+                                        </thead>
+                                        {cartItems.map(item => (<tr>
+                                            <td title={item.product.title}>{shortenContent(item.product.title, 23)}</td>
+                                            <td style={{textAlign: 'center'}}>x{item.quantity}</td>
+                                            <td style={{textAlign: 'right'}}>{formatCurrency(item.product.currentPrice * item.quantity)}</td>
+                                        </tr>))}
+                                    </table>
+                                    <div className="checkout__order__subtotal">Tạm
+                                        tính <span>{formatCurrency(totalCheck)}</span>
+                                    </div>
+                                    {discountPercent > 0 && (
+                                        <div className="checkout__order__products">Mã giảm
+                                            giá<span>- {discountPercent}%</span>
+                                        </div>
+                                    )}
+                                    <div className="checkout__order__shipping">Phí vận
+                                        chuyển <span>{shippingCostFree ? 'Miễn phí vận chuyển' : formatCurrency(shippingCost)}</span>
+                                    </div>
+                                    <div className="checkout__order__total">Tổng
+                                        tiền <span>{shippingCostFree ? formatCurrency(subTotal) : formatCurrency(subTotal + shippingCost)}</span>
+                                    </div>
+                                    <div className="checkout__input__checkbox">
+                                        <label htmlFor="acc-or">
+                                            <p>Xác nhận thông tin<span>*</span></p>
+                                            <input type="checkbox" id="acc-or" required={true}
+                                                   onChange={() => setConfirm(!confirm)}/>
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <p>Tôi xác nhận thông tin đơn hàng và những thông tin tôi đã nhập là chính xác.</p>
+                                    <button disabled={!placeOrderButtonEnabled} onClick={handleButtonPlaceOrder}
+                                            type="submit"
+                                            className="site-btn">Mua hàng
+                                    </button>
                                 </div>
                             )}
-                            <div className="checkout__order__subtotal">Tạm tính <span>{formatCurrency(subTotal)}</span>
+                        <div
+                            className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                            <div className="popup__background"></div>
+                            <div className="popup__content">
+                                <h3 className="popup__content__title">
+                                    Thành công
+                                </h3>
+                                <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                                <p>
+                                    <button className="button-popup button--success" data-for="js_success-popup"
+                                            onClick={hidePopup}>Ẩn thông báo
+                                    </button>
+                                </p>
                             </div>
-                            <div className="checkout__order__shipping">Phí vận
-                                chuyển <span>{formatCurrency(shippingCost)}</span></div>
-                            <div className="checkout__order__total">Tổng
-                                tiền <span>{formatCurrency(subTotal + shippingCost)}</span></div>
-                            <div className="checkout__input__checkbox">
-                                <label htmlFor="acc-or">
-                                    <p>Xác nhận thông tin<span>*</span></p>
-                                    <input type="checkbox" id="acc-or" required={true}
-                                           onChange={() => setConfirm(!confirm)}/>
-                                    <span className="checkmark"></span>
-                                </label>
-                            </div>
-                            <p>Tôi xác nhận thông tin đơn hàng và những thông tin tôi đã nhập là chính xác.</p>
-                            <button disabled={!placeOrderButtonEnabled} onClick={handleButtonPlaceOrder} type="submit"
-                                    className="site-btn">Mua hàng
-                            </button>
+                        </div>
 
-                            <div
-                                className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
-                                <div className="popup__background"></div>
-                                <div className="popup__content">
-                                    <h3 className="popup__content__title">
-                                        Thành công
-                                    </h3>
-                                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
-                                    <p>
-                                        <button className="button-popup button--success" data-for="js_success-popup"
-                                                onClick={hidePopup}>Ẩn thông báo
-                                        </button>
-                                    </p>
-                                </div>
+                        <div
+                            className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                            <div className="popup__background"></div>
+                            <div className="popup__content">
+                                <h3 className="popup__content__title">
+                                    Thất bại
+                                </h3>
+                                <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
+                                <p>
+                                    <button className="button-popup button--error" data-for="js_error-popup"
+                                            onClick={hidePopup}>Ẩn thông báo
+                                    </button>
+                                </p>
                             </div>
-
-                            <div
-                                className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
-                                <div className="popup__background"></div>
-                                <div className="popup__content">
-                                    <h3 className="popup__content__title">
-                                        Thất bại
-                                    </h3>
-                                    <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
-                                    <p>
-                                        <button className="button-popup button--error" data-for="js_error-popup"
-                                                onClick={hidePopup}>Ẩn thông báo
-                                        </button>
-                                    </p>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -570,8 +646,10 @@ export const InputInfor = ({cartItems, subTotal}) => {
 }
 export const Checkout = () => {
     const location = useLocation();
+    const buyNow = location.state || {};
     const [cart, setCart] = useState([]);
     const [subTotal, setSubTotal] = useState(0);
+    const [totalCheck, setTotalCheck] = useState(0);
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceToken = new APIService(token);
@@ -597,6 +675,7 @@ export const Checkout = () => {
                 let totalAmount = 0;
                 result.forEach(item => {
                     totalAmount += item.quantity * item.product.currentPrice;
+                    setTotalCheck(totalAmount);
                 });
                 if (discountPercent > 0) {
                     totalAmount -= totalAmount * discountPercent / 100;
@@ -619,7 +698,7 @@ export const Checkout = () => {
                     <Coupon/>
                     <div className="checkout__form">
                         <h4>Thông tin thanh toán</h4>
-                        <InputInfor cartItems={cart} subTotal={subTotal}/>
+                        <InputInfor cartItems={cart} subTotal={subTotal} buyNow={buyNow} totalCheck={totalCheck}/>
                     </div>
                 </div>
             </section>
