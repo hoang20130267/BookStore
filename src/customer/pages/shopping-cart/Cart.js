@@ -171,10 +171,20 @@ export const ProductsInCart = () => {
                             const errorMessage = 'Bạn đã sử dụng 1 mã giảm giá trước đó rồi!';
                             setPopupInfo({message: errorMessage, type: 'error', visible: true});
                         } else {
-                            setDiscount(response.data.discount)
-                            setIsAddDiscount(true);
-                            const successMessage = 'Áp dụng mã giảm giá thành công!';
-                            setPopupInfo({message: successMessage, type: 'success', visible: true});
+                            try {
+                                const response2 = await axios.get(`http://localhost:8080/api/promotion/checkDate/${discountCode}`);
+                                if (response2.data === "expired") {
+                                    const errorMessage = 'Mã giảm giá đã hết hạn!';
+                                    setPopupInfo({message: errorMessage, type: 'error', visible: true});
+                                } else {
+                                    setDiscount(response.data.discount)
+                                    setIsAddDiscount(true);
+                                    const successMessage = 'Áp dụng mã giảm giá thành công!';
+                                    setPopupInfo({message: successMessage, type: 'success', visible: true});
+                                }
+                            } catch (error) {
+                                console.error("Error checking date:", error)
+                            }
                         }
                     } catch (error) {
                         const errorMessage = 'Mã giảm giá không hợp lệ!';
