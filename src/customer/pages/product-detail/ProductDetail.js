@@ -400,13 +400,16 @@ export const Comment = () => {
                 } else {
                     setIsBought(false);
                 }
+                console.log("order length" + order.length);
+                console.log("comment length" + comment.length);
             } catch (error) {
                 console.error("Error fetching comment:", error);
                 setIsBought(false);
             }
         };
         isBoughtYet();
-    }, []);
+    }, [comments, id, idUser]);
+
 
     const updateListComment = async () => {
         try {

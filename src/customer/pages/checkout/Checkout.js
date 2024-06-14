@@ -45,7 +45,8 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
-    const {discount} = useParams();
+    const location = useLocation();
+    const { discountCode } = location.state || {};
     const [discountPercent, setDiscountPercent] = useState(0);
     const [discountId, setDiscountId] = useState(0);
     const [type, setType] = useState(buyNow ? buyNow.type : null);
@@ -245,9 +246,9 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
     }
     useEffect(() => {
         const getDiscountCode = async () => {
-            if (discount) {
+            if (discountCode) {
                 try {
-                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discount}`);
+                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
                     setDiscountPercent(response.data.discount);
                     setDiscountId(response.data.id)
                 } catch (error) {
@@ -653,13 +654,13 @@ export const Checkout = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceToken = new APIService(token);
-    const {discount} = useParams();
+    const { discountCode } = location.state || {};
     const [discountPercent, setDiscountPercent] = useState(0);
 
     useEffect(() => {
         const getDiscountCode = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discount}`);
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
                 setDiscountPercent(response.data.discount);
             } catch (error) {
                 console.error("Error fetching code:", error);

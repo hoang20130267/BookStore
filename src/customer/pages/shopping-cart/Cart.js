@@ -57,35 +57,32 @@ export const Item = ({id, productId, name, image, price, quantity, updateCart}) 
 
     return (
         <tr id={id}>
-            <td className="shoping__cart__item">
-                <Link to={`/product-detail/${productId}`}><img src={image} alt=""
-                                                               style={{
-                                                                   width: "85px",
-                                                                   height: "85px",
-                                                                   objectFit: "cover"
-                                                               }}/></Link>
-                <Link to={`/product-detail/${productId}`} style={{maxWidth: '380px'}}>
-                    <p>{name}</p>
-                    <p style={{color: 'red'}}>{notify}</p>
+            <td className="shoping-cart-item">
+                <Link to={`/product-detail/${productId}`} className="image-link">
+                    <img src={image} alt="" className="image"/>
+                </Link>
+                <Link to={`/product-detail/${productId}`} className="text-link">
+                    <p className="name">{name}</p>
+                    <p className="notify">{notify}</p>
                 </Link>
             </td>
             <td className="shoping__cart__price">
                 {formatCurrency(price)}
             </td>
-            <td className="shoping__cart__quantity" style={{display: "flex", justifyContent: "center"}}>
-                <div className="value-button" id="decrease"
-                     onClick={handleDecrease}>-
+            <td className="shoping__cart__price">
+                <div className="value-button" id="decrease" onClick={handleDecrease}>
+                    <p>-</p>
                 </div>
-                <input type="number" id="number" value={quantity}/>
-                <div className="value-button" id="increase"
-                     onClick={handleIncrease}>+
+                <input type="number" id="number" value={quantity} readOnly/>
+                <div className="value-button" id="increase" onClick={handleIncrease}>
+                    <p>+</p>
                 </div>
             </td>
             <td className="shoping__cart__total">
                 {formatCurrency(quantity * price)}
             </td>
             <td className="shoping__cart__item__close">
-                <MdOutlineDelete size={"30px"}
+                <MdOutlineDelete className="delete-icon"
                                  onClick={handleDelete}
                 />
             </td>
@@ -232,7 +229,7 @@ export const ProductsInCart = () => {
         fetchCarts();
     }, []);
     return (
-        <section className="shoping-cart spad" style={{margin: "0 90px 0 90px"}}>
+        <section className="shoping-cart spad">
             <div
                 className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
                 <div className="popup__background"></div>
@@ -336,8 +333,7 @@ export const ProductsInCart = () => {
                                 <li>Tổng tiền <span>{formatCurrency(total)}</span></li>
                             </ul>
                             {cart.length > 0 ? (
-                                    <Link to={`/checkout/${discountCode}`} className="primary-btn">CHUYỂN ĐẾN PHẦN THANH
-                                        TOÁN</Link>)
+                                    <CheckoutButton discountCode={discountCode}/>)
                                 :
                                 (<Link to={"/product-list/1"} className="primary-btn">TIẾP TỤC MUA SẮM</Link>)
                             }
@@ -348,9 +344,23 @@ export const ProductsInCart = () => {
         </section>
     )
 }
+const CheckoutButton = ({discountCode}) => {
+    const navigate = useNavigate();
+
+    const handleCheckout = () => {
+        navigate('/checkout', {state: {discountCode}});
+    };
+
+    return (
+        <button className="primary-btn" style={{width: "100%", border: "none", borderRadius: "4px"}}
+                onClick={handleCheckout}>
+            CHUYỂN ĐẾN PHẦN THANH TOÁN
+        </button>
+    );
+};
 export const Cart = () => {
     return (
-        <div>
+        <div className={"container-cart"}>
             <Breadcrumb/>
             <ProductsInCart/>
         </div>
