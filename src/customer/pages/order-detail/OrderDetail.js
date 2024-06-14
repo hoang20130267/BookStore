@@ -288,7 +288,8 @@ export const OrderDetail = () => {
                                             </h3>
                                             <p style={{marginBottom: "10px"}}>{popupInfo.message}</p>
                                             <p>
-                                                <table className="order-table">
+                                                <div style={{width:"100%", height:"300px", overflow:"auto"}}>
+                                                <table className="order-table" cellSpacing="0" cellPadding="1" border="1" width="300">
                                                     <thead>
                                                     <tr>
                                                         <th>
@@ -325,6 +326,7 @@ export const OrderDetail = () => {
                                                     </tr>))}
                                                     </tbody>
                                                 </table>
+                                                </div>
                                                 <button className="button-popup button--error" data-for="js_error-popup"
                                                         onClick={hidePopup}>Ẩn thông báo
                                                 </button>

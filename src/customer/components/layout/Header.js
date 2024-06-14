@@ -8,6 +8,7 @@ import "../../assets/css/searchbar.css";
 import formatCurrency from "../../../utils/formatCurrency";
 import axios from "axios";
 import {logOut} from "../../../store/apiRequest";
+import { IoMdMenu } from "react-icons/io";
 
 const apiService = new APIService();
 
@@ -35,7 +36,7 @@ export const SearchBar = ({setResults}) => {
     }
     return (
         <>
-            <div className="input-wrapper d-flex" style={{marginLeft: "185px"}}>
+            <div className="input-wrapper">
                 <FaSearch id="#search-icon"/>
                 <input type="text" className="searchInput" placeholder="Tìm kiếm..."
                        value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
@@ -62,11 +63,109 @@ export const SearchResults = ({results}) => {
         </div>
     )
 }
+export const SideBarSearch = ({setResults}) => {
+    const [keyword, setKeyword] = useState("");
+    const [hasResults, setHasResults] = useState(true);
+    const fetchSearchProduct = (value) => {
+        fetch(`${process.env.REACT_APP_ENDPOINT_API}/products/all`)
+            .then((response) => response.json())
+            .then(json => {
+                const result = json.filter(product =>
+                    value &&
+                    product &&
+                    product.title &&
+                    product.title.toLowerCase().includes(value.toLowerCase())
+                );
+                setHasResults(result.length > 0);
+                setResults(result);
+            });
+    }
+    const handleSearch = (value) => {
+        setKeyword(value)
+        fetchSearchProduct(value)
+    }
+    return (
+        <>
+            <div className="input-wrapper-sidebar">
+                <FaSearch id="#search-icon"/>
+                <input type="text" className="searchInput" placeholder="Tìm kiếm..."
+                       value={keyword} onChange={(e) => handleSearch(e.target.value)}/>
+            </div>
+            {!hasResults && keyword.length > 0 &&
+                <div className="search-results-sidebar">
+                    <p className="result-notfound-sidebar">Không tìm thấy sản phẩm</p>
+                </div>
+            }
+        </>
+    )
+}
+export const SidebarSearchResults = ({results}) => {
+    return (
+        <div className="search-results-sidebar">
+            {results.map((product) => (
+                <Link className="result-sidebar" to={`/product-detail/${product.id}`} key={product.id}>
+                    <img src={product.image} alt={product.title} className="imageSearch"/>
+                    <p>
+                        {product.title}
+                    </p>
+                </Link>
+            ))}
+        </div>
+    )
+}
+const Sidebar = ({ isOpen, toggleSidebar }) => {
+    const [mainCategories, setMainCategories] = useState([]);
+    const [parentCategory, setParentCategory] = useState({});
+    const [showSubCategories, setShowSubCategories] = useState(false);
+    const [results, setResults] = useState([]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/categories/all`);
+                const parent = result.find(cat => cat.parentCategory === null);
+                setParentCategory(parent);
+                const mainCategories = result.filter(cat => cat.parentCategory && cat.parentCategory.id === parent.id);
+                setMainCategories(mainCategories);
+            } catch (error) {
+                console.error("Error fetching categories", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const toggleSubCategories = () => {
+        setShowSubCategories(!showSubCategories);
+    };
+
+    return (
+        <div className={`show-left-sidebar ${isOpen ? 'open' : ''}`}>
+            <div className="search-box">
+                <SideBarSearch setResults={setResults}/>
+                <SidebarSearchResults results={results}/>
+            </div>
+            <ul>
+                <li><Link to={"/"}>Trang Chủ</Link></li>
+                <li>
+                    <span onClick={toggleSubCategories} style={{ cursor: 'pointer' }}>Danh mục sản phẩm</span>
+                    <ul className={`left-sidebar-menu-dropdown ${showSubCategories ? 'show' : ''}`}>
+                        {mainCategories.map(category => (
+                            <li key={category.id}>
+                                <Link to={`/product-list/${parentCategory.id}/${category.id}`}>{category.name}</Link>
+                            </li>
+                        ))}
+                    </ul>
+                </li>
+                <li><Link to={"/blog-list/0"}>Tin Tức</Link></li>
+                <li><Link to={"/contact"}>Liên Hệ</Link></li>
+            </ul>
+            <button className="close-btn" onClick={toggleSidebar}>X</button>
+        </div>
+    );
+};
 export const Header = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const [token, setToken] = useState(user?.token);
-    const apiServiceToken = new APIService(token);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
@@ -76,6 +175,12 @@ export const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
+
+    const [isOpen, setIsOpen] = useState(false);
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    };
+
 
     const checkToken = useCallback(async () => {
         if (user) {
@@ -143,6 +248,9 @@ export const Header = () => {
         fetchData();
     }, [])
 
+    const handleMouseClick = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     const handleMouseEnter = () => {
         setIsMenuOpen(true);
@@ -171,30 +279,49 @@ export const Header = () => {
                 <div className="bg-punch-light">
                     <div className="container">
                         <div className="d-flex align-items-center position-relative flex-wrap">
+                            <div className={"left-sidebar"}>
+                                <IoMdMenu className="left-sidebar-icon" size={30} onClick={toggleSidebar} />
+                                <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+                            </div>
                             <div className="site-branding pr-md-7 mx-md-0">
                                 <h1 className="beta site-title site-title text-uppercase font-weight-bold font-size-5 m-0 ">
-                                    <Link to="/" style={{marginLeft: "20px"}}>GoldLeaf</Link></h1>
+                                   GoldLeaf</h1>
                             </div>
                             <SearchBar setResults={setResults}/>
                             <SearchResults results={results}/>
-                            <div className="d-flex align-items-center ml-auto header-icons-links">
+                            <div className="d-flex align-items-center header-icons-links">
                                 {user ? (
                                     <>
-                                        <div className="position-relative mt-4 pb-4"
-                                             onMouseEnter={handleMouseEnter}
-                                             onMouseLeave={handleMouseLeave}>
+                                        <div
+                                            className="normal-user position-relative mt-4 pb-4"
+                                            onMouseEnter={handleMouseEnter}
+                                            onMouseLeave={handleMouseLeave}
+                                        >
                                             <Link id="sidebarNavToggler-my_account">
-                                                <div
-                                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <div className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                                     <i className="fa-solid fa-user font-size-5 text-dark"></i>
                                                     <div className="ml-2 d-none d-lg-block text-dark">
-                                        <span className="text-secondary-gray-1090 font-size-1">
-                                            Xin chào </span>
+                                                        <span className="text-secondary-gray-1090 font-size-1">Xin chào </span>
                                                         <div>{user.username}</div>
                                                     </div>
                                                 </div>
                                             </Link>
-                                            {isMenuOpen && (<UserMenu/>)}
+                                            {isMenuOpen && <UserMenu />}
+                                        </div>
+                                        <div
+                                            className="responsive-user position-relative mt-4 pb-4"
+                                            onClick={handleMouseClick}
+                                        >
+                                            <Link id="sidebarNavToggler-my_account">
+                                                <div className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                    <i className="fa-solid fa-user font-size-5 text-dark"></i>
+                                                    <div className="ml-2 d-none d-lg-block text-dark">
+                                                        <span className="text-secondary-gray-1090 font-size-1">Xin chào </span>
+                                                        <div>{user.username}</div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                            {isMenuOpen && <UserMenu />}
                                         </div>
                                     </>
                                 ) : (
@@ -217,7 +344,7 @@ export const Header = () => {
                             </div>
 
                             <Link id="sidebarNavToggler-my_cart" to="/cart"
-                                  className="d-block nav-link text-dark ml-4">
+                                  className="sidebarNav-my_cart d-block nav-link text-dark">
                                 <div
                                     className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                     <span
@@ -243,7 +370,7 @@ export const Header = () => {
                     </div>
                 </div>
             </div>
-            <div className="border-bottom py-1 d-none d-xl-block">
+            <div className="border-bottom py-1 d-xl-block">
                 <div className="container">
                     <div className="d-md-flex align-items-center position-relative">
                         <div className="site-navigation mx-auto">
@@ -262,7 +389,6 @@ export const Header = () => {
                                     <li><Link to={"/contact"}>Liên Hệ</Link></li>
                                 </ul>
                             </nav>
-
                         </div>
                     </div>
                 </div>
