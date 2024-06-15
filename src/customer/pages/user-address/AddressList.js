@@ -28,9 +28,9 @@ const AddressList = () => {
     return (
         <>
             <Breadcrumb/>
-            <div className="container d-flex mt-5 mb-5 px-0">
+            <div className="container information mt-5 mb-5 px-0">
                 <LeftSideBar/>
-                <div className="col-md-9 border" style={{borderRadius: "10px"}}>
+                <div className="col-md-9 address border" style={{borderRadius: "10px"}}>
                     <div className="d-flex flex-column" role="main">
                         <div className="d-flex flex-column">
                             <div className="d-flex align-items-center justify-content-between address-title-div">

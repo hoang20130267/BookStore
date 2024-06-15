@@ -379,3 +379,216 @@ select.pdw {
     display: block;
     margin: 4px 0px 0px;
 }
+
+.container.information {
+    display: flex;
+}
+
+#progress-ship {
+    margin: 50px 150px 100px 150px;
+}
+
+.order-detail .checkout__order {
+    background: #f5f5f5;
+    padding: 40px;
+    padding-top: 30px;
+}
+
+@media (max-width: 1200px) {
+    /*.container.information {*/
+    /*    display: flex;*/
+    /*}*/
+}
+
+@media (max-width: 992px) {
+    .container.information {
+        display: block;
+        max-width: 100%;
+    }
+
+    .container.order-detail {
+        max-width: 80%;
+    }
+
+    .container.information .col-md-3.left-side-bar {
+        max-width: 100%;
+        margin: 20px;
+    }
+
+    .container.information .user-info, .container.information .orders, .container.information .address {
+        max-width: 100%;
+    }
+
+    .user-info .col-md-3 {
+        max-width: 30%;
+        flex: 0 0 100%;
+    }
+
+    .user-info .col-md-9 {
+        max-width: 70%;
+    }
+
+    .my-orders table thead th, .my-orders table tbody td, .my-orders table tbody td p {
+        font-size: medium;
+        text-align: center;
+    }
+
+    #progress-ship {
+        margin: 40px 50px 75px;
+    }
+
+    .container .checkout__order {
+        padding: 20px 0 55px 0;
+    }
+
+    .container .checkout__order table tr th, .container .checkout__order table tr td {
+        font-size: medium;
+    }
+
+    .container .checkout__order .col-md-6 {
+        max-width: 100%;
+    }
+
+    .container .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container.information {
+        display: block;
+        max-width: 100%;
+    }
+
+    .container.order-detail {
+        max-width: 85%;
+    }
+
+
+    .container.information .col-md-3.left-side-bar {
+        margin: 20px;
+        max-width: 100%;
+    }
+
+    .container.information .user-info {
+        max-width: 100%;
+    }
+
+    .container.information .col-md-3 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .container.information .col-md-9 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .container.information .col-md-6 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .container.information .border-right {
+        border-right: none !important;
+    }
+
+    .container.information .col-md-9 .col-md-6.fullName {
+        margin-top: 1rem;
+    }
+
+    .user-info .col-md-3 {
+        order: -1;
+        margin-bottom: 20px;
+    }
+
+    .my-orders.checkout__order {
+        padding: 0;
+    }
+
+    .my-orders table thead th, .my-orders table tbody td, .my-orders table tbody td p {
+        font-size: small;
+        text-align: center;
+    }
+
+    #progress-ship {
+        margin: 40px 50px 75px;
+    }
+
+    .container .checkout__order {
+        padding: 20px 0 50px 0;
+    }
+
+    .container .checkout__order table tr th, .container .checkout__order table tr td {
+        font-size: small;
+    }
+
+    .container .checkout__order .col-md-6 {
+        max-width: 100%;
+    }
+
+    .container .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .container.information {
+        display: block;
+        max-width: 100%;
+    }
+
+    .container.order-detail {
+        max-width: 90%;
+    }
+
+    .container.information .col-md-3.left-side-bar {
+        margin: 20px;
+    }
+
+    .container.information .col-md-9 .col-md-6.fullName {
+        margin-top: 1rem;
+    }
+
+    .user-info .col-md-3 {
+        order: -1;
+        margin-bottom: 20px;
+    }
+
+    .my-orders.checkout__order {
+        padding: 0;
+    }
+
+    .my-orders table thead th, .my-orders table tbody td, .my-orders table tbody td p {
+        font-size: small;
+        text-align: center;
+    }
+
+    #progress-ship {
+        margin: 40px 50px 75px;
+    }
+
+
+    .table {
+        display: inline-table;
+    }
+
+    .container .checkout__order {
+        padding: 20px 0 50px 0;
+    }
+
+    .container .checkout__order table tr th, .container .checkout__order table tr td {
+        font-size: small;
+    }
+
+    .container .checkout__order .col-md-6 {
+        max-width: 100%;
+    }
+
+    .container .col-md-8 {
+        max-width: 100%;
+    }
+}
+

@@ -1,9 +1,10 @@
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
+import "../../assets/css/style-myaccount.css"
 
 export const MyOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -43,11 +44,10 @@ export const MyOrders = () => {
     return (
         <div>
             <Breadcrumb/>
-            <div className="container d-flex mb-5 mt-5 px-0">
+            <div className="container information mb-5 mt-5 px-0">
                 <LeftSideBar/>
-                {/*<form method="post" encType="multipart/form-data" className="infor_user">*/}
-                <div className="col-md-9">
-                    <div className="checkout__order">
+                <div className="col-md-9 orders">
+                    <div className="my-orders checkout__order">
                         <table className="table table-sm fs--1 mb-0">
                             <thead>
                             <tr>
@@ -89,17 +89,15 @@ export const MyOrders = () => {
                                     </tr>))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} style={{paddingTop: '30px', textAlign: "center"}}>Bạn chưa có đơn đặt hàng nào.</td>
+                                    <td colSpan={5} style={{paddingTop: '30px', textAlign: "center"}}>Bạn chưa có đơn
+                                        đặt hàng nào.
+                                    </td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
-
-
                     </div>
-
                 </div>
-                {/*</form>*/}
             </div>
         </div>
     )

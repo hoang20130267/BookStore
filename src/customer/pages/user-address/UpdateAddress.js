@@ -186,9 +186,9 @@ const UpdateAddress = () => {
     return (
         <>
             <Breadcrumb/>
-            <div className="container d-flex mt-5 mb-5 px-0">
+            <div className="container information mt-5 mb-5 px-0">
                 <LeftSideBar/>
-                <div className="col-md-9">
+                <div className="col-md-9 address">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h4 className="text-right">Chỉnh sửa địa chỉ</h4>
                         <p style={{
