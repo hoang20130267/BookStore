@@ -1,10 +1,9 @@
 import Breadcrumb from "../../components/general/Breadcrumb";
-import {Link, useLocation, useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import APIService from "../../../service/APIService";
 import formatCurrency from "../../../utils/formatCurrency";
 import axios from "axios";
-import Product from "../shop-product/sub-components/Product";
 
 export const OrderDetail = () => {
     const {id} = useParams();
@@ -110,7 +109,7 @@ export const OrderDetail = () => {
         <div>
             <Breadcrumb/>
             {progress === 0 ? <></> :
-                <div id="progress-ship" style={{margin: "50px 150px 100px 150px"}}>
+                <div id="progress-ship">
                     <div id="progress-bar" style={{width: `${(progress - 1) * 25}%`}}></div>
                     <ul id="progress-text">
                         {['Đang chờ xử lý', 'Đã xác nhận', 'Đang chuẩn bị hàng', 'Đang vận chuyển', 'Đã giao hàng'].map((step, index) => (
@@ -122,7 +121,7 @@ export const OrderDetail = () => {
                     </ul>
                 </div>
             }
-            <div className="container rounded bg-white mt-5 mb-5">
+            <div className="container order-detail rounded bg-white mt-5 mb-5">
                 <form method="post" encType="multipart/form-data" className="infor_user">
                     <div className="row">
                         <div className="col-md-8 checkout__order" style={{margin: "auto"}}>

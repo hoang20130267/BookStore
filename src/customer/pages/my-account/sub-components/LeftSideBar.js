@@ -17,7 +17,7 @@ const LeftSideBar = (props) => {
     }, [props.update]);
 
     return (
-        <div className="col-md-3 d-block p-0 pr-6">
+        <div className="col-md-3 d-block p-0 pr-6 left-side-bar">
             <div className="account-of">
                 <img
                     src={information?.userInfo?.avatar}
