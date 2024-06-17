@@ -5,6 +5,7 @@ import Breadcrumb from "../../components/general/Breadcrumb";
 import {loginUser} from "../../../store/apiRequest";
 import {useDispatch} from "react-redux";
 import {loginSuccess} from "../../../store/authSlice";
+import axios from "axios";
 
 const SignIn = () => {
     const [username, setUsername] = React.useState("");
@@ -20,9 +21,19 @@ const SignIn = () => {
         try {
             const response = await loginUser(username, password);
             if (response.status === 200) {
-                dispatch(loginSuccess(response.data));
-                localStorage.setItem('currentUser', JSON.stringify(response.data));
-                navigate("/");
+                try{
+                    const checkLocked = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/user/${response.data.id}`);
+                    if(checkLocked.data.locked){
+                        setErrorMessage("Tài khoản của bạn đã bị khóa!");
+                        setShowErrorMessage(true);
+                    } else {
+                        dispatch(loginSuccess(response.data));
+                        localStorage.setItem('currentUser', JSON.stringify(response.data));
+                        navigate("/");
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             }
         } catch (e) {
             setErrorMessage("Tài khoản hoặc mật khẩu không đúng!");
