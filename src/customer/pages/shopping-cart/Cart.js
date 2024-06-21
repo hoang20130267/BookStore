@@ -215,19 +215,21 @@ export const ProductsInCart = () => {
     };
     useEffect(() => {
         const fetchCarts = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setCart(response.data);
-            } catch (error) {
-                console.error("Error fetching cart:", error);
+            if (user) {
+                try {
+                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    setCart(response.data);
+                } catch (error) {
+                    console.error("Error fetching cart:", error);
+                }
             }
         };
         fetchCarts();
-    }, []);
+    }, [user]);
     return (
         <section className="shoping-cart spad">
             <div

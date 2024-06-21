@@ -8,7 +8,7 @@ import "../../assets/css/searchbar.css";
 import formatCurrency from "../../../utils/formatCurrency";
 import axios from "axios";
 import {logOut} from "../../../store/apiRequest";
-import { IoMdMenu } from "react-icons/io";
+import {IoMdMenu} from "react-icons/io";
 
 const apiService = new APIService();
 
@@ -113,7 +113,7 @@ export const SidebarSearchResults = ({results}) => {
         </div>
     )
 }
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({isOpen, toggleSidebar}) => {
     const [mainCategories, setMainCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState({});
     const [showSubCategories, setShowSubCategories] = useState(false);
@@ -147,7 +147,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <ul>
                 <li><Link to={"/"}>Trang Chủ</Link></li>
                 <li>
-                    <span onClick={toggleSubCategories} style={{ cursor: 'pointer' }}>Danh mục sản phẩm</span>
+                    <span onClick={toggleSubCategories} style={{cursor: 'pointer'}}>Danh mục sản phẩm</span>
                     <ul className={`left-sidebar-menu-dropdown ${showSubCategories ? 'show' : ''}`}>
                         {mainCategories.map(category => (
                             <li key={category.id}>
@@ -211,8 +211,8 @@ export const Header = () => {
 
     useEffect(() => {
         const fetchCart = async () => {
-            try {
-                if (user) {
+            if (user) {
+                try {
                     setToken(user.token);
                     const result = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
                         headers: {
@@ -225,13 +225,13 @@ export const Header = () => {
                         totalAmount += item.quantity * item.product.currentPrice;
                     });
                     setTotal(totalAmount);
+                } catch (error) {
+                    console.error("Failed to fetch cart items", error);
                 }
-            } catch (error) {
-                console.error("Failed to fetch cart items", error);
             }
         }
         fetchCart();
-    }, [user, cart])
+    }, [user])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -280,12 +280,12 @@ export const Header = () => {
                     <div className="container">
                         <div className="d-flex align-items-center position-relative flex-wrap">
                             <div className={"left-sidebar"}>
-                                <IoMdMenu className="left-sidebar-icon" size={30} onClick={toggleSidebar} />
-                                <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+                                <IoMdMenu className="left-sidebar-icon" size={30} onClick={toggleSidebar}/>
+                                <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
                             </div>
                             <div className="site-branding pr-md-7 mx-md-0">
                                 <h1 className="beta site-title site-title text-uppercase font-weight-bold font-size-5 m-0 ">
-                                   GoldLeaf</h1>
+                                    GoldLeaf</h1>
                             </div>
                             <SearchBar setResults={setResults}/>
                             <SearchResults results={results}/>
@@ -298,30 +298,34 @@ export const Header = () => {
                                             onMouseLeave={handleMouseLeave}
                                         >
                                             <Link id="sidebarNavToggler-my_account">
-                                                <div className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <div
+                                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                                     <i className="fa-solid fa-user font-size-5 text-dark"></i>
                                                     <div className="ml-2 d-none d-lg-block text-dark">
-                                                        <span className="text-secondary-gray-1090 font-size-1">Xin chào </span>
+                                                        <span
+                                                            className="text-secondary-gray-1090 font-size-1">Xin chào </span>
                                                         <div>{user.username}</div>
                                                     </div>
                                                 </div>
                                             </Link>
-                                            {isMenuOpen && <UserMenu />}
+                                            {isMenuOpen && <UserMenu/>}
                                         </div>
                                         <div
                                             className="responsive-user position-relative mt-4 pb-4"
                                             onClick={handleMouseClick}
                                         >
                                             <Link id="sidebarNavToggler-my_account">
-                                                <div className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
+                                                <div
+                                                    className="d-flex align-items-center text-white font-size-2 text-lh-sm position-relative">
                                                     <i className="fa-solid fa-user font-size-5 text-dark"></i>
                                                     <div className="ml-2 d-none d-lg-block text-dark">
-                                                        <span className="text-secondary-gray-1090 font-size-1">Xin chào </span>
+                                                        <span
+                                                            className="text-secondary-gray-1090 font-size-1">Xin chào </span>
                                                         <div>{user.username}</div>
                                                     </div>
                                                 </div>
                                             </Link>
-                                            {isMenuOpen && <UserMenu />}
+                                            {isMenuOpen && <UserMenu/>}
                                         </div>
                                     </>
                                 ) : (

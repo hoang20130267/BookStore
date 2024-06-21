@@ -392,19 +392,21 @@ export const Comment = () => {
 
     useEffect(() => {
         const isBoughtYet = async () => {
-            try {
-                const order = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/product/${id}/user/${idUser}`);
-                const comment = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/auth/${idUser}/product/${id}`);
-                if (order.length > comment.length) {
-                    setIsBought(true);
-                } else {
+            if (user) {
+                try {
+                    const order = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/product/${id}/user/${idUser}`);
+                    const comment = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/auth/${idUser}/product/${id}`);
+                    if (order.length > comment.length) {
+                        setIsBought(true);
+                    } else {
+                        setIsBought(false);
+                    }
+                    console.log("order length" + order.length);
+                    console.log("comment length" + comment.length);
+                } catch (error) {
+                    console.error("Error fetching comment:", error);
                     setIsBought(false);
                 }
-                console.log("order length" + order.length);
-                console.log("comment length" + comment.length);
-            } catch (error) {
-                console.error("Error fetching comment:", error);
-                setIsBought(false);
             }
         };
         isBoughtYet();

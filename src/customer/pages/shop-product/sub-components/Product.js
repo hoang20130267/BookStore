@@ -18,13 +18,15 @@ const Product = (props) => {
     const [isFavorite, setIsFavortie] = useState(false);
 
     const fetchFavorite = async () => {
-        try {
-            const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
-            const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
-            const isFavoriteProduct = favoriteProduct ? true : false;
-            setIsFavortie(isFavoriteProduct)
-        } catch (error) {
-            console.error("Error fetching favorite products")
+        if (user) {
+            try {
+                const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/favorites`);
+                const favoriteProduct = result.find(favorite => favorite.product?.id === productInfo.id);
+                const isFavoriteProduct = favoriteProduct ? true : false;
+                setIsFavortie(isFavoriteProduct)
+            } catch (error) {
+                console.error("Error fetching favorite products")
+            }
         }
     }
     useEffect(() => {
@@ -48,7 +50,7 @@ const Product = (props) => {
             setPrice();
             checkRemainingQuantity();
         }
-    }, [productInfo, discount])
+    }, [user, productInfo, discount])
 
     const addToCart = async (event) => {
         event.preventDefault();
