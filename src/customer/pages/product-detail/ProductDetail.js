@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Product from "../shop-product/sub-components/Product";
 import "../../assets/css/product-detail.css"
 import "../../assets/css/style-comment.css"
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import formatCurrency from "../../../utils/formatCurrency";
 import ProductImagesSlider from "./subcomponents/ProductImagesSlider";
 import APIService from "../../../service/APIService";
@@ -392,19 +392,21 @@ export const Comment = () => {
 
     useEffect(() => {
         const isBoughtYet = async () => {
-            try {
-                const order = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/product/${id}/user/${idUser}`);
-                const comment = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/auth/${idUser}/product/${id}`);
-                if (order.length > comment.length) {
-                    setIsBought(true);
-                } else {
+            if (user) {
+                try {
+                    const order = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/product/${id}/user/${idUser}`);
+                    const comment = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/comment/auth/${idUser}/product/${id}`);
+                    if (order.length > comment.length) {
+                        setIsBought(true);
+                    } else {
+                        setIsBought(false);
+                    }
+                    console.log("order length" + order.length);
+                    console.log("comment length" + comment.length);
+                } catch (error) {
+                    console.error("Error fetching comment:", error);
                     setIsBought(false);
                 }
-                console.log("order length" + order.length);
-                console.log("comment length" + comment.length);
-            } catch (error) {
-                console.error("Error fetching comment:", error);
-                setIsBought(false);
             }
         };
         isBoughtYet();
@@ -845,12 +847,16 @@ export const RelatedProducts = ({categoryId}) => {
         }
     };
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const fetchProducts = async () => {
+            setIsLoading(true)
             try {
                 const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/category/${categoryId}`);
                 const relatedProducts = result.filter(product => product.id.toString() !== id.toString());
                 setRelatedProducts(relatedProducts);
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching products', error);
             }
@@ -863,10 +869,10 @@ export const RelatedProducts = ({categoryId}) => {
                 <header className="mb-5 d-md-flex justify-content-between align-items-center">
                     <h2 className="font-size-5 mb-3 mb-md-0">Sản phẩm liên quan</h2>
                 </header>
-                <Carousel responsive={responsive}>
+                {isLoading ? (<div className="loader"></div>) : (<Carousel responsive={responsive}>
                     {relatedProducts.map(product => (
                         <div key={product.id} className="card mb-0 mx-2 no-gutters"><Product info={product}/></div>))}
-                </Carousel>
+                </Carousel>)}
             </div>
         </section>
     )

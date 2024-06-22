@@ -28,7 +28,7 @@ const MyAccount = () => {
     const [uploading, setUploading] = useState(false);
     const [updateSideBar, setUpdateSideBar] = useState(false);
     const [isSaveEnabled, setIsSaveEnabled] = useState(false);
-
+    const [error, setError] = useState('');
 
     useEffect(() => {
         let dayCheck;
@@ -44,12 +44,23 @@ const MyAccount = () => {
             monthCheck = fetchedMonth.padStart(2, '0');
             yearCheck = fetchedYear;
         }
-        const hasChanges = (fullName !== information?.userInfo?.fullName && fullName !== '') || (phoneNumber !== information?.userInfo?.phoneNumber && phoneNumber !== '') || gender !== information?.userInfo?.gender
+        const hasChanges = (fullName !== information?.userInfo?.fullName && fullName !== '') || (phoneNumber !== information?.userInfo?.phoneNumber && phoneNumber !== '' && isPhoneNumberValid(phoneNumber)) || gender !== information?.userInfo?.gender
             || selectedFile !== null || (day !== dayCheck && day !== '0' && month !== '0' && year !== '0') || (month !== monthCheck && month !== '0' && day !== '0' && year !== '0') || (year !== yearCheck && year !== '0' && day !== '0' && month !== '0') ||
             (isChecked && (currentPassword !== '' || newPassword !== '' || newPasswordConfirm !== ''));
         setIsSaveEnabled(hasChanges);
     }, [fullName, phoneNumber, gender, day, month, year, selectedFile, isChecked, currentPassword, newPassword, newPasswordConfirm]);
 
+    function isPhoneNumberValid(number) {
+        return /^0(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+    }
+
+    const handleBlur = () => {
+        if (phoneNumber !== '' && !isPhoneNumberValid(phoneNumber)) {
+            setError('Số điện thoại không hợp lệ');
+        } else {
+            setError('');
+        }
+    };
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -95,6 +106,9 @@ const MyAccount = () => {
     };
     const handlePhoneNumberChange = (event) => {
         setPhoneNumber(event.target.value);
+        if (isPhoneNumberValid(event.target.value)) {
+            setError('');
+        }
     };
     const handleFullNameChange = (event) => {
         setFullName(event.target.value);
@@ -221,7 +235,9 @@ const MyAccount = () => {
                                                                 type="text"
                                                                 value={phoneNumber}
                                                                 className="form-control" name="phone" maxLength="10"
-                                                                placeholder="Nhập số điện thoại tại đây"/>
+                                                                placeholder="Nhập số điện thoại tại đây"
+                                                                onBlur={handleBlur}/>
+                                            {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
                                         </div>
                                     </div>
                                     <div className="d-flex align-items-center mt-4">

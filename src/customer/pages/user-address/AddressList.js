@@ -13,10 +13,13 @@ const AddressList = () => {
     const token = user ? user.token : null;
     const apiService = new APIService(token);
     const [addresses, setAddresses] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const fetchAddress = async () => {
+        setIsLoading(true);
         try {
             const response = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`);
             setAddresses(response)
+            setIsLoading(false);
         } catch (error) {
             console.error('Error fetching addresses', error);
         }
@@ -54,11 +57,14 @@ const AddressList = () => {
                             <div>
                                 <div style={{padding: "12px 10px 0"}}>
                                     <div className="list-title">Địa chỉ</div>
-                                    {addresses.length > 0 ? (
+                                    {isLoading ? (
+                                        <div className="loader" style={{margin: '20px auto'}}></div>
+                                    ) : (addresses.length > 0 ? (
                                         addresses.map(addressInfo => (
                                             <AddressItem key={addressInfo.id} address={addressInfo}
                                                          updateAddresses={fetchAddress}/>))
-                                    ) : (<div className="text-center">Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ mới.</div>)}
+                                    ) : (<div className="text-center">Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ
+                                        mới.</div>))}
                                 </div>
                             </div>
                         </div>

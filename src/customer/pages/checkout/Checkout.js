@@ -19,7 +19,6 @@ export const Coupon = () => {
     )
 }
 export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
-    console.log(totalCheck)
     const [ticked, setTicked] = useState(false);
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
@@ -46,13 +45,14 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
     const token = user ? user.token : null;
     const apiServiceWithToken = new ApiService(token);
     const location = useLocation();
-    const { discountCode } = location.state || {};
+    const {discountCode} = location.state || {};
     const [discountPercent, setDiscountPercent] = useState(0);
     const [discountId, setDiscountId] = useState(0);
     const [type, setType] = useState(buyNow ? buyNow.type : null);
     const navigate = useNavigate();
     const [shippingCostFree, setShippingCostFree] = useState(false);
-    console.log(shippingCost)
+    const [error, setError] = useState('');
+
     const fetchAddresses = async () => {
         try {
             const result = await apiServiceWithToken.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/user/addresses`);
@@ -84,17 +84,37 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
         setPlaceOrderButtonEnabled(confirm && (cartItems.length > 0 || buyNow.type !== '') && !isEmpty(selectedAddress));
     }
 
+    function isPhoneNumberValid(number) {
+        return /^0(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+    }
+
+    const handleBlur = () => {
+        if (phoneNumber !== '' && !isPhoneNumberValid(phoneNumber)) {
+            setError('Số điện thoại không hợp lệ');
+        } else {
+            setError('');
+        }
+    };
+
     useEffect(() => {
         checkPlaceOrderButton();
     }, [confirm, cartItems, selectedAddress])
 
     const checkSaveButton = () => {
-        setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
-            !isEmpty(countyDistrict) && !isEmpty(wardCommune) && !isEmpty(hnumSname));
+        setSaveButtonEnabled(fullName != '' && phoneNumber != '' && isPhoneNumberValid(phoneNumber) && provinceCity != '' && selectedProvince != '' &&
+            countyDistrict != '' && selectedDistrict != '' && wardCommune != '' && selectedWard != '' && hnumSname != '');
     };
     useEffect(() => {
         checkSaveButton();
     }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune, hnumSname])
+
+    const handlePhoneNumberChange = (e) => {
+        const value = e.target.value;
+        setPhoneNumber(value);
+        if (isPhoneNumberValid(value)) {
+            setError('');
+        }
+    };
 
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -147,7 +167,9 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
             const selectedProvince = provinces.find(province => province.ProvinceID === selectedValue);
             if (selectedProvince) {
                 setSelectedDistrict('');
+                setCountyDistrict('')
                 setSelectedWard('');
+                setWardCommune('')
                 setSelectedProvince(selectedProvince.ProvinceID);
                 setProvinceCity(selectedProvince.ProvinceName);
             } else {
@@ -164,6 +186,7 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
 
             if (selectedDistrict) {
                 setSelectedWard('');
+                setWardCommune('')
                 setSelectedDistrict(selectedDistrict.DistrictID);
                 setCountyDistrict(selectedDistrict.DistrictName);
             } else {
@@ -388,9 +411,12 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
                                                     thoại</label><input id="phone" type="text" className="form-control"
                                                                         name="phone"
                                                                         placeholder="Nhập số điện thoại tại đây"
-                                                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                                                        onChange={handlePhoneNumberChange}
                                                                         maxLength={10}
+                                                                        onBlur={handleBlur}
                                                                         required/>
+                                                    {error &&
+                                                        <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
                                                 </div>
                                             </div>
                                         </div>
@@ -654,16 +680,18 @@ export const Checkout = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiServiceToken = new APIService(token);
-    const { discountCode } = location.state || {};
+    const {discountCode} = location.state || {};
     const [discountPercent, setDiscountPercent] = useState(0);
 
     useEffect(() => {
         const getDiscountCode = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
-                setDiscountPercent(response.data.discount);
-            } catch (error) {
-                console.error("Error fetching code:", error);
+            if (discountCode) {
+                try {
+                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/promotion/code/${discountCode}`);
+                    setDiscountPercent(response.data.discount);
+                } catch (error) {
+                    console.error("Error fetching code:", error);
+                }
             }
         };
         getDiscountCode();

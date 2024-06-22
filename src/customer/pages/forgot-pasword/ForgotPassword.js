@@ -75,7 +75,7 @@ const ForgotPassword = () => {
                 <div className="content">
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="col-md-6 contents">
+                            <div className="col-md-6 my-5 contents">
                                 <div className="row justify-content-center">
                                     <div className="col-md-12">
                                         <div className="form-block">
@@ -117,7 +117,7 @@ const ForgotPassword = () => {
                 <div className="content">
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="col-md-6 contents">
+                            <div className="col-md-6 my-5 contents">
                                 <div className="row justify-content-center">
                                     <div className="col-md-12">
                                         <div className="form-block">

@@ -7,6 +7,7 @@ import SideContent from "./sub-components/SideContent";
 import Pagination from "../../components/general/Pagination";
 import APIService from "../../../service/APIService";
 import ScrollToTop from "../../components/general/ScrollToTop";
+import "../../assets/css/loading.css"
 import axios from "axios";
 
 const ProductList = () => {
@@ -26,6 +27,7 @@ const ProductList = () => {
     const [order, setOrder] = useState('');
     const [latestFilter, setLatestFilter] = useState('');
     const [selectedPriceRange, setSelectedPriceRange] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const apiService = new APIService();
 
     const [promotion, setPromotion] = useState([]);
@@ -124,10 +126,12 @@ const ProductList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             try {
                 const result = await getProductsByCategory(lastParam, page, perPage, sort, filter, order);
                 setProducts(result.content);
                 setTotalPages(result.totalPages);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching products', error);
             }
@@ -212,17 +216,19 @@ const ProductList = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="grid-view">
-                                    {products.length > 0 ?
-                                        (
-                                            <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
-                                                {products.map(product => (<Product key={product.id} info={product}/>))}
-                                            </ul>)
-                                        :
-                                        <div style={{textAlign: 'center'}}>Không có sản phẩm phù hợp nào.</div>}
-                                    {totalPages > 1 && (<Pagination currentPage={page} totalPages={totalPages}
-                                                                    onPageChange={handlePageChange}/>)}
-                                </div>
+                                {isLoading ? (<div className="loader"></div>) :
+                                    (<div className="grid-view">
+                                        {products.length > 0 ?
+                                            (
+                                                <ul className="products list-unstyled row no-gutters row-cols-2 row-cols-lg-4 row-cols-wd-4 border-top border-left mb-6">
+                                                    {products.map(product => (
+                                                        <Product key={product.id} info={product}/>))}
+                                                </ul>)
+                                            :
+                                            <div style={{textAlign: 'center'}}>Không có sản phẩm phù hợp nào.</div>}
+                                        {totalPages > 1 && (<Pagination currentPage={page} totalPages={totalPages}
+                                                                        onPageChange={handlePageChange}/>)}
+                                    </div>)}
                             </main>
                         </div>
                         <SideContent selectedPriceRange={selectedPriceRange}

@@ -46,7 +46,7 @@ const SignIn = () => {
             <div className="content">
                 <div className="container">
                     <div className="row justify-content-center">
-                        <div className="col-md-5 contents">
+                        <div className="col-md-5 my-5 contents">
                             <div className="row justify-content-center">
                                 <div className="col-md-12">
                                     <div className="form-block">
@@ -67,7 +67,7 @@ const SignIn = () => {
                                                        onChange={e => setPassword(e.target.value)}/>
                                             </div>
 
-                                            <div className="d-flex mb-5 align-items-center">
+                                            <div className="d-flex mb-4 align-items-center">
 
                                             <span className="ml-auto"><Link to={"/forgot-password"}
                                                                             className="forgot-pass">Quên mật khẩu</Link></span>
@@ -77,7 +77,8 @@ const SignIn = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-                                            <button className="button_login justify-content-center d-flex" type={"submit"}
+                                            <button className="button_login justify-content-center d-flex"
+                                                    type={"submit"}
                                                     style={{
                                                         paddingBottom: "13px", border: "none", fontSize: "18px"
                                                         , fontWeight: "bold", maxWidth: '100%'
@@ -86,20 +87,20 @@ const SignIn = () => {
                                             <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
 
                                             <div className="social-login text-center">
-                                                <Link to="/not-found" className="facebook">
+                                                <Link to="" className="facebook">
                                                     <span><i className="fa-brands fa-facebook-f"></i></span>
                                                 </Link>
-                                                <Link to="/user/account" className="twitter">
+                                                <Link to="" className="twitter">
                                                     <span><i className="fa-brands fa-twitter"></i></span>
                                                 </Link>
-                                                <Link to="/user/wishlist" className="google">
+                                                <Link to="" className="google">
                                                     <span> <i className="fa-brands fa-google"></i></span>
                                                 </Link>
-
-                                                <span className="d-block text-center my-4 text-muted"><Link
-                                                    to={"/sign-up"}
-                                                    style={{width: "60px", color: "#6c757d"}}>Đăng kí</Link> </span>
                                             </div>
+
+                                            <span className="d-block text-center mt-4 text-muted"><Link
+                                                to={"/sign-up"}
+                                                style={{width: "60px", color: "#6c757d"}}>Đăng kí</Link> </span>
                                         </form>
                                     </div>
                                 </div>

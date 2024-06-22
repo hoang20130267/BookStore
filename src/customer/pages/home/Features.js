@@ -15,7 +15,7 @@ export const Features = () => {
                                     phí
                                 </h4>
                                 <p className="bwgb-icon-block__block-description feature__subtitle m-0">
-                                    Cho đơn hàng trên 500.000</p>
+                                    Cho đơn hàng trên 800.000</p>
                             </div>
                         </div>
                     </li>

@@ -11,11 +11,14 @@ export const MyOrders = () => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     const token = user ? user.token : null;
     const apiService = new APIService(token);
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = async () => {
+        setIsLoading(true);
         try {
             const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/orders/user`);
             setOrders(result);
+            setIsLoading(false);
         } catch (error) {
             console.error('Error fetching data:', error)
         }
@@ -69,7 +72,13 @@ export const MyOrders = () => {
                             </tr>
                             </thead>
                             <tbody className="list" id="table-latest-review-body">
-                            {orders.length > 0 ? (orders.map(order => (
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan={5} style={{paddingTop: '30px'}}>
+                                        <div className="loader"></div>
+                                    </td>
+                                </tr>
+                            ) : (orders.length > 0 ? (orders.map(order => (
                                     <tr key={order.id}
                                         className="hover-actions-trigger btn-reveal-trigger position-static">
                                         <td className="fs--1 align-middle ps-0 py-3">
@@ -93,7 +102,7 @@ export const MyOrders = () => {
                                         đặt hàng nào.
                                     </td>
                                 </tr>
-                            )}
+                            ))}
                             </tbody>
                         </table>
                     </div>
