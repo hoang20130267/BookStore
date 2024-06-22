@@ -3,7 +3,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "../my-account/sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
-import {isEmpty} from "react-admin";
 import axios from "axios";
 
 const UpdateAddress = () => {
@@ -26,15 +25,29 @@ const UpdateAddress = () => {
     const [wards, setWards] = useState([]);
     const [selectedWard, setSelectedWard] = useState('');
     const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const checkSaveButton = () => {
-        setSaveButtonEnabled(!isEmpty(fullName) && !isEmpty(phoneNumber) && !isEmpty(provinceCity) &&
-            !isEmpty(countyDistrict) && !isEmpty(wardCommune) && !isEmpty(hnumSname));
+        setSaveButtonEnabled(fullName != '' && phoneNumber != '' && isPhoneNumberValid(phoneNumber) && provinceCity != '' && selectedProvince != '' &&
+            countyDistrict != '' && selectedDistrict != '' && wardCommune != '' && selectedWard != '' && hnumSname != '');
     };
+
     useEffect(() => {
         checkSaveButton();
     }, [fullName, phoneNumber, provinceCity, countyDistrict, wardCommune, hnumSname])
+
+    function isPhoneNumberValid(number) {
+        return /^0(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+    }
+
+    const handleBlur = () => {
+        if (phoneNumber !== '' && !isPhoneNumberValid(phoneNumber)) {
+            setError('Số điện thoại không hợp lệ');
+        } else {
+            setError('');
+        }
+    };
     useEffect(() => {
         const fetchAddress = async () => {
             try {
@@ -70,7 +83,7 @@ const UpdateAddress = () => {
             }
         }
         fetchProvinces();
-    }, [provinces.length > 0])
+    }, [provinceCity, provinces.length > 0])
 
     const fetchDistrict = async (selectedProvince) => {
         if (selectedProvince) {
@@ -124,7 +137,10 @@ const UpdateAddress = () => {
 
             if (selectedProvince) {
                 setSelectedDistrict('');
+                setCountyDistrict('')
                 setSelectedWard('');
+                setWardCommune('');
+                setSelectedProvince(selectedProvince.ProvinceID);
                 setProvinceCity(selectedProvince.ProvinceName);
             } else {
                 setProvinceCity('');
@@ -140,6 +156,8 @@ const UpdateAddress = () => {
 
             if (selectedDistrict) {
                 setSelectedWard('');
+                setWardCommune('')
+                setSelectedDistrict(selectedDistrict.DistrictID);
                 setCountyDistrict(selectedDistrict.DistrictName);
             } else {
                 setCountyDistrict('');
@@ -153,7 +171,8 @@ const UpdateAddress = () => {
             const selectedWard = wards.find(ward => ward.WardCode === selectedValue);
 
             if (selectedWard) {
-                setWardCommune(selectedWard.WardCode);
+                setSelectedWard(selectedWard.WardCode);
+                setWardCommune(selectedWard.WardName);
             } else {
                 setWardCommune('');
             }
@@ -177,6 +196,13 @@ const UpdateAddress = () => {
             console.error("Error updating address");
         }
     }
+    const handlePhoneNumberChange = (e) => {
+        const value = e.target.value;
+        setPhoneNumber(value);
+        if (isPhoneNumberValid(value)) {
+            setError('');
+        }
+    };
     const handleButtonUpdate = (e) => {
         e.preventDefault();
         updateAddress();
@@ -216,13 +242,15 @@ const UpdateAddress = () => {
                                                                           style={{paddingTop: "10px"}}>Số
                                             điện
                                             thoại</label><input value={phoneNumber}
-                                                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                                                onChange={handlePhoneNumberChange}
                                                                 id="phone" type="text"
                                                                 className="form-control"
                                                                 name="phone"
                                                                 placeholder="Nhập số điện thoại tại đây"
                                                                 maxLength={10}
+                                                                onBlur={handleBlur}
                                                                 required/>
+                                            {error && <div style={{color: 'red', marginTop: '5px'}}>{error}</div>}
                                         </div>
                                     </div>
                                 </div>

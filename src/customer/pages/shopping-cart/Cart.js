@@ -129,6 +129,7 @@ export const ProductsInCart = () => {
     const [discount, setDiscount] = useState(0);
     const [popupInfo, setPopupInfo] = useState({message: '', type: '', visible: false});
     const [showPromotionList, setShowPromotionList] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         if (!user) {
             navigate("/sign-in");
@@ -215,21 +216,21 @@ export const ProductsInCart = () => {
     };
     useEffect(() => {
         const fetchCarts = async () => {
-            if (user) {
-                try {
-                    const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    setCart(response.data);
-                } catch (error) {
-                    console.error("Error fetching cart:", error);
-                }
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_ENDPOINT_API}/cart/items`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setCart(response.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching cart:", error);
             }
         };
         fetchCarts();
-    }, [user]);
+    }, []);
     return (
         <section className="shoping-cart spad">
             <div
@@ -277,24 +278,36 @@ export const ProductsInCart = () => {
                                     <th></th>
                                 </tr>
                                 </thead>
-                                {cart.length > 0 ? (<tbody>
-                                {cart.map(cart => (
-                                    <Item
-                                        key={cart.id}
-                                        id={cart.id}
-                                        productId={cart.product.id}
-                                        name={cart.product.title}
-                                        image={cart.product.image}
-                                        price={cart.product.currentPrice}
-                                        quantity={cart.quantity}
-                                        updateCart={updateCart}
-                                    />
-                                ))}
-                                </tbody>) : <tr>
-                                    <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong Giỏ
-                                        hàng.
-                                    </td>
-                                </tr>}
+                                {isLoading ? (
+                                    <tr>
+                                        <td colSpan={5} style={{paddingTop: '30px'}}>
+                                            <div className="loader"></div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    cart.length > 0 ? (
+                                        <tbody>
+                                        {cart.map(cartItem => (
+                                            <Item
+                                                key={cartItem.id}
+                                                id={cartItem.id}
+                                                productId={cartItem.product.id}
+                                                name={cartItem.product.title}
+                                                image={cartItem.product.image}
+                                                price={cartItem.product.currentPrice}
+                                                quantity={cartItem.quantity}
+                                                updateCart={updateCart}
+                                            />
+                                        ))}
+                                        </tbody>
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5} style={{paddingTop: '30px'}}>Bạn chưa có sản phẩm nào trong
+                                                Giỏ hàng.
+                                            </td>
+                                        </tr>
+                                    )
+                                )}
                             </table>
                         </div>
                     </div>

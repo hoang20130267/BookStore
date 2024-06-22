@@ -127,7 +127,7 @@ const SignUp = () => {
             <div className="content">
                 <div className="container">
                     <div className="row justify-content-center">
-                        <div className="col-md-5 contents">
+                        <div className="col-md-5 my-5 contents">
                             <div className="row justify-content-center">
                                 <div className="col-md-12">
                                     <div className="form-block">
@@ -171,7 +171,7 @@ const SignUp = () => {
                                                     }} onPress={handleChangeAction}> Đăng ký
                                             </button>
                                             <span
-                                                className="d-block text-center my-4 text-muted">Bạn đã có tài khoản? <Link
+                                                className="d-block text-center mt-4 text-muted">Bạn đã có tài khoản? <Link
                                                 to={"/sign-in"}
                                                 style={{width: "60px", color: "#6c757d"}}>Đăng nhập</Link> </span>
                                         </form>

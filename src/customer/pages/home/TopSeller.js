@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 
 export const TopSeller = () => {
     const apiService = new APIService();
+    const [isLoading, setIsLoading] = useState(false);
     const responsive = {
         superLargeDesktop: {
             breakpoint: {max: 4000, min: 3000},
@@ -27,10 +28,12 @@ export const TopSeller = () => {
     const [topSellBooks, setTopSellBooks] = useState([]);
     useEffect(() => {
         const fetchProducts = async () => {
+            setIsLoading(true);
             try {
                 const result = await apiService.fetchData(`${process.env.REACT_APP_ENDPOINT_API}/products/top_selling?limit=15`);
                 const limitProducts = result.slice(0, 15);
                 setTopSellBooks(limitProducts);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching products', error);
             }
@@ -49,12 +52,12 @@ export const TopSeller = () => {
                                        className="h-primary d-block bwgb-products-carousel__block-action-text"><span>Xem tất cả</span><i
                     className="fa-solid fa-caret-right ml-1"></i></Link></header>
             </div>
-            <div className="products wp-block-bwgb-products-carousel__content container">
+            {isLoading?(<div className="loader"></div>):(<div className="products wp-block-bwgb-products-carousel__content container">
                 <Carousel responsive={responsive}>
                     {topSellBooks.map(product => (
                         <div key={product.id} className="card mb-0 mx-2 no-gutters"><Product info={product}/></div>))}
                 </Carousel>
-            </div>
+            </div>)}
         </div>
     )
 }

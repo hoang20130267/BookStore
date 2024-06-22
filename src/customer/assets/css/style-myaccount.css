@@ -441,12 +441,16 @@ select.pdw {
         padding: 20px 0 55px 0;
     }
 
-    .container .checkout__order table tr th, .container .checkout__order table tr td {
-        font-size: medium;
-    }
-
     .container .checkout__order .col-md-6 {
         max-width: 100%;
+    }
+
+    .container.information .order-detail {
+        max-width: 100%;
+    }
+
+    .container .checkout__order table tr th, .container .checkout__order table tr td {
+        font-size: medium;
     }
 
     .container .col-md-8 {
