@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import "../../assets/css/style-myaccount.css"
-import {useLocation} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import LeftSideBar from "./sub-components/LeftSideBar";
 import APIService from "../../../service/APIService";
@@ -118,6 +117,10 @@ const MyAccount = () => {
         try {
             const responseData = await apiService.updateData(`${process.env.REACT_APP_ENDPOINT_API}/user/info`, requestData)
             setIsSaveEnabled(false);
+            setIsChecked(false);
+            setCurrentPassword('');
+            setNewPassword('');
+            setNewPasswordConfirm('');
             setPopupInfo({message: responseData, type: 'success', visible: true});
             fetchInformation();
             setUpdateSideBar(true);
@@ -143,13 +146,13 @@ const MyAccount = () => {
                     setUploading(false);
                     return response.data.data.url;
                 } else {
-                    alert('Failed to upload image');
+                    alert('Không tải được hình ảnh lên.');
                     setUploading(false);
                     return null;
                 }
             } catch (error) {
                 console.error('Error uploading image:', error);
-                alert('Error uploading image');
+                alert('Lỗi upload hình ảnh');
                 setUploading(false);
                 return null;
             }
@@ -168,15 +171,27 @@ const MyAccount = () => {
         }
         if (isChecked) {
             if (!currentPassword || !newPassword || !newPasswordConfirm) {
-                alert('Vui lòng điền tất cả các trường trong đổi mật khẩu');
-                return;
-            }
-            if (newPassword !== newPasswordConfirm) {
-                alert('Mật khẩu không trùng khớp.');
+                setPopupInfo({
+                    message: 'Vui lòng điền tất cả các trường trong đổi mật khẩu',
+                    type: 'error',
+                    visible: true
+                });
                 return;
             }
             if (currentPassword.length < 8 || newPassword.length < 8) {
-                alert('Mật khẩu phải có ít nhất 8 ký tự.');
+                setPopupInfo({
+                    message: 'Mật khẩu phải có ít nhất 8 ký tự',
+                    type: 'error',
+                    visible: true
+                });
+                return;
+            }
+            if (newPasswordConfirm !== newPassword) {
+                setPopupInfo({
+                    message: 'Mật khẩu nhập lại không trùng khớp',
+                    type: 'error',
+                    visible: true
+                });
                 return;
             }
         }
