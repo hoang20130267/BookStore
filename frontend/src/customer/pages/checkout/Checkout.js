@@ -23,7 +23,7 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
     const [shippingCost, setShippingCost] = useState(0);
-    const [paymentMethod, setPaymentMethod] = useState('cashondelivery');
+    const [paymentMethod, setPaymentMethod] = useState('');
     const [note, setNote] = useState('');
     const [confirm, setConfirm] = useState(false);
     const [fullName, setFullName] = useState('');
@@ -233,6 +233,17 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
         await addAddress();
         await fetchAddresses();
     }
+    const updateStatus = async (orderId) => {
+        const data = {
+            "idStatus": 7,
+        }
+        try {
+            const res = await new ApiService().sendData(`/orders/done-payment/${orderId}`, data)
+            console.log('Response updated status: ', res)
+        } catch (e) {
+            console.log(e)
+        }
+    }
     const createOrder = async () => {
         const request = {
             shippingAddress: {id: selectedAddress},
@@ -253,14 +264,42 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
         }
         try {
             let response;
-            if (type === 'buy-now') {
-                response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders/buy-now`, request);
+            console.log(paymentMethod)
+            if (paymentMethod == 'vnpay') {
+                const paramsPayment = {
+                    amount: subTotal,
+                    orderInfo: 0
+                }
+                setTimeout(async () => {
+                    if (type === 'buy-now') {
+                        response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders/buy-now`, request);
+                    } else {
+                        response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
+                    }
+                    await updateStatus(response.id)
+                    console.log('Response: ', response)
+                    paramsPayment.orderInfo = response.id
+                    // console.log('order info: ', dataPayment)
+                    const resPayment = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/payment/create_payment`, paramsPayment)
+                    const paymentResponse = {
+                        "paymentStatus": resPayment.status,
+                        "orderId": response.id
+                    }
+                    console.log('Payment response: ', resPayment)
+                    localStorage.setItem("responsePayment", JSON.stringify(paymentResponse))
+                    // localStorage.setItem("paymentVNPay", resPayment)
+                    window.location.href = resPayment.url;
+                }, 1000)
             } else {
-                response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
+                if (type === 'buy-now') {
+                    response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders/buy-now`, request);
+                } else {
+                    response = await apiServiceWithToken.sendData(`${process.env.REACT_APP_ENDPOINT_API}/orders`, request);
+                }
+                console.log("Order created successfully", response);
+                const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
+                setPopupInfo({message: successMessage, type: 'success', visible: true});
             }
-            console.log("Order created successfully", response);
-            const successMessage = response.message || 'Đơn hàng đã được đặt thành công';
-            setPopupInfo({message: successMessage, type: 'success', visible: true});
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 alert(error.response.data);
@@ -529,6 +568,19 @@ export const InputInfor = ({cartItems, subTotal, totalCheck, buyNow}) => {
                                                 />
                                                 <span className="radio-fake"></span>
                                                 <span className="label">Thanh toán bằng tiền mặt khi nhận hàng.</span>
+                                            </label>
+                                        </li>
+                                        <li className="checkout_block_list_item">
+                                            <label className="label-radio">
+                                                <input
+                                                    type="radio"
+                                                    name="paymentmethod"
+                                                    value="vnpay"
+                                                    onChange={(e) => setPaymentMethod(e.target.value)}
+                                                    defaultChecked={paymentMethod === 'vnpay'}
+                                                />
+                                                <span className="radio-fake"></span>
+                                                <span className="label">Thanh toán bằng vnpay.</span>
                                             </label>
                                         </li>
                                     </ul>

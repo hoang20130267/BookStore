@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.websubject.service;
 
 import org.springframework.data.domain.Page;
 import vn.edu.hcmuaf.fit.websubject.entity.Inventory;
-import vn.edu.hcmuaf.fit.websubject.entity.Product;
 import vn.edu.hcmuaf.fit.websubject.payload.request.InventoryRequest;
 
 import java.util.List;

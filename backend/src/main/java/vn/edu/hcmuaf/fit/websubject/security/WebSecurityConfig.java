@@ -72,6 +72,17 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers("/api/blogCate/**").permitAll()
+                                .requestMatchers("/api/blog/**").permitAll()
+                                .requestMatchers("/api/cart/**").permitAll()
+                                .requestMatchers("/api/categories/**").permitAll()
+                                .requestMatchers("/api/comment/**").permitAll()
+                                .requestMatchers("/api/contact/**").permitAll()
+                                .requestMatchers("/api/inventories/**").permitAll()
+                                .requestMatchers("/api/orders/**").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/promotion/**").permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated()
                 );

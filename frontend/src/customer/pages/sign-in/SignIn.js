@@ -84,19 +84,19 @@ const SignIn = () => {
                                                         , fontWeight: "bold", maxWidth: '100%'
                                                     }}> Đăng nhập
                                             </button>
-                                            <span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>
+                                            {/*<span className="d-block text-center my-4 text-muted"> Đăng nhập với:</span>*/}
 
-                                            <div className="social-login text-center">
-                                                <Link to="" className="facebook">
-                                                    <span><i className="fa-brands fa-facebook-f"></i></span>
-                                                </Link>
-                                                <Link to="" className="twitter">
-                                                    <span><i className="fa-brands fa-twitter"></i></span>
-                                                </Link>
-                                                <Link to="" className="google">
-                                                    <span> <i className="fa-brands fa-google"></i></span>
-                                                </Link>
-                                            </div>
+                                            {/*<div className="social-login text-center">*/}
+                                            {/*    <Link to="" className="facebook">*/}
+                                            {/*        <span><i className="fa-brands fa-facebook-f"></i></span>*/}
+                                            {/*    </Link>*/}
+                                            {/*    <Link to="" className="twitter">*/}
+                                            {/*        <span><i className="fa-brands fa-twitter"></i></span>*/}
+                                            {/*    </Link>*/}
+                                            {/*    <Link to="" className="google">*/}
+                                            {/*        <span> <i className="fa-brands fa-google"></i></span>*/}
+                                            {/*    </Link>*/}
+                                            {/*</div>*/}
 
                                             <span className="d-block text-center mt-4 text-muted"><Link
                                                 to={"/sign-up"}

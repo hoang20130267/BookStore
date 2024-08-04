@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +14,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import vn.edu.hcmuaf.fit.websubject.entity.*;
+import vn.edu.hcmuaf.fit.websubject.entity.Blog;
+import vn.edu.hcmuaf.fit.websubject.entity.BlogCategory;
+import vn.edu.hcmuaf.fit.websubject.entity.Product;
+import vn.edu.hcmuaf.fit.websubject.entity.User;
 import vn.edu.hcmuaf.fit.websubject.repository.BlogCateRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.BlogRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.UserRepository;
 import vn.edu.hcmuaf.fit.websubject.service.BlogService;
-import org.apache.log4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -75,7 +78,7 @@ public class BlogServiceImpl implements BlogService {
         Specification<Product> specification = (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
-            // Lọc theo tiêu đề sản phẩm
+            // Lọc theo tiêu đề blog
             if (filterJson.has("title")) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("title"), "%" + filterJson.get("title").asText() + "%"));
             }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.hcmuaf.fit.websubject.entity.EnumRole;
+import vn.edu.hcmuaf.fit.websubject.entity.Role;
 import vn.edu.hcmuaf.fit.websubject.entity.User;
-import vn.edu.hcmuaf.fit.websubject.entity.*;
+import vn.edu.hcmuaf.fit.websubject.entity.UserInfo;
 import vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime;
 import vn.edu.hcmuaf.fit.websubject.payload.request.UpdateUserRequest;
 import vn.edu.hcmuaf.fit.websubject.repository.RoleRepository;
@@ -28,9 +31,10 @@ import vn.edu.hcmuaf.fit.websubject.repository.UserRepository;
 import vn.edu.hcmuaf.fit.websubject.service.UserService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-import org.apache.log4j.Logger;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {

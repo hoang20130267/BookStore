@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,16 +17,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import vn.edu.hcmuaf.fit.websubject.entity.*;
 import vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime;
-import vn.edu.hcmuaf.fit.websubject.service.OrderService;
 import vn.edu.hcmuaf.fit.websubject.repository.*;
+import vn.edu.hcmuaf.fit.websubject.service.OrderService;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -232,6 +231,22 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Order not found");
         }
         Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(order.getStatus().getId());
+        if (optionalOrderStatus.isEmpty()) {
+            throw new RuntimeException("Order status not found");
+        }
+        OrderStatus status = optionalOrderStatus.get();
+        Order existedOrder = optionalOrder.get();
+        existedOrder.setStatus(status);
+        orderRepository.save(existedOrder);
+    }
+
+    @Override
+    public void updateOrderPaymentStatus(Integer orderId, int idStatus) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isEmpty()) {
+            throw new RuntimeException("Order not found");
+        }
+        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(idStatus);
         if (optionalOrderStatus.isEmpty()) {
             throw new RuntimeException("Order status not found");
         }

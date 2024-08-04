@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.websubject.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +15,6 @@ import vn.edu.hcmuaf.fit.websubject.service.FavoriteProductService;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.log4j.Logger;
 
 @Service
 public class FavoriteProductServiceImpl implements FavoriteProductService {

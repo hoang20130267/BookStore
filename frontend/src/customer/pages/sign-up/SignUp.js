@@ -24,8 +24,7 @@ const SignUp = () => {
             const response = registerUser(username, password, email, otp);
                 dispatch(registerSuccess(response.data));
                 const successMessage = "Đăng ký tài khoản thành công!";
-                setPopupInfo({ message: successMessage, type: 'success', visible: true });
-                navigate("/sign-in");
+                setPopupInfo({ message: successMessage, type: 'successRegister', visible: true });
         } catch (error) {
             setErrorMessage("Email hoặc tên tài khoản đã tồn tại!");
             setShowErrorMessage(true);
@@ -79,19 +78,11 @@ const SignUp = () => {
     const hidePopup = () => {
         setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
     };
-
-    const handleClick = async () => {
-        await handleSendEmail();
-        await handleRegister();
+    const hidePopupRegister = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        navigate("/sign-in");
     };
 
-    useEffect(() => {
-        const buttons = Array.from(document.querySelectorAll('button.add_cart_btn'));
-        buttons.forEach(button => button.addEventListener('click', handleClick));
-        return () => {
-            buttons.forEach(button => button.removeEventListener('click', handleClick));
-        };
-    }, []);
     return (
         <>
             <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
@@ -104,6 +95,21 @@ const SignUp = () => {
                     <p>
                         <button className="button-popup button--success" data-for="js_success-popup"
                                 onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'successRegister' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopupRegister}>Ẩn thông báo
                         </button>
                     </p>
                 </div>

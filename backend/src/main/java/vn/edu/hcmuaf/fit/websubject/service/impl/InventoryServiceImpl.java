@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,16 +17,14 @@ import vn.edu.hcmuaf.fit.websubject.entity.Inventory;
 import vn.edu.hcmuaf.fit.websubject.entity.Product;
 import vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime;
 import vn.edu.hcmuaf.fit.websubject.payload.request.InventoryRequest;
-import vn.edu.hcmuaf.fit.websubject.service.InventoryService;
 import vn.edu.hcmuaf.fit.websubject.repository.InventoryRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.ProductRepository;
+import vn.edu.hcmuaf.fit.websubject.service.InventoryService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.log4j.Logger;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {

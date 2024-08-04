@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/general/Breadcrumb";
 import {useDispatch} from "react-redux";
@@ -13,6 +13,7 @@ const ForgotPassword = () => {
     const [newPass, setNewPass] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
     const [showErrorMessage, setShowErrorMessage] = React.useState(false);
+    const [popupInfo, setPopupInfo] = useState({ message: '', type: '', visible: false });
     const handleSendEmail = async (e) => {
         e.preventDefault();
         setErrorMessage("");
@@ -28,6 +29,7 @@ const ForgotPassword = () => {
                 type: 1
             });
             if (response.status === 200) {
+                setPopupInfo({ message: "Gửi email thành công!", type: 'success', visible: true });
                 setChangePage(true);
             } else {
                 setErrorMessage("Không tìm thấy email");
@@ -57,7 +59,10 @@ const ForgotPassword = () => {
                 newPassword: newPass
             });
             if (response.status === 200)
-                navigate("/sign-in");
+                setPopupInfo({ message: "Thay đổi mật khẩu thành công!", type: 'successForgot', visible: true });
+            else {
+                setPopupInfo({ message: "Thay đổi mật khẩu thất bại!", type: 'error', visible: true });
+            }
         } catch (e) {
             setErrorMessage("OTP không đúng");
             setShowErrorMessage(true);
@@ -68,8 +73,60 @@ const ForgotPassword = () => {
         setErrorMessage("");
         setShowErrorMessage(false);
     };
+
+    const hidePopup = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+    };
+    const hidePopupForgot = () => {
+        setPopupInfo((prevInfo) => ({ ...prevInfo, visible: false }));
+        navigate("/sign-in");
+    };
     return (
         <>
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'success' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -success js_success-popup ${popupInfo.visible && popupInfo.type === 'successForgot' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thành công
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--success" data-for="js_success-popup"
+                                onClick={hidePopupForgot}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <div className={`popup popup--icon -error js_error-popup ${popupInfo.visible && popupInfo.type === 'error' ? 'popup--visible' : ''}`}>
+                <div className="popup__background"></div>
+                <div className="popup__content">
+                    <h3 className="popup__content__title">
+                        Thất bại
+                    </h3>
+                    <p style={{marginBottom:"10px"}}>{popupInfo.message}</p>
+                    <p>
+                        <button className="button-popup button--error" data-for="js_error-popup"
+                                onClick={hidePopup}>Ẩn thông báo
+                        </button>
+                    </p>
+                </div>
+            </div>
             <Breadcrumb/>
             {!changePage && <>
                 <div className="content">

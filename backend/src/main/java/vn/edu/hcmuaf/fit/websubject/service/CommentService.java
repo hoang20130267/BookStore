@@ -1,11 +1,9 @@
 package vn.edu.hcmuaf.fit.websubject.service;
 
 import org.springframework.data.domain.Page;
-import vn.edu.hcmuaf.fit.websubject.entity.Blog;
 import vn.edu.hcmuaf.fit.websubject.entity.Comment;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentService {
     List<Comment> getListCommentByProductId(int idProduct);
