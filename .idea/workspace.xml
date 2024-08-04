@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8c3b5db6-98cc-42a8-9c3f-a1f0a43efbc7" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/frontend" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nguyennhatdangkhoa20130295&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/hoang20130267/Online-Bookstore.git&quot;,
+    &quot;accountId&quot;: &quot;57c7e205-e9ef-46ff-b138-e1ace7b11cc3&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2hC6F1Jnxs6tTNGcPqg93hPryYK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.MyAccount.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;NguyenNhatDangKhoa&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/4th Year/WebSubjectProjects/Online-Bookstore&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="npm.start">
+    <configuration name="MyAccount.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/customer/pages/my-account/MyAccount.js" working-dir="$PROJECT_DIR$/src/customer/pages/my-account">
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="start" />
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.MyAccount.js" />
+      <item itemvalue="npm.start" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.MyAccount.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8c3b5db6-98cc-42a8-9c3f-a1f0a43efbc7" name="Changes" comment="" />
+      <created>1717085605454</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717085605454</updated>
+      <workItem from="1717085606525" duration="2516000" />
+      <workItem from="1717089434693" duration="648000" />
+      <workItem from="1717120443180" duration="7099000" />
+      <workItem from="1717292837305" duration="5000" />
+      <workItem from="1717293412602" duration="23000" />
+      <workItem from="1717297639785" duration="17265000" />
+      <workItem from="1717398138291" duration="25245000" />
+      <workItem from="1717460124810" duration="594000" />
+      <workItem from="1717462000238" duration="29023000" />
+      <workItem from="1717599185096" duration="13004000" />
+      <workItem from="1717643412859" duration="4425000" />
+      <workItem from="1717677490790" duration="6981000" />
+      <workItem from="1717692196940" duration="195000" />
+      <workItem from="1717714639550" duration="5186000" />
+      <workItem from="1717738294021" duration="11000" />
+      <workItem from="1717855547103" duration="1968000" />
+      <workItem from="1717891419907" duration="156000" />
+      <workItem from="1717891904054" duration="5702000" />
+      <workItem from="1717944815411" duration="2000" />
+      <workItem from="1718032896492" duration="17035000" />
+      <workItem from="1718067343821" duration="34987000" />
+      <workItem from="1718132018208" duration="47443000" />
+      <workItem from="1718238044073" duration="9366000" />
+      <workItem from="1718286577824" duration="2342000" />
+      <workItem from="1718325858219" duration="1380000" />
+      <workItem from="1718350648578" duration="21726000" />
+      <workItem from="1718412701516" duration="34925000" />
+      <workItem from="1718465711948" duration="11000" />
+      <workItem from="1718954229320" duration="15123000" />
+      <workItem from="1718982538980" duration="11000" />
+      <workItem from="1718991775831" duration="840000" />
+      <workItem from="1719014906037" duration="32687000" />
+      <workItem from="1719079835258" duration="753000" />
+      <workItem from="1719081568639" duration="680000" />
+      <workItem from="1719104332838" duration="12207000" />
+      <workItem from="1719198209842" duration="3596000" />
+      <workItem from="1722653130762" duration="1326000" />
+      <workItem from="1722663954148" duration="1299000" />
+      <workItem from="1722736264589" duration="3000" />
+      <workItem from="1722736288749" duration="1660000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/frontend" />
+    </ignored-roots>
+  </component>
+</project>
