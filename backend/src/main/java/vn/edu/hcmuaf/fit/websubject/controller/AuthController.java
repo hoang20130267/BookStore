@@ -1,13 +1,8 @@
 package vn.edu.hcmuaf.fit.websubject.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +12,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.hcmuaf.fit.websubject.jwt.JwtUtils;
 import vn.edu.hcmuaf.fit.websubject.entity.*;
+import vn.edu.hcmuaf.fit.websubject.jwt.JwtUtils;
 import vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime;
-import vn.edu.hcmuaf.fit.websubject.payload.request.SendEmailRequest;
 import vn.edu.hcmuaf.fit.websubject.payload.request.LoginRequest;
+import vn.edu.hcmuaf.fit.websubject.payload.request.SendEmailRequest;
 import vn.edu.hcmuaf.fit.websubject.payload.request.SignupRequest;
 import vn.edu.hcmuaf.fit.websubject.payload.response.JwtResponse;
 import vn.edu.hcmuaf.fit.websubject.payload.response.MessageResponse;
@@ -33,8 +28,11 @@ import vn.edu.hcmuaf.fit.websubject.service.OTPService;
 import vn.edu.hcmuaf.fit.websubject.service.impl.CustomUserDetailsImpl;
 
 import javax.mail.MessagingException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
-import org.apache.log4j.Logger;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

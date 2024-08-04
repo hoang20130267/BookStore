@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.websubject.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,6 @@ import vn.edu.hcmuaf.fit.websubject.repository.InventoryRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.ProductRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.UserRepository;
 import vn.edu.hcmuaf.fit.websubject.service.CartItemsService;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;

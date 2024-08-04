@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.fit.websubject.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 

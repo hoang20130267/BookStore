@@ -1,7 +1,6 @@
 package vn.edu.hcmuaf.fit.websubject.service;
 
 import org.springframework.data.domain.Page;
-import vn.edu.hcmuaf.fit.websubject.entity.Contact;
 import vn.edu.hcmuaf.fit.websubject.entity.Promotion;
 
 import java.util.Date;

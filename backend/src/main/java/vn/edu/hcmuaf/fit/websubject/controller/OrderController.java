@@ -10,11 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.hcmuaf.fit.websubject.entity.*;
-import vn.edu.hcmuaf.fit.websubject.service.CartItemsService;
-import vn.edu.hcmuaf.fit.websubject.service.InventoryService;
-import vn.edu.hcmuaf.fit.websubject.service.OrderService;
-import vn.edu.hcmuaf.fit.websubject.service.PromotionService;
-import vn.edu.hcmuaf.fit.websubject.service.UserService;
+import vn.edu.hcmuaf.fit.websubject.service.*;
 import vn.edu.hcmuaf.fit.websubject.service.impl.CustomUserDetailsImpl;
 
 import java.util.List;
@@ -152,6 +148,15 @@ public class OrderController {
         try {
             orderService.cancelOrder(orderId);
             return ResponseEntity.ok().body("Đã hủy đơn hàng");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("Đơn hàng đã được xác nhận, không thể hủy");
+        }
+    }
+    @PutMapping("/done-payment/{orderId}")
+    public ResponseEntity<String> doneOrder(@PathVariable Integer orderId, @RequestBody Integer idStatus) {
+        try {
+            orderService.updateOrderPaymentStatus(orderId, idStatus);
+            return ResponseEntity.ok().body("Đã thanh toán đơn hàng");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("Đơn hàng đã được xác nhận, không thể hủy");
         }

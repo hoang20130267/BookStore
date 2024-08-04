@@ -3,13 +3,13 @@ package vn.edu.hcmuaf.fit.websubject.service.impl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import vn.edu.hcmuaf.fit.websubject.repository.TokenRepository;
-import org.apache.log4j.Logger;
 
 @Service
 @RequiredArgsConstructor

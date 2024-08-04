@@ -1,20 +1,19 @@
 package vn.edu.hcmuaf.fit.websubject.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import vn.edu.hcmuaf.fit.websubject.entity.User;
 import vn.edu.hcmuaf.fit.websubject.entity.UserInfo;
-import vn.edu.hcmuaf.fit.websubject.service.UserInfoService;
 import vn.edu.hcmuaf.fit.websubject.repository.UserInfoRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.UserRepository;
+import vn.edu.hcmuaf.fit.websubject.service.UserInfoService;
 
 import java.util.Optional;
 
 import static vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime.getCurrentTimeInVietnam;
-
-import org.apache.log4j.Logger;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {

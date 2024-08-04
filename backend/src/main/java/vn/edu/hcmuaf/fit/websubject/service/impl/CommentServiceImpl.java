@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,18 +14,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import vn.edu.hcmuaf.fit.websubject.entity.*;
+import vn.edu.hcmuaf.fit.websubject.entity.Blog;
+import vn.edu.hcmuaf.fit.websubject.entity.Comment;
+import vn.edu.hcmuaf.fit.websubject.entity.Product;
+import vn.edu.hcmuaf.fit.websubject.entity.User;
 import vn.edu.hcmuaf.fit.websubject.payload.others.CurrentTime;
-import vn.edu.hcmuaf.fit.websubject.service.CommentService;
 import vn.edu.hcmuaf.fit.websubject.repository.CommentRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.ProductRepository;
 import vn.edu.hcmuaf.fit.websubject.repository.UserRepository;
+import vn.edu.hcmuaf.fit.websubject.service.CommentService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.log4j.Logger;
 
 @Service
 public class CommentServiceImpl implements CommentService {
