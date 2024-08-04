@@ -38,6 +38,10 @@ export const InforContact = () => {
                         });
                     const successMessage = 'Liên hệ đã được gửi thành công!';
                     setPopupInfo({message: successMessage, type: 'success', visible: true});
+                    setFullName('');
+                    setEmail('');
+                    setTitle('');
+                    setContent('');
                 } catch (error) {
                     console.error(error);
                 }

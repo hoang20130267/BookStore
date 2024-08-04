@@ -17,7 +17,7 @@ const BlogTab = () => {
     });
     const [totalPages, setTotalPages] = useState(0);
     const [sort, setSort] = useState('');
-    const [perPage, setPerPage] = useState(3);
+    const [perPage, setPerPage] = useState(6);
     const [filter, setFilter] = useState({});
     const [order, setOrder] = useState('');
 
@@ -47,7 +47,7 @@ const BlogTab = () => {
 
         navigate(`?${searchParams.toString()}`);
     };
-    const getBlogsByCategory = (categoryId, page = 0, perPage = 3, sort = 'id', filter = '{}', order = 'ASC') => {
+    const getBlogsByCategory = (categoryId, page = 0, perPage = 6, sort = 'id', filter = '{}', order = 'ASC') => {
         const endpoint = `${process.env.REACT_APP_ENDPOINT_API}/blog/cate/${categoryId}`;
 
         const params = {page, perPage, sort, filter, order};
@@ -56,7 +56,7 @@ const BlogTab = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const pageParam = parseInt(queryParams.get('page') || '1', 10) - 1;
-        const perPageParam = parseInt(queryParams.get('perPage') || '3', 10);
+        const perPageParam = parseInt(queryParams.get('perPage') || '6', 10);
         const sortParam = queryParams.get('sort') || 'id';
         const filterParam = queryParams.get('filter') || '{}';
         const orderParam = queryParams.get('order') || 'ASC';
